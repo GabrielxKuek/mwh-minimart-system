@@ -7,7 +7,7 @@ const path = require("path");
 dotenv.config();
 
 // Import routes and middleware
-const mainRoute = require("./routes/mainRoute");
+const mainRoutes = require("./routes/mainRoutes");
 
 // Create an Express app
 const app = express();
@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", express.static(path.join(__dirname, "public")));
 
 // Use imported routes
-app.use("/api", mainRoute);
+app.use("/api", mainRoutes);
 
 // Health check route
 app.get("/", (req, res) => {
