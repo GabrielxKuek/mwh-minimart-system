@@ -1,4 +1,4 @@
-module.exports.readAllProductsByAll = (req, res, next) => {
+module.exports.readAllProductByAll = (req, res, next) => {
   res.status(200).send([
     {
       product_id: 1,
