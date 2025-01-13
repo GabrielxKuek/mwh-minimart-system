@@ -2,17 +2,16 @@
 const express = require("express");
 const router = express.Router();
 
-////////////////////////////////////////////////////////////
-// the routes just for you guys' reference. i made in year 1, might not be v optimised LOL
-////////////////////////////////////////////////////////////
-
 // define routes
-const taskRoutes = require("./taskRoutes");
+const taskRoute = require("./taskRoute");
+const dashboardRoute = require("./dashboardRoute");
+const authenticationRoute = require("./authenticationRoute");
+const minimartRoute = require("./minimartRoute");
 
-// // use routes
-// router.use("/users", userRoute);
-router.use("/tasks", taskRoutes);
-// router.use("/task_progress", progressRoute);
-// router.use("/forum", forumRoute);
+// use routes
+router.use("/task", taskRoute);
+router.use("/dashboard", dashboardRoute);
+router.use("/authentication", authenticationRoute);
+router.use("/minimart", minimartRoute);
 
 module.exports = router;

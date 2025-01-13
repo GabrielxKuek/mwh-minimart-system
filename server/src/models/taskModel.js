@@ -1,4 +1,5 @@
 // this file just for you guys' reference. i made in year 1, might not be v optimised LOL
+// also since we using firebase its not accurate HAHAHAHA
 
 const { collection, addDoc, getDocs } = require("firebase/firestore");
 const { db } = require("../configs/firebase"); // Assuming you have a firebase.js in config folder
