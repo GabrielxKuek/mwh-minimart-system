@@ -1,12 +1,14 @@
+// this file just for you guys' reference. i made in year 1, might not be v optimised LOL
+
 // INCLUDES
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/taskController');
+
+const taskController = require("../controllers/taskController");
 
 // CONTROLLERS
-router.get('/all/:user_id', controller.readAllTaskByUser);
-router.get('/completed/:user_id', controller.readCompletedTasksByUser);
-router.get('/pending/:user_id', controller.readPendingTasksByUser);
-router.get('/incomplete/:user_id', controller.readIncompleteTasksByUser);
+// Route to create a new task
+router.post("/", taskController.createNewTask);
+router.get('/', taskController.getAllTask);
 
 module.exports = router;
