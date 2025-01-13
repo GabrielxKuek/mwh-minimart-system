@@ -7,11 +7,11 @@ const router = express.Router();
 ////////////////////////////////////////////////////////////
 
 // define routes
-const taskRoute = require("./taskRoute");
+const taskRoutes = require("./taskRoutes");
 
 // // use routes
 // router.use("/users", userRoute);
-router.use("/tasks", taskRoute);
+router.use("/tasks", taskRoutes);
 // router.use("/task_progress", progressRoute);
 // router.use("/forum", forumRoute);
 
