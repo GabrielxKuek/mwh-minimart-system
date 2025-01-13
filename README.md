@@ -2,7 +2,7 @@
 
 im deploying this branch to render JUST FOR TESTING PURPOSES
 
-# Base URL: localhost:8080/api
+# Base URL: (testing deployment) https://mwh-minimart-system.onrender.com (local) localhost:8080/api
 # Dashboard Endpoints
 
 ## Vouchers
