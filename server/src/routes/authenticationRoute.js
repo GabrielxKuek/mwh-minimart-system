@@ -3,7 +3,7 @@
 // INCLUDES
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/taskController');
+const controller = require('../controllers/authenticationController');
 
 // CONTROLLERS
 router.get('/all/:user_id', controller.readAllTaskByUser);

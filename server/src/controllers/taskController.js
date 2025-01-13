@@ -1,4 +1,4 @@
-module.exports.readAllTasksByUser = (req, res, next) => {
+module.exports.readAllTaskByUser = (req, res, next) => {
   res.status(200).send([
     {
       task_id: 1,
