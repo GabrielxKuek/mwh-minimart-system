@@ -1,64 +1,32 @@
 // this file just for you guys' reference. i made in year 1, might not be v optimised LOL
 
-const pool = require("../services/db");
+const { collection, addDoc, getDocs } = require("firebase/firestore");
+const { db } = require("../configs/firebase"); // Assuming you have a firebase.js in config folder
 
-// 6. POST /tasks
-module.exports.insertTask = (data, callback) => {
-  const SQLSTATEMENT = `
-    INSERT INTO Task (title, description, points)
-    VALUES (?, ?, ?);
-    `;
-  const VALUES = [data.title, data.description, data.points];
+const taskCollection = collection(db, "tasks"); // Reference to the "tasks" collection
 
-  pool.query(SQLSTATEMENT, VALUES, callback);
+module.exports.insertSingle = async (data) => {
+  try {
+    const docRef = await addDoc(taskCollection, data);
+    return { id: docRef.id, ...data }; // Return the new task data including the generated ID
+  } catch (error) {
+    console.error("Error adding document:", error);
+    throw error; // Let the controller handle the error
+  }
 };
 
-// 7. GET /tasks
-module.exports.selectAll = (callback) => {
-  const SQLSTATEMENT = `
-    SELECT * FROM Task;
-    `;
-
-  pool.query(SQLSTATEMENT, callback);
+module.exports.getAllTasks = async () => {
+  try {
+    const dataRef = collection(db, "tasks"); // Reference to the specified collection
+    const snapshot = await getDocs(dataRef); // Get all documents
+    const data = snapshot.docs.map((doc) => ({
+      id: doc.id, // Include the document ID
+      ...doc.data(), // Spread the document data
+    }));
+    return data; // Return the array of documents
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error; // Let the caller handle the error
+  }
 };
 
-// 8. GET /tasks/{task_id}
-module.exports.selectById = (data, callback) => {
-  const SQLSTATEMENT = `
-    SELECT * FROM Task
-    WHERE task_id = ?;
-    `;
-  const VALUES = [data.task_id];
-
-  pool.query(SQLSTATEMENT, VALUES, callback);
-};
-
-// 9. PUT /tasks/{task_id}
-module.exports.updateById = (data, callback) => {
-  const SQLSTATEMENT = `
-    UPDATE Task 
-    SET title = ?, description = ?, points = ?
-    WHERE task_id = ?;
-    `;
-  const VALUES = [data.title, data.description, data.points, data.task_id];
-
-  pool.query(SQLSTATEMENT, VALUES, callback);
-};
-
-// 10. DELETE /tasks/{task_id}
-module.exports.deleteById = (data, callback) => {
-  const SQLSTATEMENT = `
-    DELETE FROM Task
-    WHERE task_id = ?;
-
-    ALTER TABLE Task AUTO_INCREMENT = 1;
-
-    DELETE FROM TaskProgress
-    WHERE task_id = ?;
-
-    ALTER TABLE TaskProgress AUTO_INCREMENT = 1;
-    `;
-  const VALUES = [data.task_id, data.task_id];
-
-  pool.query(SQLSTATEMENT, VALUES, callback);
-};

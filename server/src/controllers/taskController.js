@@ -2,51 +2,43 @@
 
 const model = require("../models/taskModel.js");
 
-// 6. POST /tasks
-module.exports.createNewTask = (req, res, next) => {
-  if (
-    req.body.title == undefined ||
-    req.body.description == undefined ||
-    req.body.points == undefined
-  ) {
-    res.status(400).json({
-      message: "Error: title, description or points is undefined",
-    });
-    /*
-        Note: Add later 
+const taskModel = require("../models/taskModel");
 
-        If the provided email is already associated with another user, return 409
-        Conflict.
-        If the request body is missing username or email, return 400 Bad Request.
+module.exports.createNewTask = async (req, res, next) => {
+  const { name, description, image,  points } = req.body;
 
-        also the error codes and stuff for everything else
-        */
-
-    return;
+  // Validate input
+  if (!name || !description || !image || !points === undefined) {
+    return res
+      .status(400)
+      .send("Error: name, description, or points is/are undefined");
   }
 
-  const data = {
-    title: req.body.title,
-    description: req.body.description,
-    points: req.body.points,
-  };
+  const data = { name, description, image, points };
 
-  const callback = (error, results, fields) => {
-    if (error) {
-      console.error("Error createNewTask:", error);
-      res.status(500).json(error);
-    } else {
-      res.status(201).json({
-        task_id: results.insertId,
-        title: req.body.title,
-        description: req.body.description,
-        points: req.body.points,
-      });
-    }
-  };
+  try {
+    // Call the model to insert the data into Firestore
+    const newTask = await taskModel.insertSingle(data);
 
-  model.insertTask(data, callback);
+    // Send a successful response with the created task
+    res.status(201).json(newTask);
+  } catch (error) {
+    // Handle errors from Firestore
+    console.error("Error createNewTask:", error);
+    res.status(500).json({ error: "Failed to create task" });
+  }
 };
+
+module.exports.getAllTask = async (req, res) => {
+  try {
+    const data = await taskModel.getAllTasks();
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).send("Server Error");
+  }
+}
+
 
 // 7. GET /tasks
 module.exports.readAllTasks = (req, res, next) => {
@@ -85,19 +77,19 @@ module.exports.readTaskById = (req, res, next) => {
 // 9. PUT /tasks/{task_id}
 module.exports.updateTaskById = (req, res, next) => {
   if (
-    req.body.title == undefined ||
+    req.body.name == undefined ||
     req.body.description == undefined ||
     req.body.points == undefined
   ) {
     res.status(400).json({
-      message: "Error: title, description or points is undefined",
+      message: "Error: name, description or points is undefined",
     });
     return;
   }
 
   const data = {
     task_id: req.params.task_id,
-    title: req.body.title,
+    name: req.body.name,
     description: req.body.description,
     points: req.body.points,
   };
@@ -114,7 +106,7 @@ module.exports.updateTaskById = (req, res, next) => {
       } else
         res.status(200).json({
           task_id: req.params.task_id,
-          title: req.body.title,
+          name: req.body.name,
           description: req.body.description,
           points: req.body.points,
         });

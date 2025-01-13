@@ -1,36 +1,37 @@
-//////////////////////////////////////////////////////
-// INCLUDES
-//////////////////////////////////////////////////////
+// Import required modules
 const express = require("express");
+const dotenv = require("dotenv");
+const path = require("path");
 
-//////////////////////////////////////////////////////
-// CREATE APP
-//////////////////////////////////////////////////////
+// Load environment variables
+dotenv.config();
+
+// Import routes and middleware
+const mainRoute = require("./routes/mainRoute");
+
+// Create an Express app
 const app = express();
 
-//////////////////////////////////////////////////////
-// USES
-//////////////////////////////////////////////////////
+// Middleware to parse JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-//////////////////////////////////////////////////////
-// SETUP ROUTES
-//////////////////////////////////////////////////////
+// Serve static files from the "public" directory
+app.use("/", express.static(path.join(__dirname, "public")));
+
+// Use imported routes
+app.use("/api", mainRoute);
+
+// Health check route
 app.get("/", (req, res) => {
   res.send("I am Alive!");
 });
 
-const mainRoutes = require("./routes/mainRoutes");
+// Error handling middleware (optional, but recommended)
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something went wrong!");
+});
 
-app.use("/api", mainRoutes);
-
-//////////////////////////////////////////////////////
-// SETUP STATIC FILES
-//////////////////////////////////////////////////////
-app.use("/", express.static('public'));
-
-//////////////////////////////////////////////////////
-// EXPORT APP
-//////////////////////////////////////////////////////
+// Export the app
 module.exports = app;
