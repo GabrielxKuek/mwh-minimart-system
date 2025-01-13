@@ -147,3 +147,9 @@ module.exports.readAllRequestByUser = (req, res, next) => {
         }
     ])
 };
+
+module.exports.createRequest = (req, res, next) => {
+    res.status(200).send({
+        message: "Request created successfully"
+    })
+}
