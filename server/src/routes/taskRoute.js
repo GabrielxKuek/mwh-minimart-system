@@ -6,6 +6,6 @@ const router = express.Router();
 const controller = require('../controllers/taskController');
 
 // CONTROLLERS
-router.get('/', controller.readAllTasksByUser);
+router.get('/:user_id', controller.readAllTasksByUser);
 
 module.exports = router;
