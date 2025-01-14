@@ -54,3 +54,51 @@ export const findUsers = async (criteria) => {
   const response = await api.get("/users/search", { params: criteria });
   return response.data;
 };
+
+// Inventory Management API Calls (Updated paths)
+export const addProduct = async (productData) => {
+  const response = await api.post("/inventory/products", productData, {
+    // Updated path
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};
+
+export const getProduct = async (productId) => {
+  const response = await api.get(`/inventory/products/${productId}`); // Updated path
+  return response.data;
+};
+
+export const getAllProducts = async () => {
+  const response = await api.get("/inventory/products"); // Updated path
+  return response.data;
+};
+
+export const updateProduct = async (productId, productData) => {
+  const response = await api.put(
+    `/inventory/products/${productId}`,
+    productData,
+    {
+      // Updated path
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return response.data;
+};
+
+export const deleteProduct = async (productId) => {
+  const response = await api.delete(`/inventory/products/${productId}`); // Updated path
+  return response.data;
+};
+
+export const getLowStockProducts = async (threshold) => {
+  const response = await api.get(`/inventory/products/lowstock`, {
+    // Updated path
+    params: { threshold },
+  });
+  return response.data;
+};
