@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAchievements } from "../services/achievementsApi";
+import { getAchievements } from "../services/api";
 import AchievementCard from "../components/achievements/AchievementCard";
 import { Separator } from "@/components/ui/separator";
 

@@ -40,6 +40,7 @@ import "react-toastify/dist/ReactToastify.css";
 import UserManagement from "./pages/UserManagement";
 import InventoryManagement from "./pages/InventoryManagement";
 import Achievements from "./pages/Achievements";
+import Leaderboard from "./pages/Leaderboard";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 
@@ -60,6 +61,9 @@ function App() {
             </li>
             <li>
               <Link to="/achievements">Achievements</Link>
+            </li>
+            <li>
+              <Link to="/leaderboard">Leaderboard</Link>
             </li>
           </ul>
         </nav>
@@ -105,6 +109,8 @@ function App() {
             }
           />
           <Route path="/achievements" element={<Achievements />} />
+
+          <Route path="/leaderboard" element={<Leaderboard />} />
         </Routes>
       </div>
     </Router>

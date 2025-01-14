@@ -10,6 +10,7 @@ const minimartRoute = require("./minimartRoute");
 const userRoute = require("./userRoute");
 const inventoryRoute = require("./inventoryRoute");
 const achievementsRoute = require("./achievementsRoute");
+const leaderboardRoute = require("./leaderboardRoute");
 
 // Use routes
 router.use("/task", taskRoute);
@@ -19,5 +20,6 @@ router.use("/minimart", minimartRoute);
 router.use("/users", userRoute);
 router.use("/inventory", inventoryRoute);
 router.use("/achievements", achievementsRoute);
+router.use("/leaderboard", leaderboardRoute);
 
 module.exports = router;
