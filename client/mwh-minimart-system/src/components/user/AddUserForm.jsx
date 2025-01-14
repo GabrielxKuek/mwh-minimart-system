@@ -12,6 +12,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "react-toastify";
 
 const AddUserForm = ({ onUserAdd }) => {
@@ -20,13 +27,17 @@ const AddUserForm = ({ onUserAdd }) => {
     email: "",
     birthdate: "",
     nric: "",
-    role_id: "resident",
+    role_id: "resident", // Initial value
     status_id: "active",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleRoleChange = (value) => {
+    setFormData({ ...formData, role_id: value });
   };
 
   const handleSubmit = async (e) => {
@@ -40,7 +51,7 @@ const AddUserForm = ({ onUserAdd }) => {
         email: "",
         birthdate: "",
         nric: "",
-        role_id: "resident",
+        role_id: "resident", // Reset to default
         status_id: "active",
       });
       toast.success("User added successfully!");
@@ -84,6 +95,23 @@ const AddUserForm = ({ onUserAdd }) => {
                 className="col-span-3 rounded-md"
                 required
               />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="role" className="text-right">
+                Role
+              </Label>
+              <Select
+                onValueChange={handleRoleChange}
+                defaultValue={formData.role_id}
+              >
+                <SelectTrigger className="col-span-3 rounded-md">
+                  <SelectValue placeholder="Select a role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="resident">Resident</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="email" className="text-right">
