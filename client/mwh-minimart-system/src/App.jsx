@@ -38,6 +38,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserManagement from "./pages/UserManagement";
+import RequestManagement from "./pages/RequestManagement";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 
@@ -52,6 +53,9 @@ function App() {
             </li>
             <li>
               <Link to="/user-management">User Management</Link>
+            </li>
+            <li>
+              <Link to="/request-management">Request Management</Link>
             </li>
           </ul>
         </nav>
@@ -83,6 +87,15 @@ function App() {
             element={
               <>
                 <UserManagement />
+                <ToastContainer />
+              </>
+            }
+          />
+          <Route
+            path="/request-management"
+            element={
+              <>
+                <RequestManagement />
                 <ToastContainer />
               </>
             }

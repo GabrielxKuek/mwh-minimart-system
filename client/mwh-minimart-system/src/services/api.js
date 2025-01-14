@@ -54,3 +54,18 @@ export const findUsers = async (criteria) => {
   const response = await api.get("/users/search", { params: criteria });
   return response.data;
 };
+
+export const getRequests = async () => {
+  const response = await api.get("/requests");
+  return response.data;
+};
+
+export const approveRequest = async (requestId) => {
+  const response = await api.put(`/requests/${requestId}/approve`);
+  return response.data;
+};
+
+export const rejectRequest = async (requestId) => {
+  const response = await api.put(`/requests/${requestId}/reject`);
+  return response.data;
+};
