@@ -39,6 +39,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserManagement from "./pages/UserManagement";
 import RequestManagement from "./pages/RequestManagement";
+import InventoryManagement from "./pages/InventoryManagement";
+import Achievements from "./pages/Achievements";
+import Leaderboard from "./pages/Leaderboard";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 
@@ -56,6 +59,13 @@ function App() {
             </li>
             <li>
               <Link to="/request-management">Request Management</Link>
+              <Link to="/inventory-management">Inventory Management</Link>
+            </li>
+            <li>
+              <Link to="/achievements">Achievements</Link>
+            </li>
+            <li>
+              <Link to="/leaderboard">Leaderboard</Link>
             </li>
           </ul>
         </nav>
@@ -96,10 +106,17 @@ function App() {
             element={
               <>
                 <RequestManagement />
+            path="/inventory-management"
+            element={
+              <>
+                <InventoryManagement />
                 <ToastContainer />
               </>
             }
           />
+          <Route path="/achievements" element={<Achievements />} />
+
+          <Route path="/leaderboard" element={<Leaderboard />} />
         </Routes>
       </div>
     </Router>
