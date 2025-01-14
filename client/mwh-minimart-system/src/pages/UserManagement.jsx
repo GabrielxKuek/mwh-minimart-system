@@ -1,33 +1,27 @@
-import React, { useState } from 'react';
-import UserForm from '../components/UserForm';
-import UserList from '../components/UserList';
-import UserProfile from '../components/UserProfile';
+import { useState } from "react";
+import UserList from "../components/user/UserList";
+import AddUserForm from "../components/user/AddUserForm";
+import { Separator } from "@/components/ui/separator";
 
 const UserManagement = () => {
-  const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
 
-  const addUser = (user) => {
-    setUsers([...users, { ...user, id: Date.now(), suspended: false, transactions: [] }]);
-  };
-
-  const suspendUser = (id) => {
-    setUsers(users.map((user) => (user.id === id ? { ...user, suspended: true } : user)));
-  };
-
-  const reactivateUser = (id) => {
-    setUsers(users.map((user) => (user.id === id ? { ...user, suspended: false } : user)));
-  };
-
-  const selectUser = (id) => {
-    setSelectedUser(users.find((user) => user.id === id));
+  const handleUserAdded = () => {
+    setRefreshTrigger(!refreshTrigger);
   };
 
   return (
-    <div>
-      <UserForm onSubmit={addUser} />
-      <UserList users={users} onSuspend={suspendUser} onReactivate={reactivateUser} onSelect={selectUser} />
-      {selectedUser && <UserProfile user={selectedUser} />}
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold text-indigo-700 mb-4">
+        User Management
+      </h1>
+      <Separator className="my-4" />
+      <div className="flex justify-end mb-4">
+        <AddUserForm onUserAdd={handleUserAdded} />
+      </div>
+      <div className="rounded-lg border">
+        <UserList refreshTrigger={refreshTrigger} />
+      </div>
     </div>
   );
 };
