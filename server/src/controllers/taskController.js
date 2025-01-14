@@ -1,91 +1,137 @@
-module.exports.readAllTaskByUser = (req, res, next) => {
-  res.status(200).send([
-    {
-      task_id: 1,
-      name: "Clean the halls",
-      description: "Clean the halls of the dorm",
-      image: "https://aline-studio.com/wp-content/uploads/2020/03/310-East-70th-Street-New-York-NY-Lenox-Hill-Lobby-Redesign-View-3thumnail.jpg",
-      point: 10,
-      completion_image: "https://as2.ftcdn.net/jpg/00/59/97/55/1000_F_59975580_F6jew6yj2e4UkrNWc3pww6A7tv0Kp0nu.webp",
-      status: "completed"
-    },
-    {
-      task_id: 2,
-      name: "Hide contraband",
-      description: "Hide the contraband in the dorm",
-      image: "https://www.shutterstock.com/shutterstock/photos/38146915/display_1500/stock-photo-thief-and-walk-on-tiptoe-silent-robber-walks-on-toes-with-shoes-in-hand-the-man-in-the-mask-38146915.jpg",
-      point: 5,
-      completion_image: "https://as2.ftcdn.net/jpg/00/59/97/55/1000_F_59975580_F6jew6yj2e4UkrNWc3pww6A7tv0Kp0nu.webp",
-      status: "pending"
-    },
-    {
-      task_id: 4,
-      name: "Clear trash",
-      description: "Clear all the trash in the dorm",
-      image: "https://thumbs.dreamstime.com/z/trash-can-vector-illustration-30463554.jpg?ct=jpeg",
-      point: 15,
-      completion_image: "https://as2.ftcdn.net/jpg/00/59/97/55/1000_F_59975580_F6jew6yj2e4UkrNWc3pww6A7tv0Kp0nu.webp",
-      status: "completed"
-    },
-    {
-      task_id: 5,
-      name: "Wash the dishes",
-      description: "Wash all the dishes in the sink",
-      image: "https://miro.medium.com/v2/resize:fit:1100/format:webp/1*cMEj0b9WHzvkw21FKiQ5UA.png",
-      point: 5,
-      completion_image: null,
-      status: "incomplete"
-    }
-  ])
+const model = require("../models/taskModel.js");
+
+const taskModel = require("../models/taskModel");
+
+module.exports.createNewTask = async (req, res, next) => {
+  const { name, description, image,  points } = req.body;
+
+  // Validate input
+  if (!name || !description || !image || !points === undefined) {
+    return res
+      .status(400)
+      .send("Error: name, description, or points is/are undefined");
+  }
+
+  const data = { name, description, image, points };
+
+  try {
+    // Call the model to insert the data into Firestore
+    const newTask = await taskModel.insertSingle(data);
+
+    // Send a successful response with the created task
+    res.status(201).json(newTask);
+  } catch (error) {
+    // Handle errors from Firestore
+    console.error("Error createNewTask:", error);
+    res.status(500).json({ error: "Failed to create task" });
+  }
 };
 
-module.exports.readCompletedTasksByUser = (req, res, next) => {
-  res.status(200).send([
-    {
-      task_id: 1,
-      name: "Clean the halls",
-      description: "Clean the halls of the dorm",
-      image: "https://aline-studio.com/wp-content/uploads/2020/03/310-East-70th-Street-New-York-NY-Lenox-Hill-Lobby-Redesign-View-3thumnail.jpg",
-      point: 10,
-      completion_image: "https://as2.ftcdn.net/jpg/00/59/97/55/1000_F_59975580_F6jew6yj2e4UkrNWc3pww6A7tv0Kp0nu.webp",
-      status: "completed"
-    },
-    {
-      task_id: 4,
-      name: "Clear trash",
-      description: "Clear all the trash in the dorm",
-      image: "https://thumbs.dreamstime.com/z/trash-can-vector-illustration-30463554.jpg?ct=jpeg",
-      point: 15,
-      completion_image: "https://as2.ftcdn.net/jpg/00/59/97/55/1000_F_59975580_F6jew6yj2e4UkrNWc3pww6A7tv0Kp0nu.webp",
-      status: "completed"
-    }
-  ])
+module.exports.getAllTask = async (req, res) => {
+  try {
+    const data = await taskModel.getAllTasks();
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).send("Server Error");
+  }
 }
 
-module.exports.readPendingTasksByUser = (req, res, next) => {
-  res.status(200).send([
-    {
-      task_id: 2,
-      name: "Hide contraband",
-      description: "Hide the contraband in the dorm",
-      image: "https://www.shutterstock.com/shutterstock/photos/38146915/display_1500/stock-photo-thief-and-walk-on-tiptoe-silent-robber-walks-on-toes-with-shoes-in-hand-the-man-in-the-mask-38146915.jpg",
-      point: 5,
-      completion_image: "https://as2.ftcdn.net/jpg/00/59/97/55/1000_F_59975580_F6jew6yj2e4UkrNWc3pww6A7tv0Kp0nu.webp",
-      status: "pending"
-    },
-  ])
-}
 
-module.exports.readIncompleteTasksByUser = (req, res, next) => {
-  res.status(200).send([
-    {
-      task_id: 5,
-      name: "Wash the dishes",
-      description: "Wash all the dishes in the sink",
-      image: "https://miro.medium.com/v2/resize:fit:1100/format:webp/1*cMEj0b9WHzvkw21FKiQ5UA.png",
-      point: 5,
-      completion_image: null,
-      status: "incomplete"
+// 7. GET /tasks
+module.exports.readAllTasks = (req, res, next) => {
+  const callback = (error, results, fields) => {
+    if (error) {
+      console.error("Error readAllTasks:", error);
+      res.status(500).json(error);
+    } else res.status(200).json(results);
+  };
+
+  model.selectAll(callback);
+};
+
+// 8. GET /tasks/{task_id}
+module.exports.readTaskById = (req, res, next) => {
+  const data = {
+    task_id: req.params.task_id,
+  };
+
+  const callback = (error, results, fields) => {
+    if (error) {
+      console.error("Error readTaskById:", error);
+      res.status(500).json(error);
+    } else {
+      if (results.length == 0) {
+        res.status(404).json({
+          message: "Task not found",
+        });
+      } else res.status(200).json(results[0]);
     }
-  ])
-}
+  };
+
+  model.selectById(data, callback);
+};
+
+// 9. PUT /tasks/{task_id}
+module.exports.updateTaskById = (req, res, next) => {
+  if (
+    req.body.name == undefined ||
+    req.body.description == undefined ||
+    req.body.points == undefined
+  ) {
+    res.status(400).json({
+      message: "Error: name, description or points is undefined",
+    });
+    return;
+  }
+
+  const data = {
+    task_id: req.params.task_id,
+    name: req.body.name,
+    description: req.body.description,
+    points: req.body.points,
+  };
+
+  const callback = (error, results, fields) => {
+    if (error) {
+      console.error("Error updateTaskById:", error);
+      res.status(500).json(error);
+    } else {
+      if (results.affectedRows == 0) {
+        res.status(404).json({
+          message: "Task not found",
+        });
+      } else
+        res.status(200).json({
+          task_id: req.params.task_id,
+          name: req.body.name,
+          description: req.body.description,
+          points: req.body.points,
+        });
+    }
+  };
+
+  model.updateById(data, callback);
+};
+
+// 10. DELETE /tasks/{task_id}
+module.exports.deleteTaskById = (req, res, next) => {
+  const data = {
+    task_id: req.params.task_id,
+  };
+
+  const callback = (error, results, fields) => {
+    if (error) {
+      console.error("Error deleteTaskById:", error);
+      res.status(500).json(error);
+    } else {
+      if (results[0].affectedRows == 0) {
+        res.status(404).json({
+          message: "Task not found",
+        });
+      } else res.status(204).send(); // 204 No Content
+    }
+  };
+
+  model.deleteById(data, callback);
+};
