@@ -9,6 +9,7 @@ import {
   Package,
   CheckCircle,
   XCircle,
+  CircleEllipsis,
 } from "lucide-react";
 
 const RequestList = ({ refreshTrigger }) => {
@@ -65,7 +66,7 @@ const RequestList = ({ refreshTrigger }) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px] font-medium">
+              <TableHead className="w-[200px] font-medium">
                 <div className="flex items-center gap-1">
                   <User className="h-4 w-4" />
                   Name
@@ -77,14 +78,14 @@ const RequestList = ({ refreshTrigger }) => {
                   Product
                 </div>
               </TableHead>
-              <TableHead className="font-medium">
-                <div className="flex items-center gap-1">
+              <TableHead className="w-[100px] font-medium text-center">
+                <div className="flex items-center justify-center gap-1">
                   <Package className="h-4 w-4" />
                   Quantity
                 </div>
               </TableHead>
-              <TableHead className="font-medium">Status</TableHead>
-              <TableHead className="text-right font-medium">Actions</TableHead>
+              <TableHead className="font-medium text-center">Status</TableHead>
+              <TableHead className="font-medium text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -92,9 +93,9 @@ const RequestList = ({ refreshTrigger }) => {
               <TableRow key={request.id}>
                 <TableCell>{request.user?.name || "Unknown User"}</TableCell>
                 <TableCell>{request.product?.name || "Unknown Product"}</TableCell>
-                <TableCell>{request.quantity}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1">
+                <TableCell className="text-center">{request.quantity}</TableCell>
+                <TableCell className="text-center">
+                  <div className="flex items-center justify-center gap-1">
                     {request.status_id === "approved" ? (
                       <CheckCircle className="h-4 w-4 text-green-500" />
                     ) : request.status_id === "rejected" ? (
@@ -105,8 +106,8 @@ const RequestList = ({ refreshTrigger }) => {
                     {request.status_id}
                   </div>
                 </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex gap-2">
+                <TableCell className="text-center">
+                  <div className="flex justify-center gap-2">
                     <Button
                       variant="default"
                       className="w-full bg-green-500 hover:bg-green-600 text-white"
