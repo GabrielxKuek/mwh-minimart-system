@@ -71,6 +71,7 @@ export const rejectRequest = async (requestId) => {
 };
 
 // Inventory Management API Calls (Updated paths)
+// Inventory Management API Calls
 export const addProduct = async (productData) => {
   const response = await api.post("/inventory/products", productData, {
     headers: {
@@ -91,15 +92,11 @@ export const getAllProducts = async () => {
 };
 
 export const updateProduct = async (productId, productData) => {
-  const response = await api.put(
-    `/inventory/products/${productId}`,
-    productData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  const response = await api.put(`/inventory/products/${productId}`, productData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return response.data;
 };
 
@@ -173,3 +170,4 @@ export const deleteTask = async (taskId) => {
   const response = await api.delete(`/tasks/${taskId}`);
   return response.data;
 };
+

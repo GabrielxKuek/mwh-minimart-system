@@ -50,7 +50,7 @@ const EditProductForm = ({ product, onProductEdit }) => {
     },
     onDrop: (acceptedFiles) => {
       const file = acceptedFiles[0];
-      setFormData({ ...formData, image: file });
+      setFormData((prevFormData) => ({ ...prevFormData, image: file }));
 
       const reader = new FileReader();
       reader.onload = () => {
@@ -75,8 +75,12 @@ const EditProductForm = ({ product, onProductEdit }) => {
     productData.append("point", formData.point);
     if (formData.image) {
       productData.append("image", formData.image);
-    } else {
-      productData.append("imageUrl", product.imageUrl); // Use the current image URL if no new image is provided
+    }
+    productData.append("imageUrl", product.imageUrl || ""); // Always append the current image URL, even if it's empty
+
+    // Log the FormData values
+    for (let [key, value] of productData.entries()) {
+      console.log(`${key}: ${value}`);
     }
 
     try {
