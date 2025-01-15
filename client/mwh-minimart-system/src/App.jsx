@@ -6,6 +6,7 @@ import RequestManagement from "./pages/RequestManagement";
 import InventoryManagement from "./pages/InventoryManagement";
 import Achievements from "./pages/Achievements";
 import Leaderboard from "./pages/Leaderboard";
+import Vouchers from "./pages/Vouchers";
 import Minimart from "./pages/Minimart";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
@@ -36,6 +37,9 @@ function App() {
             </li>
             <li>
               <Link to="/minimart">Minimart</Link>
+            </li>
+            <li>
+              <Link to="/vouchers">Vouchers</Link>
             </li>
           </ul>
         </nav>
@@ -92,6 +96,7 @@ function App() {
           <Route path="/achievements" element={<Achievements />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/minimart" element={<Minimart />} />
+          <Route path="/vouchers" element={<Vouchers />} />
         </Routes>
       </div>
     </Router>
