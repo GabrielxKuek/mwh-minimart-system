@@ -192,6 +192,12 @@ const UserList = ({ refreshTrigger }) => {
                                   <strong>NRIC:</strong> {user.nric}
                                 </p>
                                 <p>
+                                  <strong>Birth Date:</strong> {user.birthdate}
+                                </p>
+                                <p>
+                                  <strong>Role:</strong> {user.role_id}
+                                </p>
+                                <p>
                                   <strong>Status:</strong> {user.status_id}
                                 </p>
                                 <p>
