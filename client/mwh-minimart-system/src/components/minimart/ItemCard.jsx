@@ -7,14 +7,22 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { enterTransaction } from "../../services/api";
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
+import PurchaseDialog from './PurchaseDialog';
+
+function generateTransactionId() {
+  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  return Array.from(
+    { length: 5 }, 
+    () => chars[Math.floor(Math.random() * chars.length)]
+  ).join('');
+}
 
 const ItemCard = ({ item }) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [requestQuantity, setRequestQuantity] = useState(1);
+  const [isPurchaseDialogOpen, setIsPurchaseDialogOpen] = useState(false);
+  const [purchaseQuantity, setPurchaseQuantity] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   
@@ -26,18 +34,18 @@ const ItemCard = ({ item }) => {
   // Close dialog on escape key
   useEffect(() => {
     const handleEscape = (e) => {
-      if (e.key === 'Escape') setIsDialogOpen(false);
+      if (e.key === 'Escape') setIsPurchaseDialogOpen(false);
     };
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
   }, []);
 
-  const handleRequest = async () => {
+  const handlePurchase = async () => {
     setIsSubmitting(true);
     setError(null);
     
     try {
-      const productQuantity = parseInt(requestQuantity);
+      const productQuantity = parseInt(purchaseQuantity);
       const totalPoints = points * productQuantity;
       
       // Create products object with proper format
@@ -46,13 +54,13 @@ const ItemCard = ({ item }) => {
       }];
 
       await enterTransaction(
-        'abc123',
+        generateTransactionId(),
         totalPoints,
         products
       );
-      setIsDialogOpen(false);
+      setIsPurchaseDialogOpen(false);
     } catch (error) {
-      setError(error.message || 'Failed to submit request');
+      setError(error.message || 'Failed to purchase item');
     } finally {
       setIsSubmitting(false);
     }
@@ -96,14 +104,14 @@ const ItemCard = ({ item }) => {
             <Button
               variant="outline"
               className="w-full bg-orange-50 border-orange-300 text-orange-600 hover:bg-orange-100"
-              onClick={() => setIsDialogOpen(true)}
+              onClick={() => console.log(`Requesting ${item.name}`)}
             >
               Request Item
             </Button>
           ) : (
             <Button
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
-              onClick={() => console.log(`Purchasing ${item.name}`)}
+              onClick={() => setIsPurchaseDialogOpen(true)}
             >
               Purchase Item
             </Button>
@@ -111,53 +119,17 @@ const ItemCard = ({ item }) => {
         </CardContent>
       </Card>
 
-      {isDialogOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <div className="space-y-4">
-              <div>
-                <h2 className="text-lg font-semibold">Request {item.name}</h2>
-                <p className="text-sm text-gray-500 mt-1">
-                  Enter the quantity you would like to request. This will cost {points} points per item.
-                </p>
-              </div>
-
-              <div>
-                <Input
-                  type="number"
-                  value={requestQuantity}
-                  onChange={(e) => setRequestQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                  min="1"
-                  className="w-full"
-                />
-                <p className="mt-2 text-sm text-gray-500">
-                  Total points: {points * requestQuantity}
-                </p>
-                {error && (
-                  <p className="mt-2 text-sm text-red-500">{error}</p>
-                )}
-              </div>
-
-              <div className="flex justify-end gap-2 mt-6">
-                <Button
-                  variant="outline"
-                  onClick={() => setIsDialogOpen(false)}
-                  className="bg-white hover:bg-gray-50"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleRequest}
-                  disabled={isSubmitting}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white"
-                >
-                  {isSubmitting ? 'Submitting...' : 'Confirm Request'}
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <PurchaseDialog
+        isOpen={isPurchaseDialogOpen}
+        onClose={() => setIsPurchaseDialogOpen(false)}
+        onConfirm={handlePurchase}
+        itemName={item.name}
+        pointsPerItem={points}
+        isSubmitting={isSubmitting}
+        error={error}
+        purchaseQuantity={purchaseQuantity}
+        onQuantityChange={setPurchaseQuantity}
+      />
     </>
   );
 };
