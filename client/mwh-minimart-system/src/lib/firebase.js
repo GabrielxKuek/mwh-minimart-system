@@ -12,7 +12,6 @@ const firebaseConfig = {
   measurementId: "G-QCP742S2T4"
 };
 
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
