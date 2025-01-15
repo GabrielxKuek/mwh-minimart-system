@@ -107,6 +107,11 @@ function App() {
             element={
               <>
                 <RequestManagement />
+                <ToastContainer />
+              </>
+            }
+            />
+          <Route
             path="/inventory-management"
             element={
               <>

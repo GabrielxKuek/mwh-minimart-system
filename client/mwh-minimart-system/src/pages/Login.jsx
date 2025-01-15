@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from './firebase'; // Adjust the path based on your project structure
+import { auth } from "../configs/firebase"; // Adjust the path based on your project structure // Adjust the path based on your project structure
 import './styles.css';
 
 const Login = () => {

@@ -12,7 +12,7 @@ import {
   CircleEllipsis,
 } from "lucide-react";
 
-const RequestList = ({ refreshTrigger }) => {
+const RequestList = ({ refreshTrigger, searchQuery }) => {
   const [requests, setRequests] = useState([]);
 
   const fetchRequests = async () => {
@@ -60,6 +60,14 @@ const RequestList = ({ refreshTrigger }) => {
     }
   };
 
+  const filteredRequests = requests.filter((request) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      request.user?.name.toLowerCase().includes(query) ||
+      request.product?.name.toLowerCase().includes(query)
+    );
+  });
+
   return (
     <div>
       <div className="rounded-md border overflow-x-auto">
@@ -89,7 +97,7 @@ const RequestList = ({ refreshTrigger }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {requests.map((request) => (
+            {filteredRequests.map((request) => (
               <TableRow key={request.id}>
                 <TableCell>{request.user?.name || "Unknown User"}</TableCell>
                 <TableCell>{request.product?.name || "Unknown Product"}</TableCell>
