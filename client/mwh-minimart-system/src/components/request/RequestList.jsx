@@ -7,8 +7,6 @@ import {
   User,
   Utensils,
   Package,
-  CheckCircle,
-  XCircle,
   CircleEllipsis,
 } from "lucide-react";
 
@@ -19,7 +17,7 @@ const RequestList = ({ refreshTrigger, searchQuery }) => {
     try {
       const data = await getRequests();
       console.log("Fetched requests:", data); // Log the fetched requests
-      setRequests(data);
+      setRequests(data.filter(request => request.status_id === "pending"));
     } catch (error) {
       console.error("Error fetching requests:", error);
       toast.error("Failed to fetch requests.");
@@ -36,7 +34,7 @@ const RequestList = ({ refreshTrigger, searchQuery }) => {
       setRequests(
         requests.map((request) =>
           request.id === requestId ? { ...request, status_id: "approved" } : request
-        )
+        ).filter(request => request.status_id === "pending")
       );
       toast.success("Request approved successfully!");
     } catch (error) {
@@ -51,7 +49,7 @@ const RequestList = ({ refreshTrigger, searchQuery }) => {
       setRequests(
         requests.map((request) =>
           request.id === requestId ? { ...request, status_id: "rejected" } : request
-        )
+        ).filter(request => request.status_id === "pending")
       );
       toast.success("Request rejected successfully!");
     } catch (error) {
@@ -104,11 +102,7 @@ const RequestList = ({ refreshTrigger, searchQuery }) => {
                 <TableCell className="text-center">{request.quantity}</TableCell>
                 <TableCell className="text-center">
                   <div className="flex items-center justify-center gap-1">
-                    {request.status_id === "approved" ? (
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                    ) : request.status_id === "rejected" ? (
-                      <XCircle className="h-4 w-4 text-red-500" />
-                    ) : request.status_id === "pending" ? (
+                    {request.status_id === "pending" ? (
                       <CircleEllipsis className="h-4 w-4 text-gray-500" />
                     ) : null}
                     {request.status_id}

@@ -3,14 +3,32 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; 
 import UserManagement from "./pages/UserManagement";
 import RequestManagement from "./pages/RequestManagement";
+import RequestHistory from "./pages/RequestHistory";
 import InventoryManagement from "./pages/InventoryManagement";
 import TaskManagement from "./pages/TaskManagement";
 import Achievements from "./pages/Achievements";
 import Leaderboard from "./pages/Leaderboard";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
+import { useState, useRef } from "react";
 
 function App() {
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const timeoutRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setIsDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setIsDropdownOpen(false);
+    }, 1000); // 3 seconds delay
+  };
   return (
     <Router>
       <div className="p-4">
@@ -22,8 +40,26 @@ function App() {
             <li>
               <Link to="/user-management">User Management</Link>
             </li>
-            <li>
-              <Link to="/request-management">Request Management</Link>
+            <li
+              className="relative"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <span className="cursor-pointer">Request Management</span>
+              {isDropdownOpen && (
+                <ul className="absolute mt-2 bg-white border rounded shadow-lg">
+                  <li>
+                    <Link to="/request-management" className="block px-4 py-2 hover:bg-gray-200">
+                      Current
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/request-history" className="block px-4 py-2 hover:bg-gray-200">
+                      History
+                    </Link>
+                  </li>
+                </ul>
+              )}
             </li>
             <li>
               <Link to="/inventory-management">Inventory Management</Link>
@@ -80,6 +116,15 @@ function App() {
               </>
             }
           />
+          <Route
+            path="/request-history"
+            element={
+              <>
+                <RequestHistory />
+                <ToastContainer />
+              </>
+            }
+            />
           <Route
             path="/inventory-management"
             element={
