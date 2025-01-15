@@ -8,6 +8,10 @@ import RequestManagement from "./pages/RequestManagement";
 import InventoryManagement from "./pages/InventoryManagement";
 import Achievements from "./pages/Achievements";
 import Leaderboard from "./pages/Leaderboard";
+import Vouchers from "./pages/Vouchers";
+import Minimart from "./pages/Minimart";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
 
 // Protected Route wrapper component
 const ProtectedRoute = ({ children }) => {
@@ -18,7 +22,7 @@ const ProtectedRoute = ({ children }) => {
 // Navigation component
 const Navigation = () => {
   const { logout } = useAuth();
-  
+
   return (
     <nav className="mb-4">
       <ul className="flex space-x-4">
@@ -41,6 +45,12 @@ const Navigation = () => {
           <Link to="/leaderboard">Leaderboard</Link>
         </li>
         <li>
+          <Link to="/minimart">Minimart</Link>
+        </li>
+        <li>
+          <Link to="/vouchers">Vouchers</Link>
+        </li>
+        <li>
           <button 
             onClick={logout}
             className="text-red-600 hover:text-red-800"
@@ -53,18 +63,18 @@ const Navigation = () => {
   );
 };
 
-function App() {
-  const Layout = ({ children }) => {
-    const { isAuthenticated } = useAuth();
-    return (
-      <div className="p-4">
-        {isAuthenticated && <Navigation />}
-        {children}
-        <ToastContainer />
-      </div>
-    );
-  };
+const Layout = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return (
+    <div className="p-4">
+      {isAuthenticated && <Navigation />}
+      {children}
+      <ToastContainer />
+    </div>
+  );
+};
 
+function App() {
   return (
     <AuthProvider>
       <Router>
@@ -82,7 +92,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="/user-management"
               element={
@@ -127,7 +137,25 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
+            
+            <Route
+              path="/minimart"
+              element={
+                <ProtectedRoute>
+                  <Minimart />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/vouchers"
+              element={
+                <ProtectedRoute>
+                  <Vouchers />
+                </ProtectedRoute>
+              }
+            />
+            
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </Layout>
