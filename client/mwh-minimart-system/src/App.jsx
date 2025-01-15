@@ -43,6 +43,7 @@ import Achievements from "./pages/Achievements";
 import Leaderboard from "./pages/Leaderboard";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
+import TransactionManagement from "./pages/TransactionManagement";
 
 function App() {
   return (
@@ -64,6 +65,9 @@ function App() {
             </li>
             <li>
               <Link to="/leaderboard">Leaderboard</Link>
+            </li>
+            <li>
+              <Link to="/transactions">Transaction Management</Link>
             </li>
           </ul>
         </nav>
@@ -111,6 +115,7 @@ function App() {
           <Route path="/achievements" element={<Achievements />} />
 
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/transactions" element={<TransactionManagement />} />
         </Routes>
       </div>
     </Router>

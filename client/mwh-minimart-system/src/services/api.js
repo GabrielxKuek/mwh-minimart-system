@@ -144,3 +144,17 @@ export const getAchievements = async () => {
     throw error;
   }
 };
+
+// Transaction Management API Calls
+export const getTransactions = async () => {
+  const response = await api.get("/transactions"); // No need for manual headers
+  return response.data;
+};
+
+export const claimTransaction = async (transactionId, code) => {
+  const response = await api.put("/transactions/claim", {
+    transactionId,
+    code,
+  }); // No need for manual headers
+  return response.data;
+};
