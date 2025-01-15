@@ -25,6 +25,7 @@ const AddUserForm = ({ onUserAdd }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    password: "",
     birthdate: "",
     nric: "",
     role_id: "resident", // Initial value
@@ -49,6 +50,7 @@ const AddUserForm = ({ onUserAdd }) => {
       setFormData({
         name: "",
         email: "",
+        password: "",
         birthdate: "",
         nric: "",
         role_id: "resident", // Reset to default
@@ -96,6 +98,21 @@ const AddUserForm = ({ onUserAdd }) => {
                 required
               />
             </div>
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
+                Password
+              </Label>
+              <Input
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="col-span-3 rounded-md"
+                required
+              />
+            </div>
+            
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="role" className="text-right">
                 Role
@@ -113,6 +130,7 @@ const AddUserForm = ({ onUserAdd }) => {
                 </SelectContent>
               </Select>
             </div>
+            
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="email" className="text-right">
                 Email
@@ -127,6 +145,7 @@ const AddUserForm = ({ onUserAdd }) => {
                 required
               />
             </div>
+            
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="birthdate" className="text-right">
                 Birthdate

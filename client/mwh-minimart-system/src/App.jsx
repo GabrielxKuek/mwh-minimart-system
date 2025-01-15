@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; 
+import Login from "./pages/Login";
 import UserManagement from "./pages/UserManagement";
 import RequestManagement from "./pages/RequestManagement";
 import InventoryManagement from "./pages/InventoryManagement";
@@ -17,6 +18,9 @@ function App() {
           <ul className="flex space-x-4">
             <li>
               <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/login ">Login</Link>
             </li>
             <li>
               <Link to="/user-management">User Management</Link>
@@ -63,6 +67,15 @@ function App() {
             element={
               <>
                 <UserManagement />
+                <ToastContainer />
+              </>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <>
+                <Login />
                 <ToastContainer />
               </>
             }
