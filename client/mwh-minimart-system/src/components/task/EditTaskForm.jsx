@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { updateProduct } from "../../services/api";
+import { updateTask } from "../../services/api";
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,12 +16,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "react-toastify";
 
-const EditProductForm = ({ product, onProductEdit }) => {
+const EditTaskForm = ({ task, onTaskEdit }) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    quantity: 0,
-    point: 0,
+    points: 0,
     image: null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,20 +28,19 @@ const EditProductForm = ({ product, onProductEdit }) => {
   const [previewImage, setPreviewImage] = useState(null);
 
   useEffect(() => {
-    if (product) {
+    if (task) {
       setFormData({
-        name: product.name,
-        description: product.description,
-        quantity: product.quantity,
-        point: product.point,
+        name: task.name,
+        description: task.description,
+        points: task.points,
         image: null,
       });
 
-      if (product.imageUrl) {
-        setPreviewImage(product.imageUrl);
+      if (task.imageUrl) {
+        setPreviewImage(task.imageUrl);
       }
     }
-  }, [product]);
+  }, [task]);
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -68,25 +66,24 @@ const EditProductForm = ({ product, onProductEdit }) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const productData = new FormData();
-    productData.append("name", formData.name);
-    productData.append("description", formData.description);
-    productData.append("quantity", formData.quantity);
-    productData.append("point", formData.point);
+    const taskData = new FormData();
+    taskData.append("name", formData.name);
+    taskData.append("description", formData.description);
+    taskData.append("points", formData.points);
     if (formData.image) {
-      productData.append("image", formData.image);
+      taskData.append("image", formData.image);
     } else {
-      productData.append("imageUrl", product.imageUrl); // Use the current image URL if no new image is provided
+      taskData.append("imageUrl", task.imageUrl); // Use the current image URL if no new image is provided
     }
 
     try {
-      await updateProduct(product.id, productData);
-      toast.success("Product updated successfully!");
-      onProductEdit();
+      await updateTask(task.id, taskData);
+      toast.success("Task updated successfully!");
+      onTaskEdit();
       setIsOpen(false);
     } catch (error) {
-      console.error("Error updating product:", error);
-      toast.error("Failed to update product.");
+      console.error("Error updating task:", error);
+      toast.error("Failed to update task.");
     } finally {
       setIsSubmitting(false);
     }
@@ -101,9 +98,9 @@ const EditProductForm = ({ product, onProductEdit }) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] rounded-md">
         <DialogHeader>
-          <DialogTitle>Edit Product</DialogTitle>
+          <DialogTitle>Edit Task</DialogTitle>
           <DialogDescription>
-            Modify the details of the product.
+            Modify the details of the task.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
@@ -135,28 +132,14 @@ const EditProductForm = ({ product, onProductEdit }) => {
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="quantity" className="text-right">
-                Quantity
+              <Label htmlFor="points" className="text-right">
+                Points
               </Label>
               <Input
-                id="quantity"
-                name="quantity"
+                id="points"
+                name="points"
                 type="number"
-                value={formData.quantity}
-                onChange={handleChange}
-                className="col-span-3 rounded-md"
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="point" className="text-right">
-                Point
-              </Label>
-              <Input
-                id="point"
-                name="point"
-                type="number"
-                value={formData.point}
+                value={formData.points}
                 onChange={handleChange}
                 className="col-span-3 rounded-md"
                 required
@@ -174,7 +157,7 @@ const EditProductForm = ({ product, onProductEdit }) => {
                 {previewImage ? (
                   <img
                     src={previewImage}
-                    alt="Product Preview"
+                    alt="Task Preview"
                     className="h-20 w-20 object-cover rounded-md"
                   />
                 ) : (
@@ -198,16 +181,15 @@ const EditProductForm = ({ product, onProductEdit }) => {
   );
 };
 
-EditProductForm.propTypes = {
-  product: PropTypes.shape({
+EditTaskForm.propTypes = {
+  task: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    quantity: PropTypes.number.isRequired,
-    point: PropTypes.number.isRequired,
+    points: PropTypes.number.isRequired,
     imageUrl: PropTypes.string,
   }).isRequired,
-  onProductEdit: PropTypes.func.isRequired,
+  onTaskEdit: PropTypes.func.isRequired,
 };
 
-export default EditProductForm;
+export default EditTaskForm;

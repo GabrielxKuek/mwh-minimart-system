@@ -69,10 +69,10 @@ export const rejectRequest = async (requestId) => {
   const response = await api.put(`/requests/${requestId}/reject`);
   return response.data;
 };
+
 // Inventory Management API Calls (Updated paths)
 export const addProduct = async (productData) => {
   const response = await api.post("/inventory/products", productData, {
-    // Updated path
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -81,12 +81,12 @@ export const addProduct = async (productData) => {
 };
 
 export const getProduct = async (productId) => {
-  const response = await api.get(`/inventory/products/${productId}`); // Updated path
+  const response = await api.get(`/inventory/products/${productId}`);
   return response.data;
 };
 
 export const getAllProducts = async () => {
-  const response = await api.get("/inventory/products"); // Updated path
+  const response = await api.get("/inventory/products");
   return response.data;
 };
 
@@ -95,7 +95,6 @@ export const updateProduct = async (productId, productData) => {
     `/inventory/products/${productId}`,
     productData,
     {
-      // Updated path
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -105,13 +104,12 @@ export const updateProduct = async (productId, productData) => {
 };
 
 export const deleteProduct = async (productId) => {
-  const response = await api.delete(`/inventory/products/${productId}`); // Updated path
+  const response = await api.delete(`/inventory/products/${productId}`);
   return response.data;
 };
 
 export const getLowStockProducts = async (threshold) => {
   const response = await api.get(`/inventory/products/lowstock`, {
-    // Updated path
     params: { threshold },
   });
   return response.data;
@@ -119,42 +117,59 @@ export const getLowStockProducts = async (threshold) => {
 
 export const getLeaderboard = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/leaderboard`); // Update the URL to /api/leaderboard
+    const response = await fetch(`${API_BASE_URL}/leaderboard`);
     if (!response.ok) {
       throw new Error("Failed to fetch leaderboard data");
     }
     return await response.json();
   } catch (error) {
     console.error(error);
-    throw error; // Re-throw to handle in component
+    throw error;
   }
 };
 
 export const getAchievements = async () => {
   try {
-    // Make a GET request to your server's API endpoint for achievements.
     const response = await fetch(`${API_BASE_URL}/achievements`);
-
-    // Check if the response was successful (status code 200-299).
     if (!response.ok) {
-      // If not successful, throw an error with a message. You can customize
-      // the error message based on the response status code if needed.
       throw new Error(`Failed to fetch achievements: ${response.status}`);
     }
-
-    // Parse the response body as JSON.
-    const achievements = await response.json();
-
-    // Return the fetched achievements data.
-    return achievements;
+    return await response.json();
   } catch (error) {
-    // Log the error to the console for debugging purposes.
     console.error("Error fetching achievements:", error);
-
-    // You can either:
-    // 1. Return an empty array or some default value to indicate failure:
-    // return [];
-    // 2. Or, re-throw the error to be handled by the caller:
     throw error;
   }
+};
+
+export const addTask = async (taskData) => {
+  const response = await api.post("/tasks", taskData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};
+
+export const getAllTasks = async () => {
+  const response = await api.get("/tasks");
+  return response.data;
+};
+
+export const getTaskById = async (taskId) => {
+  const response = await api.get(`/tasks/${taskId}`);
+  return response.data;
+};
+
+export const updateTask = async (taskId, taskData) => {
+  const response = await api.put(`/tasks/${taskId}`, taskData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};
+
+export const deleteTask = async (taskId) => {
+  const response = await api.delete(`/tasks/${taskId}`);
+  return response.data;
 };

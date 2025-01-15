@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import UserManagement from "./pages/UserManagement";
 import RequestManagement from "./pages/RequestManagement";
 import InventoryManagement from "./pages/InventoryManagement";
+import TaskManagement from "./pages/TaskManagement";
 import Achievements from "./pages/Achievements";
 import Leaderboard from "./pages/Leaderboard";
 import reactLogo from "./assets/react.svg";
@@ -26,6 +27,9 @@ function App() {
             </li>
             <li>
               <Link to="/inventory-management">Inventory Management</Link>
+            </li>
+            <li>
+              <Link to="/task-management">Task Management</Link>
             </li>
             <li>
               <Link to="/achievements">Achievements</Link>
@@ -75,12 +79,21 @@ function App() {
                 <ToastContainer />
               </>
             }
-            />
+          />
           <Route
             path="/inventory-management"
             element={
               <>
                 <InventoryManagement />
+                <ToastContainer />
+              </>
+            }
+          />
+          <Route
+            path="/task-management"
+            element={
+              <>
+                <TaskManagement />
                 <ToastContainer />
               </>
             }

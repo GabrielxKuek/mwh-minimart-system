@@ -1,137 +1,75 @@
-const model = require("../models/taskModel.js");
-
 const taskModel = require("../models/taskModel");
 
-module.exports.createNewTask = async (req, res, next) => {
-  const { name, description, image,  points } = req.body;
+const taskController = {
+  async addTask(req, res) {
+    try {
+      const taskData = req.body;
+      const file = req.file; // Assuming you use multer for file uploads
 
-  // Validate input
-  if (!name || !description || !image || !points === undefined) {
-    return res
-      .status(400)
-      .send("Error: name, description, or points is/are undefined");
-  }
-
-  const data = { name, description, image, points };
-
-  try {
-    // Call the model to insert the data into Firestore
-    const newTask = await taskModel.insertSingle(data);
-
-    // Send a successful response with the created task
-    res.status(201).json(newTask);
-  } catch (error) {
-    // Handle errors from Firestore
-    console.error("Error createNewTask:", error);
-    res.status(500).json({ error: "Failed to create task" });
-  }
-};
-
-module.exports.getAllTask = async (req, res) => {
-  try {
-    const data = await taskModel.getAllTasks();
-    res.status(200).json(data);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    res.status(500).send("Server Error");
-  }
-}
-
-
-// 7. GET /tasks
-module.exports.readAllTasks = (req, res, next) => {
-  const callback = (error, results, fields) => {
-    if (error) {
-      console.error("Error readAllTasks:", error);
-      res.status(500).json(error);
-    } else res.status(200).json(results);
-  };
-
-  model.selectAll(callback);
-};
-
-// 8. GET /tasks/{task_id}
-module.exports.readTaskById = (req, res, next) => {
-  const data = {
-    task_id: req.params.task_id,
-  };
-
-  const callback = (error, results, fields) => {
-    if (error) {
-      console.error("Error readTaskById:", error);
-      res.status(500).json(error);
-    } else {
-      if (results.length == 0) {
-        res.status(404).json({
-          message: "Task not found",
-        });
-      } else res.status(200).json(results[0]);
+      const newTask = await taskModel.addTask(taskData, file);
+      res.status(201).json(newTask);
+    } catch (error) {
+      console.error("Error adding task:", error);
+      res.status(500).json({ message: error.message });
     }
-  };
+  },
 
-  model.selectById(data, callback);
-};
+  async getTask(req, res) {
+    try {
+      const { taskId } = req.params;
+      const task = await taskModel.getTaskById(taskId);
 
-// 9. PUT /tasks/{task_id}
-module.exports.updateTaskById = (req, res, next) => {
-  if (
-    req.body.name == undefined ||
-    req.body.description == undefined ||
-    req.body.points == undefined
-  ) {
-    res.status(400).json({
-      message: "Error: name, description or points is undefined",
-    });
-    return;
-  }
+      if (!task) {
+        return res.status(404).json({ message: "Task not found" });
+      }
 
-  const data = {
-    task_id: req.params.task_id,
-    name: req.body.name,
-    description: req.body.description,
-    points: req.body.points,
-  };
-
-  const callback = (error, results, fields) => {
-    if (error) {
-      console.error("Error updateTaskById:", error);
-      res.status(500).json(error);
-    } else {
-      if (results.affectedRows == 0) {
-        res.status(404).json({
-          message: "Task not found",
-        });
-      } else
-        res.status(200).json({
-          task_id: req.params.task_id,
-          name: req.body.name,
-          description: req.body.description,
-          points: req.body.points,
-        });
+      res.status(200).json(task);
+    } catch (error) {
+      console.error("Error getting task:", error);
+      res.status(500).json({ message: error.message });
     }
-  };
+  },
 
-  model.updateById(data, callback);
-};
-
-// 10. DELETE /tasks/{task_id}
-module.exports.deleteTaskById = (req, res, next) => {
-  const data = {
-    task_id: req.params.task_id,
-  };
-
-  const callback = (error, results, fields) => {
-    if (error) {
-      console.error("Error deleteTaskById:", error);
-      res.status(500).json(error);
-    } else {
-      if (results[0].affectedRows == 0) {
-        res.status(404).json({
-          message: "Task not found",
-        });
-      } else res.status(204).send(); // 204 No Content
+  async getAllTasks(req, res) {
+    try {
+      const tasks = await taskModel.getAllTasks();
+      res.status(200).json(tasks);
+    } catch (error) {
+      console.error("Error getting all tasks:", error);
+      res.status(500).json({ message: error.message });
     }
-  };
+  },
 
-  model.deleteById(data, callback);
+  async updateTask(req, res) {
+    try {
+      const { taskId } = req.params;
+      const taskData = req.body;
+      const file = req.file;
+
+      console.log("Updating task with ID:", taskId); // Add logging here
+      console.log("Task data:", taskData); // Add logging here
+      if (file) {
+        console.log("File received:", file.originalname); // Add logging here
+      }
+
+      const updatedTask = await taskModel.updateTask(taskId, taskData, file);
+      res.status(200).json(updatedTask);
+    } catch (error) {
+      console.error("Error updating task:", error); // Add logging here
+      res.status(500).json({ message: error.message });
+    }
+  },
+
+  async deleteTask(req, res) {
+    try {
+      const { taskId } = req.params;
+      await taskModel.deleteTask(taskId);
+      res.status(200).json({ message: "Task deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      res.status(500).json({ message: error.message });
+    }
+  },
 };
+
+module.exports = taskController;

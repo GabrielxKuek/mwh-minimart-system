@@ -1,4 +1,3 @@
-// server/src/models/inventoryModel.js
 const {
   getFirestore,
   doc,
@@ -23,23 +22,19 @@ const storage = getStorage();
 const inventoryModel = {
   async addProduct(productData, file) {
     try {
-      // Upload image to Firebase Storage
       const storageRef = ref(
         storage,
         `product_images/${Date.now()}_${file.originalname}`
       );
       const uploadTask = uploadBytesResumable(storageRef, file.buffer);
-
-      // Get image URL after upload
       const snapshot = await uploadTask;
       const imageUrl = await getDownloadURL(snapshot.ref);
 
-      // Add product to Firestore
       const productRef = doc(collection(db, "products"));
       await setDoc(productRef, {
         ...productData,
         imageUrl,
-        quantity: parseInt(productData.quantity), // Ensure quantity is a number
+        quantity: parseInt(productData.quantity),
         point: parseInt(productData.point),
       });
 
@@ -56,7 +51,7 @@ const inventoryModel = {
       const productSnap = await getDoc(productRef);
 
       if (!productSnap.exists()) {
-        return null; // Product not found
+        return null;
       }
 
       return { id: productSnap.id, ...productSnap.data() };
@@ -87,26 +82,28 @@ const inventoryModel = {
     try {
       const productRef = doc(db, "products", productId);
 
-      // Handle image update if a new file is provided
-      let imageUrl = productData.imageUrl; // Keep existing URL by default
+      let imageUrl = productData.imageUrl;
       if (file) {
         const storageRef = ref(
           storage,
           `product_images/${Date.now()}_${file.originalname}`
         );
         const uploadTask = uploadBytesResumable(storageRef, file.buffer);
-
         const snapshot = await uploadTask;
         imageUrl = await getDownloadURL(snapshot.ref);
       }
 
-      await updateDoc(productRef, {
-        ...productData,
-        imageUrl,
-        quantity: parseInt(productData.quantity),
-        point: parseInt(productData.point),
-      });
+      console.log("Updating product in Firestore with ID:", productId);
+      console.log("Updated product data:", { ...productData, imageUrl });
 
+      const updateData = { ...productData };
+      if (imageUrl) {
+        updateData.imageUrl = imageUrl;
+      } else {
+        delete updateData.imageUrl;
+      }
+
+      await updateDoc(productRef, updateData);
       return { id: productId, ...productData, imageUrl };
     } catch (error) {
       console.error("Error updating product:", error);

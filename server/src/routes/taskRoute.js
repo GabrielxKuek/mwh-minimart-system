@@ -1,14 +1,22 @@
-// this file just for you guys' reference. i made in year 1, might not be v optimised LOL
-
-// INCLUDES
 const express = require('express');
 const router = express.Router();
+const taskController = require('../controllers/taskController');
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
 
-const taskController = require("../controllers/taskController");
-
-// CONTROLLERS
 // Route to create a new task
-router.post("/", taskController.createNewTask);
-router.get('/', taskController.getAllTask);
+router.post('/', upload.single('image'), taskController.addTask);
+
+// Route to get all tasks
+router.get('/', taskController.getAllTasks);
+
+// Route to get a task by ID
+router.get('/:taskId', taskController.getTask);
+
+// Route to update a task by ID
+router.put('/:taskId', upload.single('image'), taskController.updateTask);
+
+// Route to delete a task by ID
+router.delete('/:taskId', taskController.deleteTask);
 
 module.exports = router;
