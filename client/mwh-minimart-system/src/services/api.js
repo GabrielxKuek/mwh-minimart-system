@@ -158,3 +158,43 @@ export const getAchievements = async () => {
     throw error;
   }
 };
+
+// get mock data
+export const getMinimartItems = async () => {
+  try {
+    // Simulate a delay to mimic an API call
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Return the mock data
+    return [
+      {
+        id: 1,
+        name: "Potato Chips",
+        points: 100,
+        description: "Classic salted potato chips, perfect for snacking",
+        category: "Snacks",
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Potato-Chips.jpg/330px-Potato-Chips.jpg"
+      },
+      {
+        id: 2,
+        name: "Cola",
+        points: 80,
+        description: "Refreshing carbonated drink",
+        category: "Drinks",
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Potato-Chips.jpg/330px-Potato-Chips.jpg"
+      },
+      {
+        id: 3,
+        name: "Chocolate Bar",
+        points: 120,
+        description: "Rich milk chocolate bar",
+        category: "Snacks",
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Potato-Chips.jpg/330px-Potato-Chips.jpg"
+      },
+    ];
+    
+  } catch (error) {
+    console.error("Error fetching mock achievements:", error);
+    throw error;
+  }
+};

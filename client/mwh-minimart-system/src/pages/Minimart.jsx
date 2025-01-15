@@ -1,34 +1,7 @@
 import { useState, useEffect } from "react";
+import { getMinimartItems } from "../services/api";
 import ItemCard from "../components/minimart/ItemCard";
 import { Separator } from "@/components/ui/separator";
-
-// Mock data - replace with actual API call
-const mockItems = [
-    {
-      id: 1,
-      name: "Potato Chips",
-      points: 100,
-      description: "Classic salted potato chips, perfect for snacking",
-      category: "Snacks",
-      imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Potato-Chips.jpg/330px-Potato-Chips.jpg"
-    },
-    {
-      id: 2,
-      name: "Cola",
-      points: 80,
-      description: "Refreshing carbonated drink",
-      category: "Drinks",
-      imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Potato-Chips.jpg/330px-Potato-Chips.jpg"
-    },
-    {
-      id: 3,
-      name: "Chocolate Bar",
-      points: 120,
-      description: "Rich milk chocolate bar",
-      category: "Snacks",
-      imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Potato-Chips.jpg/330px-Potato-Chips.jpg"
-    },
-  ];
   
 
 const Minimart = () => {
@@ -40,12 +13,12 @@ const Minimart = () => {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        // Replace with actual API call
-        // const response = await getItems();
-        // setItems(response);
-        setItems(mockItems);
+        const response = await getMinimartItems();
+        setItems(response);
+
       } catch (error) {
         setError(error.message);
+
       } finally {
         setLoading(false);
       }
@@ -82,6 +55,38 @@ const Minimart = () => {
         ))}
       </div>
 
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
+      <Separator className="my-4" />
       <Separator className="my-4" />
 
       {loading ? (
