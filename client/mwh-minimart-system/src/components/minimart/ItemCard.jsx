@@ -10,11 +10,13 @@ import { Button } from "@/components/ui/button";
 import PropTypes from 'prop-types';
 
 const ItemCard = ({ item }) => {
+  const isOutOfStock = item.quantity === 0;
+
   return (
-    <Card className="h-full">
+    <Card className={`h-full ${isOutOfStock ? 'opacity-75' : ''}`}>
       <CardHeader className="space-y-4">
         <div className="flex gap-4">
-          <div className="w-32 h-32 rounded-lg overflow-hidden flex-shrink-0">
+          <div className={`w-32 h-32 rounded-lg overflow-hidden flex-shrink-0 ${isOutOfStock ? 'grayscale' : ''}`}>
             <img
               src={item.image_url}
               alt={item.name}
@@ -43,12 +45,22 @@ const ItemCard = ({ item }) => {
         </div>
       </CardHeader>
       <CardContent>
-        <Button
-          className="w-full bg-indigo-600 hover:bg-indigo-700"
-          onClick={() => console.log(`Purchasing ${item.name}`)}
-        >
-          Purchase Item
-        </Button>
+        {isOutOfStock ? (
+          <Button
+            variant="outline"
+            className="w-full bg-orange-50 border-orange-300 text-orange-600 hover:bg-orange-100"
+            onClick={() => console.log(`Requesting ${item.name}`)}
+          >
+            Request Item
+          </Button>
+        ) : (
+          <Button
+            className="w-full bg-indigo-600 hover:bg-indigo-700"
+            onClick={() => console.log(`Purchasing ${item.name}`)}
+          >
+            Purchase Item
+          </Button>
+        )}
       </CardContent>
     </Card>
   );
