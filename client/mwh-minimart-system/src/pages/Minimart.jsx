@@ -37,6 +37,7 @@ const Minimart = () => {
       <h1 className="text-3xl font-bold text-indigo-700 mb-6">
         Minimart Catalog
       </h1>
+      
       <Separator className="my-4" />
       
       <div className="flex flex-wrap gap-2 mb-6">
@@ -55,38 +56,6 @@ const Minimart = () => {
         ))}
       </div>
 
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
-      <Separator className="my-4" />
       <Separator className="my-4" />
 
       {loading ? (
