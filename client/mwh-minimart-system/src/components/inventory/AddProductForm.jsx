@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { addProduct } from "../../services/api";
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
@@ -13,13 +14,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { toast } from "react-toastify";
 
 const AddProductForm = ({ onProductAdd }) => {
@@ -174,7 +168,7 @@ const AddProductForm = ({ onProductAdd }) => {
                     className="h-20 w-20 object-cover rounded-md"
                   />
                 ) : (
-                  <p>Drag 'n' drop an image here, or click to select one</p>
+                  <p>Drag and drop an image here, or click to select one</p>
                 )}
               </div>
             </div>
@@ -192,6 +186,9 @@ const AddProductForm = ({ onProductAdd }) => {
       </DialogContent>
     </Dialog>
   );
+};
+AddProductForm.propTypes = {
+  onProductAdd: PropTypes.func.isRequired,
 };
 
 export default AddProductForm;

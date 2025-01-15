@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import PropTypes from 'prop-types';
 
 const AchievementCard = ({ achievement }) => {
   return (
@@ -43,6 +44,15 @@ const AchievementCard = ({ achievement }) => {
       </CardContent>
     </Card>
   );
+};
+AchievementCard.propTypes = {
+  achievement: PropTypes.shape({
+    imageURL: PropTypes.string.isRequired,
+    imageDescription: PropTypes.string.isRequired,
+    badgeTitle: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    requirements: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default AchievementCard;
