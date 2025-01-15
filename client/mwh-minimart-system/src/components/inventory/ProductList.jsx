@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
   getAllProducts,
   deleteProduct,
@@ -210,6 +211,9 @@ const ProductList = ({ refreshTrigger }) => {
       </div>
     </div>
   );
+};
+ProductList.propTypes = {
+  refreshTrigger: PropTypes.any.isRequired,
 };
 
 export default ProductList;

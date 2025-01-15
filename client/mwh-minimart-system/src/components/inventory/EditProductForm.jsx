@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { updateProduct, getProduct } from "../../services/api";
+import PropTypes from "prop-types";
+import { updateProduct } from "../../services/api";
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import {
@@ -179,7 +180,7 @@ const EditProductForm = ({ product, onProductEdit }) => {
                     className="h-20 w-20 object-cover rounded-md"
                   />
                 ) : (
-                  <p>Drag 'n' drop an image here, or click to select one</p>
+                  <p>Drag and drop an image here, or click to select one</p>
                 )}
               </div>
             </div>
@@ -197,6 +198,17 @@ const EditProductForm = ({ product, onProductEdit }) => {
       </DialogContent>
     </Dialog>
   );
+};
+EditProductForm.propTypes = {
+  product: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    quantity: PropTypes.number.isRequired,
+    point: PropTypes.number.isRequired,
+    imageUrl: PropTypes.string,
+  }).isRequired,
+  onProductEdit: PropTypes.func.isRequired,
 };
 
 export default EditProductForm;
