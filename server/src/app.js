@@ -1,5 +1,5 @@
-// Import required modules
 const express = require("express");
+const cors = require("cors"); // Import the cors middleware
 const dotenv = require("dotenv");
 const path = require("path");
 
@@ -11,6 +11,9 @@ const mainRoutes = require("./routes/mainRoutes");
 
 // Create an Express app
 const app = express();
+
+// Enable CORS for all origins (for development)
+app.use(cors());
 
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
