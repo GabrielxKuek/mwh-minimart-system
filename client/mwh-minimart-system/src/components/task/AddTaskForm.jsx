@@ -31,7 +31,7 @@ const AddTaskForm = ({ onTaskAdd }) => {
     },
     onDrop: (acceptedFiles) => {
       const file = acceptedFiles[0];
-      setFormData({ ...formData, image: file });
+      setFormData((prevFormData) => ({ ...prevFormData, image: file }));
 
       const reader = new FileReader();
       reader.onload = () => {

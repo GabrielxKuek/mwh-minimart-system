@@ -48,7 +48,7 @@ const EditTaskForm = ({ task, onTaskEdit }) => {
     },
     onDrop: (acceptedFiles) => {
       const file = acceptedFiles[0];
-      setFormData({ ...formData, image: file });
+      setFormData((prevFormData) => ({ ...prevFormData, image: file }));
 
       const reader = new FileReader();
       reader.onload = () => {
@@ -72,8 +72,12 @@ const EditTaskForm = ({ task, onTaskEdit }) => {
     taskData.append("points", formData.points);
     if (formData.image) {
       taskData.append("image", formData.image);
-    } else {
-      taskData.append("imageUrl", task.imageUrl); // Use the current image URL if no new image is provided
+    }
+    taskData.append("imageUrl", task.imageUrl || ""); // Always append the current image URL, even if it's empty
+
+    // Log the FormData values
+    for (let [key, value] of taskData.entries()) {
+      console.log(`${key}: ${value}`);
     }
 
     try {

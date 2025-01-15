@@ -29,7 +29,12 @@ const TaskList = ({ refreshTrigger }) => {
   const fetchTasks = async () => {
     try {
       const data = await getAllTasks();
-      setTasks(data);
+      // Ensure points are numbers
+      const tasksWithNumericPoints = data.map(task => ({
+        ...task,
+        points: Number(task.points),
+      }));
+      setTasks(tasksWithNumericPoints);
     } catch (error) {
       console.error("Error fetching tasks:", error);
       toast.error("Failed to fetch tasks.");

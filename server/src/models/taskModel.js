@@ -1,5 +1,5 @@
 const { collection, doc, getDoc, getDocs, updateDoc, deleteDoc, addDoc } = require("firebase/firestore");
-const { getStorage, ref, uploadBytesResumable, getDownloadURL } = require("firebase/storage");
+const { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject, getMetadata } = require("firebase/storage");
 const { db } = require("../configs/firebase");
 
 const taskCollection = collection(db, "tasks");
@@ -10,7 +10,7 @@ const taskModel = {
     try {
       let imageUrl = null;
       if (file) {
-        const storageRef = ref(storage, `task_images/${Date.now()}_${file.originalname}`);
+        const storageRef = ref(storage, `task_images/${file.originalname}`);
         const uploadTask = uploadBytesResumable(storageRef, file.buffer);
         const snapshot = await uploadTask;
         imageUrl = await getDownloadURL(snapshot.ref);
@@ -55,9 +55,34 @@ const taskModel = {
     try {
       const taskRef = doc(db, "tasks", taskId);
 
+      console.log("Received taskData:", taskData); // Add logging here
       let imageUrl = taskData.imageUrl; // Keep existing URL by default
+      console.log("Current imageUrl:", imageUrl); // Add logging here
+      console.log("Received file:", file); // Add logging here
       if (file) {
-        const storageRef = ref(storage, `task_images/${Date.now()}_${file.originalname}`);
+        // Delete the old image if it exists
+        if (imageUrl) {
+          const pathStartIndex = imageUrl.indexOf("/o/") + 3;
+          const pathEndIndex = imageUrl.indexOf("?alt=media");
+          const oldImagePath = decodeURIComponent(imageUrl.substring(pathStartIndex, pathEndIndex));
+          console.log("Old image path:", oldImagePath); // Add logging here
+          const oldImageRef = ref(storage, oldImagePath);
+
+          // Check if the old image exists before attempting to delete it
+          try {
+            await getMetadata(oldImageRef);
+            await deleteObject(oldImageRef);
+            console.log("Old image deleted:", oldImagePath); // Add logging here
+          } catch (error) {
+            if (error.code === 'storage/object-not-found') {
+              console.warn(`Old image not found: ${oldImagePath}`); // Log a warning if the old image does not exist
+            } else {
+              throw error; // Re-throw the error if it's not a "not found" error
+            }
+          }
+        }
+
+        const storageRef = ref(storage, `task_images/${file.originalname}`);
         const uploadTask = uploadBytesResumable(storageRef, file.buffer);
         const snapshot = await uploadTask;
         imageUrl = await getDownloadURL(snapshot.ref);
@@ -84,7 +109,39 @@ const taskModel = {
   async deleteTask(taskId) {
     try {
       const taskRef = doc(db, "tasks", taskId);
+      const taskSnap = await getDoc(taskRef);
+
+      if (!taskSnap.exists()) {
+        throw new Error("Task not found");
+      }
+
+      const taskData = taskSnap.data();
+      const imageUrl = taskData.imageUrl;
+
+      // Delete the image from storage if it exists
+      if (imageUrl) {
+        const pathStartIndex = imageUrl.indexOf("/o/") + 3;
+        const pathEndIndex = imageUrl.indexOf("?alt=media");
+        const imagePath = decodeURIComponent(imageUrl.substring(pathStartIndex, pathEndIndex));
+        console.log("Image path to delete:", imagePath); // Add logging here
+        const imageRef = ref(storage, imagePath);
+
+        // Check if the image exists before attempting to delete it
+        try {
+          await getMetadata(imageRef);
+          await deleteObject(imageRef);
+          console.log("Image deleted:", imagePath); // Add logging here
+        } catch (error) {
+          if (error.code === 'storage/object-not-found') {
+            console.warn(`Image not found: ${imagePath}`); // Log a warning if the image does not exist
+          } else {
+            throw error; // Re-throw the error if it's not a "not found" error
+          }
+        }
+      }
+
       await deleteDoc(taskRef);
+      console.log("Task deleted from Firestore with ID:", taskId); // Add logging here
       return { id: taskId };
     } catch (error) {
       console.error("Error deleting task:", error);

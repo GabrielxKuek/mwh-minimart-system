@@ -15,6 +15,7 @@ const {
   ref,
   uploadBytesResumable,
   getDownloadURL,
+  deleteObject,
 } = require("firebase/storage");
 const db = getFirestore();
 const storage = getStorage();
@@ -84,6 +85,12 @@ const inventoryModel = {
 
       let imageUrl = productData.imageUrl;
       if (file) {
+        // Delete the old image if it exists
+        if (imageUrl) {
+          const oldImageRef = ref(storage, imageUrl);
+          await deleteObject(oldImageRef);
+        }
+
         const storageRef = ref(
           storage,
           `product_images/${Date.now()}_${file.originalname}`
