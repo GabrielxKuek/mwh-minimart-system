@@ -160,41 +160,20 @@ export const getAchievements = async () => {
 };
 
 // get mock data
-export const getMinimartItems = async () => {
+export const getMinimartProducts = async () => {
   try {
-    // Simulate a delay to mimic an API call
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // Return the mock data
-    return [
-      {
-        id: 1,
-        name: "Potato Chips",
-        points: 100,
-        description: "Classic salted potato chips, perfect for snacking",
-        category: "Snacks",
-        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Potato-Chips.jpg/330px-Potato-Chips.jpg"
-      },
-      {
-        id: 2,
-        name: "Cola",
-        points: 80,
-        description: "Refreshing carbonated drink",
-        category: "Drinks",
-        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Potato-Chips.jpg/330px-Potato-Chips.jpg"
-      },
-      {
-        id: 3,
-        name: "Chocolate Bar",
-        points: 120,
-        description: "Rich milk chocolate bar",
-        category: "Snacks",
-        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Potato-Chips.jpg/330px-Potato-Chips.jpg"
-      },
-    ];
+    const response = await fetch(`${API_BASE_URL}/minimart/product/all`);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch minimart products: ${response.status}`);
+    }
+
+    const products = await response.json();
+
+    return products;
     
   } catch (error) {
-    console.error("Error fetching mock achievements:", error);
+    console.error("Error fetching minimart products:", error);
     throw error;
   }
 };
