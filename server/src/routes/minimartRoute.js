@@ -9,5 +9,6 @@ const controller = require('../controllers/minimartController');
 // router.post('/create', controller.createRequest);
 
 router.get('/product/all', controller.readAllProductByAll);
+router.post('/product/create', controller.createTransaction);
 
 module.exports = router;

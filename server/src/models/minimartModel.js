@@ -1,10 +1,13 @@
 // this file just for you guys' reference. i made in year 1, might not be v optimised LOL
 // also since we using firebase its not accurate HAHAHAHA
 
-const { collection, getDocs } = require('firebase/firestore');
+const { collection, addDoc, getDocs } = require('firebase/firestore');
 const { db } = require("../configs/firebase");
 
-module.exports.getAllProducts = async () => {
+// config
+const transactionCollection = collection(db, "transactions");
+
+module.exports.selectAllProducts = async () => {
     try {
         // Reference to the products collection
         const productsRef = collection(db, "products");
@@ -24,3 +27,13 @@ module.exports.getAllProducts = async () => {
         throw error;
     }
 };
+
+module.exports.insertTransaction = async (data) => {
+    try {
+        const docRef = await addDoc(transactionCollection, data);
+        return { id: docRef.id, ...data };
+    } catch (error) {
+        console.error("Error adding transaction:", error);
+        throw error;
+    }
+}

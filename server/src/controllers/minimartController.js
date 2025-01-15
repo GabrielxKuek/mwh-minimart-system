@@ -154,12 +154,12 @@
 //     })
 // }
 
-const { getAllProducts } = require('../models/minimartModel');
+const { selectAllProducts, insertTransaction } = require('../models/minimartModel');
 
 module.exports.readAllProductByAll = async (req, res, next) => {
   try {
     // Get products using your existing model function
-    const products = await getAllProducts();
+    const products = await selectAllProducts();
     
     // Transform the data to match your desired response format
     const formattedProducts = products.map(product => ({
@@ -180,5 +180,47 @@ module.exports.readAllProductByAll = async (req, res, next) => {
       message: "Failed to fetch products",
       error: error.message
     });
+  }
+};
+
+module.exports.createTransaction = async (req, res) => {
+  try {
+      const transactionData = req.body;
+      
+      // Validate required fields
+      const missingFields = [];
+
+      if (!transactionData.code) missingFields.push("code");
+      if (!transactionData.points_cost) missingFields.push("points_cost");
+      if (!transactionData.productId) missingFields.push("productId");
+      if (!transactionData.status) missingFields.push("status");
+
+      if (missingFields.length > 0) {
+          return res.status(400).json({
+              success: false,
+              message: `Missing required fields: ${missingFields.join(", ")}`
+          });
+      }
+
+      // Add timestamp if not provided
+      if (!transactionData.createdAt) {
+          transactionData.createdAt = new Date();
+      }
+
+      // Insert transaction using the model
+      const newTransaction = await insertTransaction(transactionData);
+
+      res.status(201).json({
+          success: true,
+          data: newTransaction
+      });
+
+  } catch (error) {
+      console.error("Controller error creating transaction:", error);
+      res.status(500).json({
+          success: false,
+          message: "Failed to create transaction",
+          error: error.message
+      });
   }
 };

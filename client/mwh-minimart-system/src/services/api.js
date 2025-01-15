@@ -159,7 +159,11 @@ export const getAchievements = async () => {
   }
 };
 
-// get mock data
+/////////////////////
+// MINIMART SYSTEM //
+/////////////////////
+
+// get minimart products
 export const getMinimartProducts = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/minimart/product/all`);
@@ -174,6 +178,36 @@ export const getMinimartProducts = async () => {
     
   } catch (error) {
     console.error("Error fetching minimart products:", error);
+    throw error;
+  }
+};
+
+// insert transaction history (buying a product)
+export const enterTransaction = async (input_code, input_points_cost, input_products) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/minimart/product/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        code: input_code,
+        points_cost: input_points_cost,
+        productId: input_products,
+        status: "unclaimed"
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch entering transaction: ${response.status}`);
+    }
+
+    const products = await response.json();
+
+    return products;
+    
+  } catch (error) {
+    console.error("Error fetching entering transaction:", error);
     throw error;
   }
 };
