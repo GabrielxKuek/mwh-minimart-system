@@ -1,11 +1,14 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; 
+import Login from "./pages/Login";
 import UserManagement from "./pages/UserManagement";
 import RequestManagement from "./pages/RequestManagement";
 import InventoryManagement from "./pages/InventoryManagement";
 import Achievements from "./pages/Achievements";
 import Leaderboard from "./pages/Leaderboard";
+import Vouchers from "./pages/Vouchers";
+import Minimart from "./pages/Minimart";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 
@@ -17,6 +20,9 @@ function App() {
           <ul className="flex space-x-4">
             <li>
               <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/login ">Login</Link>
             </li>
             <li>
               <Link to="/user-management">User Management</Link>
@@ -32,6 +38,12 @@ function App() {
             </li>
             <li>
               <Link to="/leaderboard">Leaderboard</Link>
+            </li>
+            <li>
+              <Link to="/minimart">Minimart</Link>
+            </li>
+            <li>
+              <Link to="/vouchers">Vouchers</Link>
             </li>
           </ul>
         </nav>
@@ -68,6 +80,15 @@ function App() {
             }
           />
           <Route
+            path="/login"
+            element={
+              <>
+                <Login />
+                <ToastContainer />
+              </>
+            }
+          />
+          <Route
             path="/request-management"
             element={
               <>
@@ -87,6 +108,8 @@ function App() {
           />
           <Route path="/achievements" element={<Achievements />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/minimart" element={<Minimart />} />
+          <Route path="/vouchers" element={<Vouchers />} />
         </Routes>
       </div>
     </Router>
