@@ -23,7 +23,7 @@ const ProtectedRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
-// Add this new component after ProtectedRoute
+// Role Protected Route wrapper component
 const RoleProtectedRoute = ({ children, allowedRoles }) => {
   const { isAuthenticated } = useAuth();
   const roleId = sessionStorage.getItem('roleId');
@@ -32,7 +32,7 @@ const RoleProtectedRoute = ({ children, allowedRoles }) => {
     return <Navigate to="/login" replace />;
   }
   
-  return allowedRoles.includes(roleId) ? children : <Navigate to="/user-management" replace />;
+  return allowedRoles.includes(roleId) ? children : <Navigate to="/login" replace />;
 };
 
 RoleProtectedRoute.propTypes = {
@@ -44,12 +44,25 @@ const Navigation = () => {
   const { logout } = useAuth();
   const roleId = sessionStorage.getItem('roleId');
   const isAdmin = roleId === 'admin';
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const timeoutRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    clearTimeout(timeoutRef.current);
+    setIsDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setIsDropdownOpen(false);
+    }, 200);
+  };
 
   return (
     <nav className="mb-4">
       <ul className="flex space-x-4">
         <li>
-          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/">Home</Link>
         </li>
         {isAdmin && (
           <>
@@ -122,104 +135,22 @@ const Layout = ({ children }) => {
 };
 
 function App() {
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const timeoutRef = useRef(null);
-  
-    const handleMouseEnter = () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      setIsDropdownOpen(true);
-    };
-  
-    const handleMouseLeave = () => {
-      timeoutRef.current = setTimeout(() => {
-        setIsDropdownOpen(false);
-      }, 1000); // 3 seconds delay
-    };
   return (
     <AuthProvider>
       <Router>
         <Layout>
           <Routes>
-            <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Login />} />
-
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <h1>Dashboard</h1>
-                </ProtectedRoute>
-              }
-            />
-
-            {/* Update admin routes to use RoleProtectedRoute */}
-            <Route
-              path="/user-management"
-              element={
-                <RoleProtectedRoute allowedRoles={['admin']}>
-                  <UserManagement />
-                </RoleProtectedRoute>
-              }
-            />
-            
-            <Route
-              path="/request-management"
-              element={
-                <RoleProtectedRoute allowedRoles={['admin']}>
-                  <RequestManagement />
-                </RoleProtectedRoute>
-              }
-            />
-            
-            <Route
-              path="/inventory-management"
-              element={
-                <RoleProtectedRoute allowedRoles={['admin']}>
-                  <InventoryManagement />
-                </RoleProtectedRoute>
-              }
-            />
-            
-            {/* Keep regular protected routes for non-admin pages */}
-            <Route
-              path="/achievements"
-              element={
-                <ProtectedRoute>
-                  <Achievements />
-                </ProtectedRoute>
-              }
-            />
-            
-            <Route
-              path="/leaderboard"
-              element={
-                <ProtectedRoute>
-                  <Leaderboard />
-                </ProtectedRoute>
-              }
-            />
-            
-            <Route
-              path="/minimart"
-              element={
-                <ProtectedRoute>
-                  <Minimart />
-                </ProtectedRoute>
-              }
-            />
-            
-            <Route
-              path="/vouchers"
-              element={
-                <ProtectedRoute>
-                  <Vouchers />
-                </ProtectedRoute>
-              }
-            />
-            
-            <Route path="*" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<ProtectedRoute><UserManagement /></ProtectedRoute>} /> {/* Set a default route */}
+            <Route path="/user-management" element={<RoleProtectedRoute allowedRoles={['admin']}><UserManagement /></RoleProtectedRoute>} />
+            <Route path="/request-management" element={<RoleProtectedRoute allowedRoles={['admin']}><RequestManagement /></RoleProtectedRoute>} />
+            <Route path="/request-history" element={<RoleProtectedRoute allowedRoles={['admin']}><RequestHistory /></RoleProtectedRoute>} />
+            <Route path="/inventory-management" element={<RoleProtectedRoute allowedRoles={['admin']}><InventoryManagement /></RoleProtectedRoute>} />
+            <Route path="/task-management" element={<RoleProtectedRoute allowedRoles={['admin']}><TaskManagement /></RoleProtectedRoute>} />
+            <Route path="/achievements" element={<ProtectedRoute><Achievements /></ProtectedRoute>} />
+            <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
+            <Route path="/minimart" element={<ProtectedRoute><Minimart /></ProtectedRoute>} />
+            <Route path="/vouchers" element={<ProtectedRoute><Vouchers /></ProtectedRoute>} />
           </Routes>
         </Layout>
       </Router>
