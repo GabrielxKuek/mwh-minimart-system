@@ -44,6 +44,7 @@ import Leaderboard from "./pages/Leaderboard";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import TransactionManagement from "./pages/TransactionManagement";
+import Reports from "./pages/Reports";
 
 function App() {
   return (
@@ -68,6 +69,9 @@ function App() {
             </li>
             <li>
               <Link to="/transactions">Transaction Management</Link>
+            </li>
+            <li>
+              <Link to="/reports">Reports</Link>
             </li>
           </ul>
         </nav>
@@ -116,6 +120,7 @@ function App() {
 
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/transactions" element={<TransactionManagement />} />
+          <Route path="/reports" element={<Reports />} />
         </Routes>
       </div>
     </Router>
