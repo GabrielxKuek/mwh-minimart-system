@@ -1,4 +1,3 @@
-// server/src/controllers/inventoryController.js
 const inventoryModel = require("../models/inventoryModel");
 
 const inventoryController = {
