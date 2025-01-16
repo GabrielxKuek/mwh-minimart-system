@@ -231,6 +231,47 @@ export const getCurrentPoints = async (userId) => {
   }
 };
 
+export const createRequest = async (product_id, quantity, userId) => {
+  try {
+    // Ensure proper prefixes are present
+    const formattedProductId = product_id.startsWith('products/') ? product_id : `products/${product_id}`;
+    const formattedUserId = userId.startsWith('users/') ? userId : `users/${userId}`;
+   
+    const response = await fetch(`${API_BASE_URL}/minimart/request`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        product_id: formattedProductId,
+        quantity: parseInt(quantity),
+        user_id: formattedUserId,
+        status_id: "pending"  // Using string status instead of number
+      })
+    });
+
+    const responseText = await response.text();
+   
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (e) {
+      console.error('Response was not JSON:', responseText);
+      throw new Error('Invalid server response');
+    }
+    
+    if (!response.ok) {
+      throw new Error(data.message || `Request failed with status: ${response.status}`);
+    }
+    return data;
+   
+  } catch (error) {
+    console.error("Error creating request:", error);
+    throw error;
+  }
+};
+
 ////////////////////
 // VOUCHER SYSTEM //
 ////////////////////

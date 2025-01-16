@@ -6,6 +6,7 @@ const { db } = require("../configs/firebase");
 
 // config
 const transactionCollection = collection(db, "transactions");
+const requestCollection = collection(db, "requests");
 
 module.exports.selectAllProducts = async () => {
     try {
@@ -114,3 +115,13 @@ module.exports.decrementProductQuantity = async (productId, purchaseQuantity) =>
         throw error;
     }
 };
+
+module.exports.insertRequest = async (data) => {
+    try {
+        const docRef = await addDoc(requestCollection, data);
+        return { id: docRef.id, ...data };
+    } catch (error) {
+        console.error("Error adding request:", error);
+        throw error;
+    }
+}

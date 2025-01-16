@@ -154,7 +154,7 @@
 //     })
 // }
 
-const { selectAllProducts, insertTransaction, decrementUserPoints, decrementProductQuantity } = require('../models/minimartModel');
+const { selectAllProducts, insertTransaction, decrementUserPoints, decrementProductQuantity, insertRequest } = require('../models/minimartModel');
 
 module.exports.readAllProductByAll = async (req, res, next) => {
   try {
@@ -296,6 +296,50 @@ module.exports.decreaseProductQuantity = async (req, res, next) => {
         success: false,
         message: "Failed to update product quantity",
         error: error.message
+    });
+  }
+};
+
+module.exports.createRequest = async (req, res) => {
+  try {
+    const requestData = req.body;
+    
+    // Validate required fields
+    const missingFields = [];
+    if (!requestData.product_id) missingFields.push("product_id");
+    if (!requestData.quantity) missingFields.push("quantity");
+    if (!requestData.user_id) missingFields.push("user_id");
+    if (!requestData.status_id) missingFields.push("status_id");
+
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Missing required fields: ${missingFields.join(", ")}`
+      });
+    }
+
+    // Ensure the data structure matches exactly what we want in Firebase
+    const cleanedData = {
+      product_id: requestData.product_id,  // Keep the products/ prefix
+      quantity: parseInt(requestData.quantity),
+      user_id: requestData.user_id,        // Keep the users/ prefix
+      status_id: requestData.status_id     // Keep as string
+    };
+
+    // Insert request using the model
+    const newRequest = await insertRequest(cleanedData);
+
+    res.status(201).json({
+      success: true,
+      data: newRequest
+    });
+
+  } catch (error) {
+    console.error("Controller error creating request:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to create request",
+      error: error.message
     });
   }
 };

@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { addTransaction } from "../../services/api";
+import { addTransaction, createRequest } from "../../services/api";
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import PurchaseDialog from './PurchaseDialog';
@@ -39,6 +39,28 @@ const ItemCard = ({ item, onPurchaseComplete }) => {
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
   }, []);
+
+  const handleRequest = async () => {
+    setIsSubmitting(true);
+    setError(null);
+    
+    try {
+      const userId = sessionStorage.getItem('userId');
+      await createRequest(item.product_id, 1, userId);
+      
+      // Show success state (you might want to add a toast notification here)
+      // Reset any relevant state
+      setIsSubmitting(false);
+      
+      // Optionally refresh the parent component
+      if (onPurchaseComplete) {
+        onPurchaseComplete(item.product_id);
+      }
+    } catch (error) {
+      setError(error.message || 'Failed to request product');
+      setIsSubmitting(false);
+    }
+  };
 
   const handlePurchase = async () => {
     setIsSubmitting(true);
@@ -114,9 +136,10 @@ const ItemCard = ({ item, onPurchaseComplete }) => {
             <Button
               variant="outline"
               className="w-full bg-orange-50 border-orange-300 text-orange-600 hover:bg-orange-100"
-              onClick={() => console.log(`Requesting ${item.name}`)}
+              onClick={handleRequest}
+              disabled={isSubmitting}
             >
-              Request Item
+              {isSubmitting ? 'Submitting Request...' : 'Request Item'}
             </Button>
           ) : (
             <Button
@@ -125,6 +148,9 @@ const ItemCard = ({ item, onPurchaseComplete }) => {
             >
               Purchase Voucher
             </Button>
+          )}
+          {error && (
+            <p className="mt-2 text-sm text-red-500 text-center">{error}</p>
           )}
         </CardContent>
       </Card>
