@@ -8,6 +8,13 @@ import ProductTab from './ProductTab';
 import PropTypes from 'prop-types';
 
 const VoucherDetailsDialog = ({ open, onOpenChange, voucher }) => {
+    const getTotalQuantity = (productIdArray) => {
+        return productIdArray.reduce((total, item) => {
+            const quantity = Object.values(item)[0];
+            return total + quantity;
+        }, 0);
+    };
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-3xl max-h-[80vh]">
@@ -27,7 +34,7 @@ const VoucherDetailsDialog = ({ open, onOpenChange, voucher }) => {
                             </div>
                             <div>
                                 <span className="text-sm text-gray-600">Quantity:</span>
-                                <p className="font-medium text-indigo-700">{voucher.purchaseQuantity}</p>
+                                <p className="font-medium text-indigo-700">{getTotalQuantity(voucher.productId)}</p>
                             </div>
                         </div>
                        
@@ -56,7 +63,6 @@ VoucherDetailsDialog.propTypes = {
     voucher: PropTypes.shape({
         code: PropTypes.string.isRequired,
         points_cost: PropTypes.number.isRequired,
-        purchaseQuantity: PropTypes.number.isRequired,
         productId: PropTypes.arrayOf(PropTypes.object).isRequired,
     }).isRequired,
 };

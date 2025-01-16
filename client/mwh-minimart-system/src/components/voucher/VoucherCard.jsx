@@ -50,21 +50,31 @@ const VoucherCard = ({ voucher }) => {
         fetchProducts();
     }, [voucher.productId]);
 
+    const getTotalQuantity = (productIdArray) => {
+        return productIdArray.reduce((total, item) => {
+            const quantity = Object.values(item)[0];
+            return total + quantity;
+        }, 0);
+    };
+
+    const isClaimed = voucher.status === "claimed";
+    const cardClassName = `h-full flex flex-col ${isClaimed ? 'opacity-60 bg-gray-50' : ''}`;
+
     return (
         <>
-            <Card className="h-full flex flex-col">
+            <Card className={cardClassName}>
                 <CardHeader className="space-y-4 flex-1">
                     <div className="flex justify-between items-start">
-                        <CardTitle className="text-xl font-semibold text-indigo-700">
+                        <CardTitle className={`text-xl font-semibold ${isClaimed ? 'text-gray-500' : 'text-indigo-700'}`}>
                             {voucher.code}
                         </CardTitle>
                         <Badge
                             variant="secondary"
-                            className={`${
-                                voucher.status === "unclaimed"
-                                    ? 'bg-indigo-100 text-indigo-700'
-                                    : 'bg-gray-100 text-gray-700'
-                            }`}
+                            className={
+                                isClaimed
+                                    ? 'bg-gray-100 text-gray-500'
+                                    : 'bg-indigo-100 text-indigo-700'
+                            }
                         >
                             {voucher.status}
                         </Badge>
@@ -72,7 +82,7 @@ const VoucherCard = ({ voucher }) => {
                     <div className="flex flex-col gap-3">
                         <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-2 text-sm text-gray-500">
-                                <Clock className="h-4 w-4 text-indigo-500" />
+                                <Clock className={`h-4 w-4 ${isClaimed ? 'text-gray-400' : 'text-indigo-500'}`} />
                                 <span>Created</span>
                             </div>
                             <span className="text-sm font-medium text-gray-700 pl-6">
@@ -81,7 +91,7 @@ const VoucherCard = ({ voucher }) => {
                         </div>
                         <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-2 text-sm text-gray-500">
-                                <Package className="h-4 w-4 text-indigo-500" />
+                                <Package className={`h-4 w-4 ${isClaimed ? 'text-gray-400' : 'text-indigo-500'}`} />
                                 <span>Products</span>
                             </div>
                             {loading ? (
@@ -89,8 +99,9 @@ const VoucherCard = ({ voucher }) => {
                             ) : (
                                 <ul className="pl-6 space-y-1 mt-1">
                                     {products.map((product, index) => (
-                                        <li key={index} className="text-sm text-gray-700">
-                                            {product.name}
+                                        <li key={index} className="text-sm text-gray-700 flex justify-between items-center">
+                                            <span>{product.name}</span>
+                                            <span className="text-gray-500">x{Object.values(voucher.productId[index])[0]}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -101,7 +112,11 @@ const VoucherCard = ({ voucher }) => {
                 <CardContent>
                     <Button
                         variant="outline"
-                        className="w-full border-indigo-200 hover:bg-indigo-50"
+                        className={`w-full ${
+                            isClaimed 
+                                ? 'border-gray-200 text-gray-500 hover:bg-gray-50'
+                                : 'border-indigo-200 hover:bg-indigo-50'
+                        }`}
                         onClick={() => setShowDetails(true)}
                     >
                         View Details
