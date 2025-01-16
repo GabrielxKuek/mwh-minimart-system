@@ -276,3 +276,23 @@ export const getVoucherProductById = async (voucherProducts) => {
     throw error;
   }
 };
+
+export const getTotalUsers = async () => {
+  const response = await api.get("/dashboard/data");
+  return response.data.totalUsers;
+};
+
+export const getTotalPendingRequests = async () => {
+  const response = await api.get("/dashboard/data");
+  return response.data.totalPendingRequests;
+};
+
+export const getLowStockItems = async () => {
+  const response = await api.get("/dashboard/data");
+  return response.data.lowStockItems;
+};
+
+export const getRecentChanges = async () => {
+  const response = await api.get("/dashboard/data");
+  return response.data.recentChanges;
+};

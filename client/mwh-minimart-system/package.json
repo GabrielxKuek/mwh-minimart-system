@@ -38,6 +38,7 @@
     "react-dropzone": "^14.3.5",
     "react-router-dom": "^7.1.1",
     "react-toastify": "^11.0.2",
+    "recharts": "^2.15.0",
     "rollup": "^4.30.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7"

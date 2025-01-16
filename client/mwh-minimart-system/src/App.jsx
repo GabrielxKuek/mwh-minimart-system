@@ -12,6 +12,7 @@ import Achievements from "./pages/Achievements";
 import Leaderboard from "./pages/Leaderboard";
 import Vouchers from "./pages/Vouchers";
 import Minimart from "./pages/Minimart";
+import Dashboard from "./pages/Dashboard"; // Import the Dashboard component
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import { useState, useRef } from "react";
@@ -62,7 +63,7 @@ const Navigation = () => {
     <nav className="mb-4">
       <ul className="flex space-x-4">
         <li>
-          <Link to="/">Home</Link>
+          <Link to="/dashboard">Home</Link>
         </li>
         {isAdmin && (
           <>
@@ -140,8 +141,9 @@ function App() {
       <Router>
         <Layout>
           <Routes>
+            <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<ProtectedRoute><UserManagement /></ProtectedRoute>} /> {/* Set a default route */}
+            <Route path="/dashboard" element={<RoleProtectedRoute allowedRoles={['admin']}><Dashboard /></RoleProtectedRoute>} />
             <Route path="/user-management" element={<RoleProtectedRoute allowedRoles={['admin']}><UserManagement /></RoleProtectedRoute>} />
             <Route path="/request-management" element={<RoleProtectedRoute allowedRoles={['admin']}><RequestManagement /></RoleProtectedRoute>} />
             <Route path="/request-history" element={<RoleProtectedRoute allowedRoles={['admin']}><RequestHistory /></RoleProtectedRoute>} />
