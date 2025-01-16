@@ -52,8 +52,8 @@ const VoucherCard = ({ voucher }) => {
 
     return (
         <>
-            <Card className="h-full">
-                <CardHeader className="space-y-4">
+            <Card className="h-full flex flex-col">
+                <CardHeader className="space-y-4 flex-1">
                     <div className="flex justify-between items-start">
                         <CardTitle className="text-xl font-semibold text-indigo-700">
                             {voucher.code}
