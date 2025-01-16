@@ -213,3 +213,26 @@ export const enterTransaction = async (input_code, input_points_cost, input_prod
     throw error;
   }
 };
+
+////////////////////
+// VOUCHER SYSTEM //
+////////////////////
+
+// get vouchers
+export const getVoucherByAll = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/voucher/all`);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch vouchers: ${response.status}`);
+    }
+
+    const vouchers = await response.json();
+
+    return vouchers;
+    
+  } catch (error) {
+    console.error("Error fetching vouchers:", error);
+    throw error;
+  }
+};
