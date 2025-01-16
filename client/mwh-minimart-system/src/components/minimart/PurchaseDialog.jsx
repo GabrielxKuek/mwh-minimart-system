@@ -22,7 +22,7 @@ const PurchaseDialog = ({
           <div>
             <h2 className="text-lg font-semibold">Purchase {itemName}</h2>
             <p className="text-sm text-gray-500 mt-1">
-              Enter the quantity you would like to purchase. This will cost {pointsPerItem} points per item.
+              Enter the quantity you would like to purchase. This will cost {pointsPerItem} points per voucher.
             </p>
           </div>
 
