@@ -25,6 +25,7 @@ import Vouchers from "./pages/Vouchers";
 import Minimart from "./pages/Minimart";
 import Tasks from "./pages/Tasks";
 import TransactionManagement from "./pages/TransactionManagement";
+import Profile from "./pages/Profile";
 import Reports from "./pages/Reports";
 
 // Constants
@@ -207,6 +208,15 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <Vouchers />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />
