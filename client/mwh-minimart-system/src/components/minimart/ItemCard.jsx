@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { enterTransaction } from "../../services/api";
+import { addTransaction } from "../../services/api";
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import PurchaseDialog from './PurchaseDialog';
@@ -47,16 +47,18 @@ const ItemCard = ({ item, onPurchaseComplete }) => {
     try {
       const productQuantity = parseInt(purchaseQuantity);
       const totalPoints = points * productQuantity;
+      const userId = sessionStorage.getItem('userId');
       
       // Create products object with proper format
       const products = [{
         [item.product_id]: productQuantity
       }];
 
-      await enterTransaction(
+      await addTransaction(
         generateTransactionId(),
         totalPoints,
-        products
+        products,
+        userId
       );
       
       // Reset dialog state

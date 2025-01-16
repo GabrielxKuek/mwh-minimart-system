@@ -282,7 +282,7 @@ module.exports.decreaseProductQuantity = async (req, res, next) => {
     if (Array.isArray(productId)) {
       cleaned_productId = productId[0];
     }
-    
+
     // Call model function to update quantity
     await decrementProductQuantity(cleaned_productId, purchaseQuantity);
 
