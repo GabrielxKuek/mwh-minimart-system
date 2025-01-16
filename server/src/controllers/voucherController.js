@@ -11,10 +11,10 @@ module.exports.readVoucherByAll = async (req, res, next) => {
 }
 
 module.exports.readVoucherProductById = async (req, res, next) => {
-    const { voucherId } = req.params;
+    const { productId } = req.params;
 
     try {
-        const data = await selectVoucherProductById(voucherId);
+        const data = await selectVoucherProductById(productId);
         res.status(200).json(data);
     } catch (error) {
         console.error("Error fetching data:", error);

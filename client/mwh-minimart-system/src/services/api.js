@@ -238,20 +238,29 @@ export const getVoucherByAll = async () => {
 };
 
 // get products from voucher
-export const getVoucherProductByAll = async () => {
+export const getVoucherProductById = async (voucherProducts) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/voucher/all`);
+    // Create an array of promises for each product request
+    const productPromises = voucherProducts.map(async (productObj) => {
+      const [productId, quantity] = Object.entries(productObj)[0];
+      
+      const response = await fetch(`${API_BASE_URL}/voucher/product/${productId}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch product ${productId}: ${response.status}`);
+      }
+      
+      const product = await response.json();
+      return {
+        ...product,
+        quantity: quantity
+      };
+    });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch vouchers: ${response.status}`);
-    }
-
-    const vouchers = await response.json();
-
-    return vouchers;
-    
+    const products = await Promise.all(productPromises);
+    return products;
+   
   } catch (error) {
-    console.error("Error fetching vouchers:", error);
+    console.error("Error fetching voucher products:", error);
     throw error;
   }
 };

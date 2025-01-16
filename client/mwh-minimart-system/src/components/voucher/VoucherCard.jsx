@@ -6,16 +6,16 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock } from "lucide-react";
+import { Clock, Package } from "lucide-react";
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import VoucherDetailsDialog from './VoucherDetailsDialog';
+import { getVoucherProductById } from "../../services/api";
 
 const formatDateTime = (timestamp) => {
     try {
-        // Convert Firestore timestamp to JavaScript Date
         const date = new Date(timestamp.seconds * 1000);
-        
+       
         return date.toLocaleString('en-US', {
             year: 'numeric',
             month: 'long',
@@ -32,6 +32,23 @@ const formatDateTime = (timestamp) => {
 
 const VoucherCard = ({ voucher }) => {
     const [showDetails, setShowDetails] = useState(false);
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const productDetails = await getVoucherProductById(voucher.productId);
+                setProducts(productDetails);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, [voucher.productId]);
 
     return (
         <>
@@ -41,8 +58,8 @@ const VoucherCard = ({ voucher }) => {
                         <CardTitle className="text-xl font-semibold text-indigo-700">
                             {voucher.code}
                         </CardTitle>
-                        <Badge 
-                            variant="secondary" 
+                        <Badge
+                            variant="secondary"
                             className={`${
                                 voucher.status === "unclaimed"
                                     ? 'bg-indigo-100 text-indigo-700'
@@ -52,14 +69,33 @@ const VoucherCard = ({ voucher }) => {
                             {voucher.status}
                         </Badge>
                     </div>
-                    <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                            <Clock className="h-4 w-4 text-indigo-500" />
-                            <span>Created</span>
+                    <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-2 text-sm text-gray-500">
+                                <Clock className="h-4 w-4 text-indigo-500" />
+                                <span>Created</span>
+                            </div>
+                            <span className="text-sm font-medium text-gray-700 pl-6">
+                                {formatDateTime(voucher.createdAt)}
+                            </span>
                         </div>
-                        <span className="text-sm font-medium text-gray-700 pl-6">
-                            {formatDateTime(voucher.createdAt)}
-                        </span>
+                        <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-2 text-sm text-gray-500">
+                                <Package className="h-4 w-4 text-indigo-500" />
+                                <span>Products</span>
+                            </div>
+                            {loading ? (
+                                <div className="pl-2 text-sm text-gray-400">Loading products...</div>
+                            ) : (
+                                <ul className="pl-6 space-y-1 mt-1">
+                                    {products.map((product, index) => (
+                                        <li key={index} className="text-sm text-gray-700">
+                                            {product.name}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
                     </div>
                 </CardHeader>
                 <CardContent>
@@ -72,9 +108,8 @@ const VoucherCard = ({ voucher }) => {
                     </Button>
                 </CardContent>
             </Card>
-
-            <VoucherDetailsDialog 
-                open={showDetails} 
+            <VoucherDetailsDialog
+                open={showDetails}
                 onOpenChange={setShowDetails}
                 voucher={voucher}
             />
