@@ -68,7 +68,7 @@ const ItemCard = ({ item, onPurchaseComplete }) => {
         onPurchaseComplete(item.product_id);
       }
     } catch (error) {
-      setError(error.message || 'Failed to purchase item');
+      setError(error.message || 'Failed to purchase product');
     } finally {
       setIsSubmitting(false);
     }
@@ -121,7 +121,7 @@ const ItemCard = ({ item, onPurchaseComplete }) => {
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
               onClick={() => setIsPurchaseDialogOpen(true)}
             >
-              Purchase Item
+              Purchase Voucher
             </Button>
           )}
         </CardContent>
