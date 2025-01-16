@@ -166,7 +166,7 @@ export const getAchievements = async () => {
 // get minimart products
 export const getMinimartProducts = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/minimart/product/all`);
+    const response = await fetch(`${API_BASE_URL}/minimart/all`);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch minimart products: ${response.status}`);
@@ -185,29 +185,82 @@ export const getMinimartProducts = async () => {
 // insert transaction history (buying a product)
 export const enterTransaction = async (input_code, input_points_cost, input_products) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/minimart/product/create`, {
+    const response = await fetch(`${API_BASE_URL}/minimart/purchase`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         code: input_code,
-        points_cost: input_points_cost,
+        points_cost: parseInt(input_points_cost), // Ensure it's a number
         productId: input_products,
-        status: "unclaimed"
+        status: "unclaimed",
+        userId: "3rrxuSJYEFH3uT5TkApi",
+        purchaseQuantity: 1
       })
     });
 
+    const data = await response.json();
+    
     if (!response.ok) {
-      throw new Error(`Failed to fetch entering transaction: ${response.status}`);
+      throw new Error(data.message || `Failed to complete transaction: ${response.status}`);
     }
 
-    const products = await response.json();
+    return data;
+   
+  } catch (error) {
+    console.error("Error in transaction:", error);
+    throw error;
+  }
+};
 
-    return products;
+////////////////////
+// VOUCHER SYSTEM //
+////////////////////
+
+// get vouchers
+export const getVoucherByAll = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/voucher/all`);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch vouchers: ${response.status}`);
+    }
+
+    const vouchers = await response.json();
+
+    return vouchers;
     
   } catch (error) {
-    console.error("Error fetching entering transaction:", error);
+    console.error("Error fetching vouchers:", error);
+    throw error;
+  }
+};
+
+// get products from voucher
+export const getVoucherProductById = async (voucherProducts) => {
+  try {
+    // Create an array of promises for each product request
+    const productPromises = voucherProducts.map(async (productObj) => {
+      const [productId, quantity] = Object.entries(productObj)[0];
+      
+      const response = await fetch(`${API_BASE_URL}/voucher/product/${productId}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch product ${productId}: ${response.status}`);
+      }
+      
+      const product = await response.json();
+      return {
+        ...product,
+        quantity: quantity
+      };
+    });
+
+    const products = await Promise.all(productPromises);
+    return products;
+   
+  } catch (error) {
+    console.error("Error fetching voucher products:", error);
     throw error;
   }
 };

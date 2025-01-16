@@ -20,7 +20,7 @@ function generateTransactionId() {
   ).join('');
 }
 
-const ItemCard = ({ item }) => {
+const ItemCard = ({ item, onPurchaseComplete }) => {
   const [isPurchaseDialogOpen, setIsPurchaseDialogOpen] = useState(false);
   const [purchaseQuantity, setPurchaseQuantity] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,9 +58,17 @@ const ItemCard = ({ item }) => {
         totalPoints,
         products
       );
+      
+      // Reset dialog state
       setIsPurchaseDialogOpen(false);
+      setPurchaseQuantity(1);
+      
+      // Notify parent component to refresh data
+      if (onPurchaseComplete) {
+        onPurchaseComplete(item.product_id);
+      }
     } catch (error) {
-      setError(error.message || 'Failed to purchase item');
+      setError(error.message || 'Failed to purchase product');
     } finally {
       setIsSubmitting(false);
     }
@@ -113,7 +121,7 @@ const ItemCard = ({ item }) => {
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
               onClick={() => setIsPurchaseDialogOpen(true)}
             >
-              Purchase Item
+              Purchase Voucher
             </Button>
           )}
         </CardContent>
@@ -149,6 +157,7 @@ ItemCard.propTypes = {
       PropTypes.number
     ]).isRequired,
   }).isRequired,
+  onPurchaseComplete: PropTypes.func,
 };
 
 export default ItemCard;
