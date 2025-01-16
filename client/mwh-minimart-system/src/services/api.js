@@ -354,6 +354,7 @@ export const getLowStockItems = async () => {
 export const getRecentChanges = async () => {
   const response = await api.get("/dashboard/data");
   return response.data.recentChanges;
+};
 // Transaction Management API Calls
 export const getTransactions = async () => {
   const response = await api.get("/transactions"); // No need for manual headers

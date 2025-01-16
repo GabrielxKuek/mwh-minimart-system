@@ -25,8 +25,6 @@ import Minimart from "./pages/Minimart";
 import Dashboard from "./pages/Dashboard"; // Import the Dashboard component
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
-import { useState, useRef } from "react";
-import PropTypes from 'prop-types';
 import Task from "./pages/Tasks";
 import TransactionManagement from "./pages/TransactionManagement";
 import Reports from "./pages/Reports";
@@ -194,7 +192,7 @@ function App() {
               path="/dashboard"
               element={
                 <ProtectedRoute>
-                  <h1>Dashboard</h1>
+                  <Dashboard/>
                 </ProtectedRoute>
               }
             />
