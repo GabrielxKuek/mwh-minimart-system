@@ -11,8 +11,23 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import VoucherDetailsDialog from './VoucherDetailsDialog';
 
-const formatDateTime = (dateString) => {
-    return dateString;
+const formatDateTime = (timestamp) => {
+    try {
+        // Convert Firestore timestamp to JavaScript Date
+        const date = new Date(timestamp.seconds * 1000);
+        
+        return date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        });
+    } catch (error) {
+        console.error('Date formatting error:', error);
+        return 'Invalid date';
+    }
 };
 
 const VoucherCard = ({ voucher }) => {
@@ -20,49 +35,49 @@ const VoucherCard = ({ voucher }) => {
 
     return (
         <>
-        <Card className="h-full">
-            <CardHeader className="space-y-4">
-            <div className="flex justify-between items-start">
-                <CardTitle className="text-xl font-semibold text-indigo-700">
-                {voucher.code}
-                </CardTitle>
-                <Badge 
-                variant="secondary" 
-                className={`${
-                    voucher.status === "unclaimed"
-                    ? 'bg-indigo-100 text-indigo-700'
-                    : 'bg-gray-100 text-gray-700'
-                }`}
-                >
-                {voucher.status}
-                </Badge>
-            </div>
-            <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-2 text-sm text-gray-700">
-                    <Clock className="h-4 w-4 text-indigo-500" />
-                    <span>Created</span>
-                </div>
-                <span className="text-sm font-medium pl-6 text-gray-500">
-                    {formatDateTime(voucher.createdAt)}
-                </span>
-            </div>
-            </CardHeader>
-            <CardContent>
-            <Button
-                variant="outline"
-                className="w-full border-indigo-200 hover:bg-indigo-50"
-                onClick={() => setShowDetails(true)}
-            >
-                View Details
-            </Button>
-            </CardContent>
-        </Card>
+            <Card className="h-full">
+                <CardHeader className="space-y-4">
+                    <div className="flex justify-between items-start">
+                        <CardTitle className="text-xl font-semibold text-indigo-700">
+                            {voucher.code}
+                        </CardTitle>
+                        <Badge 
+                            variant="secondary" 
+                            className={`${
+                                voucher.status === "unclaimed"
+                                    ? 'bg-indigo-100 text-indigo-700'
+                                    : 'bg-gray-100 text-gray-700'
+                            }`}
+                        >
+                            {voucher.status}
+                        </Badge>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <Clock className="h-4 w-4 text-indigo-500" />
+                            <span>Created</span>
+                        </div>
+                        <span className="text-sm font-medium text-gray-700 pl-6">
+                            {formatDateTime(voucher.createdAt)}
+                        </span>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <Button
+                        variant="outline"
+                        className="w-full border-indigo-200 hover:bg-indigo-50"
+                        onClick={() => setShowDetails(true)}
+                    >
+                        View Details
+                    </Button>
+                </CardContent>
+            </Card>
 
-        <VoucherDetailsDialog 
-            open={showDetails} 
-            onOpenChange={setShowDetails}
-            voucher={voucher}
-        />
+            <VoucherDetailsDialog 
+                open={showDetails} 
+                onOpenChange={setShowDetails}
+                voucher={voucher}
+            />
         </>
     );
 };
@@ -70,12 +85,15 @@ const VoucherCard = ({ voucher }) => {
 VoucherCard.propTypes = {
     voucher: PropTypes.shape({
         code: PropTypes.string.isRequired,
-        createdAt: PropTypes.string.isRequired,
+        createdAt: PropTypes.shape({
+            seconds: PropTypes.number.isRequired,
+            nanoseconds: PropTypes.number.isRequired
+        }).isRequired,
         status: PropTypes.string.isRequired,
         productId: PropTypes.arrayOf(PropTypes.object).isRequired,
         points_cost: PropTypes.number.isRequired,
-        purchaseQuantity: PropTypes.number.isRequired,
-        userId: PropTypes.string.isRequired,
+        purchaseQuantity: PropTypes.number,
+        userId: PropTypes.string,
     }).isRequired,
 };
 

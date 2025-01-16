@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Separator } from "@/components/ui/separator";
 import VoucherCard from "../components/voucher/VoucherCard";
+import { getVoucherByAll } from "../services/api";
 
 const Vouchers = () => {
   const [vouchers, setVouchers] = useState([]);
@@ -9,17 +10,9 @@ const Vouchers = () => {
 
   const fetchVouchers = useCallback(async () => {
     try {
-      const dummyVouchers = [
-        {
-          code: "OEO2H",
-          createdAt: "January 16, 2025 at 3:51:18 AM UTC+8",
-          points_cost: 10,
-          productId: [{ zZplkwEvX17jr7Vp8R5c: 1 }],
-          purchaseQuantity: 1,
-          status: "unclaimed"
-        },
-      ];
-      setVouchers(dummyVouchers);
+      const response = await getVoucherByAll();
+
+      setVouchers(response);
     } catch (error) {
       setError(error.message);
     } finally {
