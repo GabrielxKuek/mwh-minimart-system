@@ -154,7 +154,7 @@
 //     })
 // }
 
-const { selectAllProducts, insertTransaction } = require('../models/minimartModel');
+const { selectAllProducts, insertTransaction, decrementUserPoints, decrementProductQuantity } = require('../models/minimartModel');
 
 module.exports.readAllProductByAll = async (req, res, next) => {
   try {
@@ -166,10 +166,10 @@ module.exports.readAllProductByAll = async (req, res, next) => {
       product_id: product.id,
       name: product.name,
       description: product.description,
-      quantity: product.quantity,
+      quantity: Number(product.quantity), // Ensure it's a number
       image_url: product.imageUrl,
-      point: product.point
-    }));
+      point: Number(product.point) // Also convert point to number
+  }));
 
     // Send successful response
     res.status(200).send(formattedProducts);
@@ -185,42 +185,117 @@ module.exports.readAllProductByAll = async (req, res, next) => {
 
 module.exports.createTransaction = async (req, res) => {
   try {
-      const transactionData = req.body;
-      
-      // Validate required fields
-      const missingFields = [];
+    const transactionData = req.body;
+    
+    // Validate required fields
+    const missingFields = [];
 
-      if (!transactionData.code) missingFields.push("code");
-      if (!transactionData.points_cost) missingFields.push("points_cost");
-      if (!transactionData.productId) missingFields.push("productId");
-      if (!transactionData.status) missingFields.push("status");
+    if (!transactionData.code) missingFields.push("code");
+    if (!transactionData.points_cost) missingFields.push("points_cost");
+    if (!transactionData.productId) missingFields.push("productId");
+    if (!transactionData.status) missingFields.push("status");
 
-      if (missingFields.length > 0) {
-          return res.status(400).json({
-              success: false,
-              message: `Missing required fields: ${missingFields.join(", ")}`
-          });
-      }
-
-      // Add timestamp if not provided
-      if (!transactionData.createdAt) {
-          transactionData.createdAt = new Date();
-      }
-
-      // Insert transaction using the model
-      const newTransaction = await insertTransaction(transactionData);
-
-      res.status(201).json({
-          success: true,
-          data: newTransaction
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Missing required fields: ${missingFields.join(", ")}`
       });
+    }
+
+    // Add timestamp if not provided
+    if (!transactionData.createdAt) {
+      transactionData.createdAt = new Date();
+    }
+
+    // Insert transaction using the model
+    const newTransaction = await insertTransaction(transactionData);
+
+    res.status(201).json({
+      success: true,
+      data: newTransaction
+    });
 
   } catch (error) {
-      console.error("Controller error creating transaction:", error);
-      res.status(500).json({
-          success: false,
-          message: "Failed to create transaction",
-          error: error.message
+    console.error("Controller error creating transaction:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to create transaction",
+      error: error.message
+    });
+  }
+};
+
+module.exports.decreaseUserPoints = async (req, res, next) => {
+  try {
+    const { userId, points_cost } = req.body;
+
+    // Validate required fields
+    const missingFields = [];
+    if (!userId) missingFields.push("userId");
+    if (!points_cost) missingFields.push("points_cost");
+
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Missing required fields: ${missingFields.join(", ")}`
       });
+    }
+
+    // Validate points is a positive number
+    if (points_cost <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Points to deduct must be greater than 0"
+      });
+    }
+
+    // Call the model function to update points
+    const result = await decrementUserPoints(userId, points_cost);
+
+    next()
+
+  } catch (error) {
+    console.error("Controller error decreasing user points:", error);
+    
+    // Generic error response
+    res.status(500).json({
+      success: false,
+      message: "Failed to decrease user points",
+      error: error.message
+    });
+  }
+};
+
+module.exports.decreaseProductQuantity = async (req, res, next) => {
+  try {
+    const { productId, purchaseQuantity } = req.body;
+
+    // Validate required fields
+    if (!productId || !purchaseQuantity) {
+      return res.status(400).json({
+        success: false,
+        message: "Product ID, purchase quantity, and purchaesQuantity are required"
+      });
+    }
+
+    // data cleaning
+    if (Array.isArray(productId)) {
+      cleaned_productId = productId[0];
+    }
+    
+    // Call model function to update quantity
+    await decrementProductQuantity(cleaned_productId, purchaseQuantity);
+
+    next()
+
+  } catch (error) {
+    console.error("Controller error updating product quantity:", error);
+
+    // Generic error response
+    res.status(500).json({
+        success: false,
+        message: "Failed to update product quantity",
+        error: error.message
+    });
   }
 };
