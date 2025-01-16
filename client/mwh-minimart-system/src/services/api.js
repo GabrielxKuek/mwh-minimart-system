@@ -236,18 +236,19 @@ export const getCurrentPoints = async (userId) => {
 ////////////////////
 
 // get vouchers
-export const getVoucherByAll = async () => {
+export const getVoucherByUserId = async (userId) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/voucher/all`);
-
+    const response = await fetch(`${API_BASE_URL}/voucher/userId`, {
+      headers: {
+        'userid': userId
+      }
+    });
     if (!response.ok) {
       throw new Error(`Failed to fetch vouchers: ${response.status}`);
     }
-
     const vouchers = await response.json();
-
     return vouchers;
-    
+   
   } catch (error) {
     console.error("Error fetching vouchers:", error);
     throw error;
