@@ -26,6 +26,31 @@ const requestController = {
       });
   },
 
+  addRequest: function (req, res) {
+    requestModel
+      .addRequest(req.body)
+      .then((request) => {
+        res.status(201).json(request);
+      })
+      .catch((error) => {
+        res.status(500).json({ error: error.message });
+      });
+  },
+
+  updateRequest: function (req, res) {
+    requestModel
+      .updateRequest(req.params.requestId, req.body)
+      .then((updatedRequest) => {
+        if (!updatedRequest) {
+          return res.status(404).json({ message: "Request not found" });
+        }
+        res.status(200).json(updatedRequest);
+      })
+      .catch((error) => {
+        res.status(500).json({ error: error.message });
+      });
+  },
+
   approveRequest: function (req, res) {
     requestModel
       .updateRequest(req.params.requestId, { status_id: "approved" })

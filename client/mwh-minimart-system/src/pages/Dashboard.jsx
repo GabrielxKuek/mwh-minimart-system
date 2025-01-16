@@ -6,12 +6,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { getTotalUsers, getTotalPendingRequests, getLowStockItems, getRecentChanges } from "../services/api";
+import { getTotalUsers, getTotalPendingRequests, getLowStockItems, getApprovedRequests, getRecentChanges } from "../services/api";
 
 const Dashboard = () => {
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalPendingRequests, setTotalPendingRequests] = useState(0);
   const [lowStockItems, setLowStockItems] = useState(0);
+  const [approvedRequests, setApprovedRequests] = useState([]);
   const [recentChanges, setRecentChanges] = useState([]);
   const [chartData, setChartData] = useState([]);
 
@@ -20,21 +21,17 @@ const Dashboard = () => {
       const users = await getTotalUsers();
       const pendingRequests = await getTotalPendingRequests();
       const lowStock = await getLowStockItems();
+      const approvedRequestsData = await getApprovedRequests();
       const changes = await getRecentChanges();
 
       setTotalUsers(users);
       setTotalPendingRequests(pendingRequests);
       setLowStockItems(lowStock);
+      setApprovedRequests(approvedRequestsData);
       setRecentChanges(changes);
 
-      // Example chart data
-      setChartData([
-        { name: "Jan", value: 30 },
-        { name: "Feb", value: 20 },
-        { name: "Mar", value: 50 },
-        { name: "Apr", value: 40 },
-        { name: "May", value: 60 },
-      ]);
+      // Set chart data
+      setChartData(approvedRequestsData);
     };
 
     fetchData();
@@ -87,7 +84,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Bar Chart</CardTitle>
+            <CardTitle>Products Approved</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -95,7 +92,7 @@ const Dashboard = () => {
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="value" fill="#8884d8" />
+                <Bar dataKey="quantity" fill="#8884d8" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -106,11 +103,9 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             <ul className="space-y-2">
-              {recentChanges.map((change, index) => (
+            {recentChanges.map((change, index) => (
                 <li key={index} className="text-sm">
-                  {change.type === "User" || change.type === "Request"
-                    ? `${change.type}: ${change.name} Status: ${change.status} (Updated at: ${formatTimestamp(change.updated_at)})`
-                    : `${change.type}: ${change.name} Quantity: ${change.quantity} (Updated at: ${formatTimestamp(change.updated_at)})`}
+                  {`${change.type} ${change.action}: ${change.name} (Time: ${formatTimestamp(change.updated_at)})`}
                 </li>
               ))}
             </ul>
