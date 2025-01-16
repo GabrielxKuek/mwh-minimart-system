@@ -166,7 +166,7 @@ export const getAchievements = async () => {
 // get minimart products
 export const getMinimartProducts = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/minimart/product/all`);
+    const response = await fetch(`${API_BASE_URL}/minimart/all`);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch minimart products: ${response.status}`);
@@ -185,7 +185,7 @@ export const getMinimartProducts = async () => {
 // insert transaction history (buying a product)
 export const enterTransaction = async (input_code, input_points_cost, input_products) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/minimart/product/purchase`, {
+    const response = await fetch(`${API_BASE_URL}/minimart/purchase`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
