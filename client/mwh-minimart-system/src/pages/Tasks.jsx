@@ -9,7 +9,7 @@ const Tasks = () => {
 
   const fetchTasks = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/task/");
+      const response = await fetch("http://localhost:8080/api/tasks/");
       if (!response.ok) {
         throw new Error("Failed to fetch tasks");
       }
