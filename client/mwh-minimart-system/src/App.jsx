@@ -10,6 +10,7 @@ import Achievements from "./pages/Achievements";
 import Leaderboard from "./pages/Leaderboard";
 import Vouchers from "./pages/Vouchers";
 import Minimart from "./pages/Minimart";
+import Task from "./pages/Tasks";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import PropTypes from 'prop-types';
@@ -61,6 +62,9 @@ const Navigation = () => {
             </li>
           </>
         )}
+        <li>
+          <Link to="/tasks">Tasks</Link>
+        </li>
         <li>
           <Link to="/achievements">Achievements</Link>
         </li>
@@ -144,6 +148,15 @@ function App() {
             />
             
             {/* Keep regular protected routes for non-admin pages */}
+            <Route
+              path="/tasks"
+              element={
+                <ProtectedRoute>
+                  <Task />
+                </ProtectedRoute>
+              } 
+            />
+
             <Route
               path="/achievements"
               element={
