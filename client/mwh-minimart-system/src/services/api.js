@@ -183,8 +183,10 @@ export const getMinimartProducts = async () => {
 };
 
 // insert transaction history (buying a product)
-export const enterTransaction = async (input_code, input_points_cost, input_products) => {
+export const addTransaction = async (input_code, input_points_cost, input_products, userId) => {
   try {
+    const quantity = input_products.reduce((total, product) => total + Object.values(product)[0], 0)
+
     const response = await fetch(`${API_BASE_URL}/minimart/purchase`, {
       method: 'POST',
       headers: {
@@ -192,11 +194,11 @@ export const enterTransaction = async (input_code, input_points_cost, input_prod
       },
       body: JSON.stringify({
         code: input_code,
-        points_cost: parseInt(input_points_cost), // Ensure it's a number
+        points_cost: parseInt(input_points_cost),
         productId: input_products,
         status: "unclaimed",
-        userId: "3rrxuSJYEFH3uT5TkApi",
-        purchaseQuantity: 1
+        userId: userId,
+        purchaseQuantity: quantity
       })
     });
 
@@ -210,6 +212,21 @@ export const enterTransaction = async (input_code, input_points_cost, input_prod
    
   } catch (error) {
     console.error("Error in transaction:", error);
+    throw error;
+  }
+};
+
+export const getCurrentPoints = async (userId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}/points`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch current points: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.current_points;
+   
+  } catch (error) {
+    console.error("Error fetching current points:", error);
     throw error;
   }
 };
