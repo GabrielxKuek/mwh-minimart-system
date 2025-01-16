@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { addUser } from "../../services/api";
 import { Button } from "@/components/ui/button";
+import bcrypt from "bcryptjs"; // Import bcrypt
 import {
   Dialog,
   DialogContent,
@@ -25,9 +26,10 @@ const AddUserForm = ({ onUserAdd }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    password: "",
     birthdate: "",
     nric: "",
-    role_id: "resident", // Initial value
+    role_id: "resident",
     status_id: "active",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,15 +47,27 @@ const AddUserForm = ({ onUserAdd }) => {
     setIsSubmitting(true);
 
     try {
-      await addUser(formData);
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(formData.password, 10); // 10 is the salt rounds
+      const updatedFormData = {
+        ...formData,
+        password: hashedPassword,
+      };
+
+      // Send the updated data with the hashed password
+      await addUser(updatedFormData);
+      
+      // Reset form
       setFormData({
         name: "",
         email: "",
+        password: "",
         birthdate: "",
         nric: "",
-        role_id: "resident", // Reset to default
+        role_id: "resident",
         status_id: "active",
       });
+      
       toast.success("User added successfully!");
       onUserAdd();
     } catch (error) {
@@ -83,6 +97,7 @@ const AddUserForm = ({ onUserAdd }) => {
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
+            {/* Name Input */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
                 Name
@@ -96,6 +111,23 @@ const AddUserForm = ({ onUserAdd }) => {
                 required
               />
             </div>
+            
+            {/* Password Input */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="password" className="text-right">
+                Password
+              </Label>
+              <Input
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="col-span-3 rounded-md"
+                required
+              />
+            </div>
+            
+            {/* Role Select */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="role" className="text-right">
                 Role
@@ -113,6 +145,9 @@ const AddUserForm = ({ onUserAdd }) => {
                 </SelectContent>
               </Select>
             </div>
+            
+            {/* Other Inputs */}
+            {/* Email */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="email" className="text-right">
                 Email
@@ -127,6 +162,8 @@ const AddUserForm = ({ onUserAdd }) => {
                 required
               />
             </div>
+            
+            {/* Birthdate */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="birthdate" className="text-right">
                 Birthdate
@@ -141,6 +178,8 @@ const AddUserForm = ({ onUserAdd }) => {
                 required
               />
             </div>
+            
+            {/* NRIC */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="nric" className="text-right">
                 NRIC

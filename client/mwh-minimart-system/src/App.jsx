@@ -1,6 +1,8 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; 
+import "react-toastify/dist/ReactToastify.css";
+import { AuthProvider, useAuth } from "./components/authentication/AuthContext.jsx";
+import Login from "./pages/Login";
 import UserManagement from "./pages/UserManagement";
 import RequestManagement from "./pages/RequestManagement";
 import RequestHistory from "./pages/RequestHistory";
@@ -8,35 +10,49 @@ import InventoryManagement from "./pages/InventoryManagement";
 import TaskManagement from "./pages/TaskManagement";
 import Achievements from "./pages/Achievements";
 import Leaderboard from "./pages/Leaderboard";
+import Vouchers from "./pages/Vouchers";
+import Minimart from "./pages/Minimart";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import { useState, useRef } from "react";
+import PropTypes from 'prop-types';
 
-function App() {
+// Protected Route wrapper component
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const timeoutRef = useRef(null);
+// Add this new component after ProtectedRoute
+const RoleProtectedRoute = ({ children, allowedRoles }) => {
+  const { isAuthenticated } = useAuth();
+  const roleId = sessionStorage.getItem('roleId');
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return allowedRoles.includes(roleId) ? children : <Navigate to="/user-management" replace />;
+};
 
-  const handleMouseEnter = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    setIsDropdownOpen(true);
-  };
+RoleProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+  allowedRoles: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
 
-  const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => {
-      setIsDropdownOpen(false);
-    }, 1000); // 3 seconds delay
-  };
+const Navigation = () => {
+  const { logout } = useAuth();
+  const roleId = sessionStorage.getItem('roleId');
+  const isAdmin = roleId === 'admin';
+
   return (
-    <Router>
-      <div className="p-4">
-        <nav className="mb-4">
-          <ul className="flex space-x-4">
-            <li>
-              <Link to="/">Home</Link>
-            </li>
+    <nav className="mb-4">
+      <ul className="flex space-x-4">
+        <li>
+          <Link to="/dashboard">Dashboard</Link>
+        </li>
+        {isAdmin && (
+          <>
             <li>
               <Link to="/user-management">User Management</Link>
             </li>
@@ -67,87 +83,147 @@ function App() {
             <li>
               <Link to="/task-management">Task Management</Link>
             </li>
-            <li>
-              <Link to="/achievements">Achievements</Link>
-            </li>
-            <li>
-              <Link to="/leaderboard">Leaderboard</Link>
-            </li>
-          </ul>
-        </nav>
+          </>
+        )}
+        <li>
+          <Link to="/achievements">Achievements</Link>
+        </li>
+        <li>
+          <Link to="/leaderboard">Leaderboard</Link>
+        </li>
+        <li>
+          <Link to="/minimart">Minimart</Link>
+        </li>
+        <li>
+          <Link to="/vouchers">Vouchers</Link>
+        </li>
+        <li>
+          <button 
+            onClick={logout}
+            className="text-red-600 hover:text-red-800"
+          >
+            Logout
+          </button>
+        </li>
+      </ul>
+    </nav>
+  );
+};
 
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <div>
-                  <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                  </a>
-                  <a href="https://react.dev" target="_blank" rel="noreferrer">
-                    <img
-                      src={reactLogo}
-                      className="logo react"
-                      alt="React logo"
-                    />
-                  </a>
-                </div>
-                <h1>Vite + React</h1>
-                <p>Your original content here.</p>
-              </>
-            }
-          />
-          <Route
-            path="/user-management"
-            element={
-              <>
-                <UserManagement />
-                <ToastContainer />
-              </>
-            }
-          />
-          <Route
-            path="/request-management"
-            element={
-              <>
-                <RequestManagement />
-                <ToastContainer />
-              </>
-            }
-          />
-          <Route
-            path="/request-history"
-            element={
-              <>
-                <RequestHistory />
-                <ToastContainer />
-              </>
-            }
+const Layout = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return (
+    <div className="p-4">
+      {isAuthenticated && <Navigation />}
+      {children}
+      <ToastContainer />
+    </div>
+  );
+};
+
+function App() {
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const timeoutRef = useRef(null);
+  
+    const handleMouseEnter = () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      setIsDropdownOpen(true);
+    };
+  
+    const handleMouseLeave = () => {
+      timeoutRef.current = setTimeout(() => {
+        setIsDropdownOpen(false);
+      }, 1000); // 3 seconds delay
+    };
+  return (
+    <AuthProvider>
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/login" element={<Login />} />
+
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <h1>Dashboard</h1>
+                </ProtectedRoute>
+              }
             />
-          <Route
-            path="/inventory-management"
-            element={
-              <>
-                <InventoryManagement />
-                <ToastContainer />
-              </>
-            }
-          />
-          <Route
-            path="/task-management"
-            element={
-              <>
-                <TaskManagement />
-                <ToastContainer />
-              </>
-            }
-          />
-          <Route path="/achievements" element={<Achievements />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-        </Routes>
-      </div>
-    </Router>
+
+            {/* Update admin routes to use RoleProtectedRoute */}
+            <Route
+              path="/user-management"
+              element={
+                <RoleProtectedRoute allowedRoles={['admin']}>
+                  <UserManagement />
+                </RoleProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/request-management"
+              element={
+                <RoleProtectedRoute allowedRoles={['admin']}>
+                  <RequestManagement />
+                </RoleProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/inventory-management"
+              element={
+                <RoleProtectedRoute allowedRoles={['admin']}>
+                  <InventoryManagement />
+                </RoleProtectedRoute>
+              }
+            />
+            
+            {/* Keep regular protected routes for non-admin pages */}
+            <Route
+              path="/achievements"
+              element={
+                <ProtectedRoute>
+                  <Achievements />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/leaderboard"
+              element={
+                <ProtectedRoute>
+                  <Leaderboard />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/minimart"
+              element={
+                <ProtectedRoute>
+                  <Minimart />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/vouchers"
+              element={
+                <ProtectedRoute>
+                  <Vouchers />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </AuthProvider>
   );
 }
 

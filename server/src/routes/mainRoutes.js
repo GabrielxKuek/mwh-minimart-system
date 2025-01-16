@@ -11,6 +11,7 @@ const requestRoute = require("./requestRoute");
 const inventoryRoute = require("./inventoryRoute");
 const achievementsRoute = require("./achievementsRoute");
 const leaderboardRoute = require("./leaderboardRoute");
+const voucherRoute = require("./voucherRoute");
 
 // Use routes
 router.use("/tasks", taskRoute); // Ensure this line is included
@@ -22,5 +23,6 @@ router.use("/requests", requestRoute);
 router.use("/inventory", inventoryRoute);
 router.use("/achievements", achievementsRoute);
 router.use("/leaderboard", leaderboardRoute);
+router.use("/voucher", voucherRoute);
 
 module.exports = router;
