@@ -10,7 +10,7 @@ module.exports.readVoucherByAll = async (req, res, next) => {
     }
 }
 
-module.exports.readVoucherById = async (req, res, next) => {
+module.exports.readProductById = async (req, res, next) => {
     const { voucherId } = req.params;
 
     try {
