@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getUserById, updateUser } from '../services/api';
-import { User, Mail, CalendarDays, Coins, History, Crown, Cake } from 'lucide-react';
+import { User, Mail, Coins, History, Crown, Cake } from 'lucide-react';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
