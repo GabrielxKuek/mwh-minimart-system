@@ -183,11 +183,11 @@ function App() {
               }
             />
 
-<Route
+            <Route
               path="/task-management"
               element={
                 <ProtectedRoute>
-                  <TaskManagement />
+                  <TaskManagement/>
                 </ProtectedRoute>
               }
             />
@@ -256,3 +256,6 @@ function App() {
 }
 
 export default App;
+
+//--------------------------------------------------  END  -----------------------------------------------------//
+
