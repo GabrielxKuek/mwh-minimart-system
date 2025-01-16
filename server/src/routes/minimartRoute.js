@@ -10,5 +10,6 @@ const controller = require('../controllers/minimartController');
 
 router.get('/all', controller.readAllProductByAll);
 router.post('/purchase', controller.decreaseUserPoints, /*controller.decreaseProductQuantity, */controller.createTransaction);
+router.post('/request', controller.createRequest);
 
 module.exports = router;

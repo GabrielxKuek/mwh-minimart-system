@@ -151,6 +151,21 @@ const userController = {
         res.status(500).json({ error: error.message });
       });
   },
+
+  getCurrentPoints: function(req, res) {
+    userModel
+      .getCurrentPointsByUserId(req.params.userId)
+      .then((points) => {
+        res.status(200).json({ current_points: points });
+      })
+      .catch((error) => {
+        if (error.message === 'User not found') {
+          res.status(404).json({ error: 'User not found' });
+        } else {
+          res.status(500).json({ error: error.message });
+        }
+      });
+  }
 };
 
 module.exports = userController;

@@ -1,7 +1,17 @@
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  Navigate,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AuthProvider, useAuth } from "./components/authentication/AuthContext.jsx";
+import { AuthProvider, useAuth } from "./components/authentication/AuthContext";
+import { useState, useRef, useMemo } from "react";
+import PropTypes from "prop-types";
+
+// Pages
 import Login from "./pages/Login";
 import UserManagement from "./pages/UserManagement";
 import RequestManagement from "./pages/RequestManagement";
@@ -17,6 +27,16 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import { useState, useRef } from "react";
 import PropTypes from 'prop-types';
+import Task from "./pages/Tasks";
+import TransactionManagement from "./pages/TransactionManagement";
+import Reports from "./pages/Reports";
+
+// Components
+// import reactLogo from "./assets/react.svg"; // Not used, can be removed
+// import viteLogo from "/vite.svg"; // Not used, can be removed
+
+// Constants for Roles (for better maintainability)
+const ADMIN_ROLE = "admin";
 
 // Protected Route wrapper component
 const ProtectedRoute = ({ children }) => {
@@ -27,13 +47,17 @@ const ProtectedRoute = ({ children }) => {
 // Role Protected Route wrapper component
 const RoleProtectedRoute = ({ children, allowedRoles }) => {
   const { isAuthenticated } = useAuth();
-  const roleId = sessionStorage.getItem('roleId');
-  
+  const roleId = sessionStorage.getItem("roleId");
+
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-  
-  return allowedRoles.includes(roleId) ? children : <Navigate to="/login" replace />;
+
+  return allowedRoles.includes(roleId) ? (
+    children
+  ) : (
+    <Navigate to="/login" replace />
+  );
 };
 
 RoleProtectedRoute.propTypes = {
@@ -41,10 +65,11 @@ RoleProtectedRoute.propTypes = {
   allowedRoles: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
+// Navigation Component
 const Navigation = () => {
   const { logout } = useAuth();
-  const roleId = sessionStorage.getItem('roleId');
-  const isAdmin = roleId === 'admin';
+  const roleId = sessionStorage.getItem("roleId");
+  const isAdmin = useMemo(() => roleId === ADMIN_ROLE, [roleId]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const timeoutRef = useRef(null);
 
@@ -65,6 +90,8 @@ const Navigation = () => {
         <li>
           <Link to="/dashboard">Home</Link>
         </li>
+
+        {/* Admin Links */}
         {isAdmin && (
           <>
             <li>
@@ -79,12 +106,18 @@ const Navigation = () => {
               {isDropdownOpen && (
                 <ul className="absolute mt-2 bg-white border rounded shadow-lg">
                   <li>
-                    <Link to="/request-management" className="block px-4 py-2 hover:bg-gray-200">
+                    <Link
+                      to="/request-management"
+                      className="block px-4 py-2 hover:bg-gray-200"
+                    >
                       Current
                     </Link>
                   </li>
                   <li>
-                    <Link to="/request-history" className="block px-4 py-2 hover:bg-gray-200">
+                    <Link
+                      to="/request-history"
+                      className="block px-4 py-2 hover:bg-gray-200"
+                    >
                       History
                     </Link>
                   </li>
@@ -97,8 +130,19 @@ const Navigation = () => {
             <li>
               <Link to="/task-management">Task Management</Link>
             </li>
+            <li>
+              <Link to="/transactions">Transaction Management</Link>
+            </li>
+            <li>
+              <Link to="/reports">Reports</Link>
+            </li>
           </>
         )}
+
+        {/* Common Links */}
+        <li>
+          <Link to="/tasks">Tasks</Link>
+        </li>
         <li>
           <Link to="/achievements">Achievements</Link>
         </li>
@@ -111,11 +155,10 @@ const Navigation = () => {
         <li>
           <Link to="/vouchers">Vouchers</Link>
         </li>
+
+        {/* Logout Button */}
         <li>
-          <button 
-            onClick={logout}
-            className="text-red-600 hover:text-red-800"
-          >
+          <button onClick={logout} className="text-red-600 hover:text-red-800">
             Logout
           </button>
         </li>
@@ -124,6 +167,7 @@ const Navigation = () => {
   );
 };
 
+// Layout Component
 const Layout = ({ children }) => {
   const { isAuthenticated } = useAuth();
   return (
@@ -135,24 +179,128 @@ const Layout = ({ children }) => {
   );
 };
 
+// App Component
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Layout>
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<RoleProtectedRoute allowedRoles={['admin']}><Dashboard /></RoleProtectedRoute>} />
-            <Route path="/user-management" element={<RoleProtectedRoute allowedRoles={['admin']}><UserManagement /></RoleProtectedRoute>} />
-            <Route path="/request-management" element={<RoleProtectedRoute allowedRoles={['admin']}><RequestManagement /></RoleProtectedRoute>} />
-            <Route path="/request-history" element={<RoleProtectedRoute allowedRoles={['admin']}><RequestHistory /></RoleProtectedRoute>} />
-            <Route path="/inventory-management" element={<RoleProtectedRoute allowedRoles={['admin']}><InventoryManagement /></RoleProtectedRoute>} />
-            <Route path="/task-management" element={<RoleProtectedRoute allowedRoles={['admin']}><TaskManagement /></RoleProtectedRoute>} />
-            <Route path="/achievements" element={<ProtectedRoute><Achievements /></ProtectedRoute>} />
-            <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
-            <Route path="/minimart" element={<ProtectedRoute><Minimart /></ProtectedRoute>} />
-            <Route path="/vouchers" element={<ProtectedRoute><Vouchers /></ProtectedRoute>} />
+
+            {/* Dashboard (Protected) */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <h1>Dashboard</h1>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Admin Routes (Role Protected) */}
+            <Route
+              path="/user-management"
+              element={
+                <RoleProtectedRoute allowedRoles={[ADMIN_ROLE]}>
+                  <UserManagement />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/request-management"
+              element={
+                <RoleProtectedRoute allowedRoles={[ADMIN_ROLE]}>
+                  <RequestManagement />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/inventory-management"
+              element={
+                <RoleProtectedRoute allowedRoles={[ADMIN_ROLE]}>
+                  <InventoryManagement />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/task-management"
+              element={
+                <RoleProtectedRoute allowedRoles={[ADMIN_ROLE]}>
+                  <TaskManagement />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/transactions"
+              element={
+                <RoleProtectedRoute allowedRoles={[ADMIN_ROLE]}>
+                  <TransactionManagement />
+                </RoleProtectedRoute>
+              }
+            />
+            <Route
+              path="/reports"
+              element={
+                <RoleProtectedRoute allowedRoles={[ADMIN_ROLE]}>
+                  <Reports />
+                </RoleProtectedRoute>
+              }
+            />
+
+            {/* Common Protected Routes */}
+            <Route
+              path="/request-history"
+              element={
+                <ProtectedRoute>
+                  <RequestHistory />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/tasks"
+              element={
+                <ProtectedRoute>
+                  <Task />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/achievements"
+              element={
+                <ProtectedRoute>
+                  <Achievements />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/leaderboard"
+              element={
+                <ProtectedRoute>
+                  <Leaderboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/minimart"
+              element={
+                <ProtectedRoute>
+                  <Minimart />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/vouchers"
+              element={
+                <ProtectedRoute>
+                  <Vouchers />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Fallback Route */}
+            <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </Layout>
       </Router>

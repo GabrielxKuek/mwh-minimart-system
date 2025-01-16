@@ -1,48 +1,47 @@
 import { useState, useEffect, useCallback } from "react";
 import { Separator } from "@/components/ui/separator";
-import VoucherCard from "../components/voucher/VoucherCard";
-import { getVoucherByUserId } from "../services/api";
+import TaskCard from "../components/task/TaskCard";
 
-const Vouchers = () => {
-  const [vouchers, setVouchers] = useState([]);
+const Tasks = () => {
+  const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchVouchers = useCallback(async () => {
+  const fetchTasks = useCallback(async () => {
     try {
-      const userId = sessionStorage.getItem('userId');
-      const response = await getVoucherByUserId(userId);
-
-      setVouchers(response);
+      const response = await fetch("http://localhost:8080/api/tasks/");
+      if (!response.ok) {
+        throw new Error("Failed to fetch tasks");
+      }
+      const data = await response.json();
+      setTasks(data); // Update tasks state
     } catch (error) {
-      setError(error.message);
+      console.error("Error fetching tasks:", error);
+      setError(error.message); // Update error state
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading spinner
     }
   }, []);
 
   useEffect(() => {
-    fetchVouchers();
-  }, [fetchVouchers]);
+    fetchTasks(); // Call the function when the component mounts
+  }, [fetchTasks]);
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold text-indigo-700 mb-6">
-        Vouchers
+        Available Tasks
       </h1>
       <Separator className="my-4" />
-      
+
       {loading ? (
         <div className="text-center text-gray-600">Loading...</div>
       ) : error ? (
         <div className="text-center text-red-500">Error: {error}</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {vouchers.map((voucher) => (
-            <VoucherCard
-              key={voucher.code}
-              voucher={voucher}
-            />
+          {tasks.map((task) => (
+            <TaskCard key={task.id} task={task} />
           ))}
         </div>
       )}
@@ -50,4 +49,4 @@ const Vouchers = () => {
   );
 };
 
-export default Vouchers;
+export default Tasks;
