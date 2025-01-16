@@ -12,6 +12,7 @@ import Vouchers from "./pages/Vouchers";
 import Minimart from "./pages/Minimart";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
+import PropTypes from 'prop-types';
 
 // Protected Route wrapper component
 const ProtectedRoute = ({ children }) => {
@@ -19,9 +20,27 @@ const ProtectedRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
-// Navigation component
+// Add this new component after ProtectedRoute
+const RoleProtectedRoute = ({ children, allowedRoles }) => {
+  const { isAuthenticated } = useAuth();
+  const roleId = sessionStorage.getItem('roleId');
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return allowedRoles.includes(roleId) ? children : <Navigate to="/user-management" replace />;
+};
+
+RoleProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+  allowedRoles: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
 const Navigation = () => {
   const { logout } = useAuth();
+  const roleId = sessionStorage.getItem('roleId');
+  const isAdmin = roleId === 'admin';
 
   return (
     <nav className="mb-4">
@@ -29,15 +48,19 @@ const Navigation = () => {
         <li>
           <Link to="/dashboard">Dashboard</Link>
         </li>
-        <li>
-          <Link to="/user-management">User Management</Link>
-        </li>
-        <li>
-          <Link to="/request-management">Request Management</Link>
-        </li>
-        <li>
-          <Link to="/inventory-management">Inventory Management</Link>
-        </li>
+        {isAdmin && (
+          <>
+            <li>
+              <Link to="/user-management">User Management</Link>
+            </li>
+            <li>
+              <Link to="/request-management">Request Management</Link>
+            </li>
+            <li>
+              <Link to="/inventory-management">Inventory Management</Link>
+            </li>
+          </>
+        )}
         <li>
           <Link to="/achievements">Achievements</Link>
         </li>
@@ -81,7 +104,6 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Navigate to="/login" replace />} />
-            
             <Route path="/login" element={<Login />} />
 
             <Route
@@ -93,33 +115,35 @@ function App() {
               }
             />
 
+            {/* Update admin routes to use RoleProtectedRoute */}
             <Route
               path="/user-management"
               element={
-                <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={['admin']}>
                   <UserManagement />
-                </ProtectedRoute>
+                </RoleProtectedRoute>
               }
             />
             
             <Route
               path="/request-management"
               element={
-                <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={['admin']}>
                   <RequestManagement />
-                </ProtectedRoute>
+                </RoleProtectedRoute>
               }
             />
             
             <Route
               path="/inventory-management"
               element={
-                <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={['admin']}>
                   <InventoryManagement />
-                </ProtectedRoute>
+                </RoleProtectedRoute>
               }
             />
             
+            {/* Keep regular protected routes for non-admin pages */}
             <Route
               path="/achievements"
               element={

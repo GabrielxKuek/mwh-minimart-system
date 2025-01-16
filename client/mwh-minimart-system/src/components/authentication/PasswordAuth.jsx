@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { db } from '../../lib/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { Button } from "../ui/button"
-import { Input } from "../ui/input"
-import { Label } from "../ui/label"
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
+import bcrypt from 'bcryptjs'; // Import bcryptjs
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 
 const PasswordAuth = () => {
   const [email, setEmail] = useState('');
@@ -19,40 +20,44 @@ const PasswordAuth = () => {
   const handleAuth = async (e) => {
     e.preventDefault();
     setError('');
-
+  
     try {
       const usersRef = collection(db, 'users');
-      const q = query(usersRef, where('email', '==', email.toLowerCase()));
+      const q = query(usersRef, where('email', '==', email));
       const querySnapshot = await getDocs(q);
-
+  
       if (querySnapshot.empty) {
         setError('User not found.');
         return;
       }
-
+  
       const userDoc = querySnapshot.docs[0];
       const userData = userDoc.data();
-
-      if (userData.password === password) {
-        // Log in the user with the auth context
-        login({
-          id: userDoc.id,
-          email: userData.email,
-          // Add any other user data you want to store
-        });
-        
-        // Store userId and roleId in session storage
-        sessionStorage.setItem('userId', userDoc.id);
-        sessionStorage.setItem('roleId', userData.role_id); // Ensure roleId exists in your user data
-
-        // Navigate to dashboard
-        navigate('/user-management');
-      } else {
-        setError('Incorrect password.');
+  
+      // Compare the hashed password with the user input
+      const isPasswordValid = await bcrypt.compare(password, userData.password);
+      if (!isPasswordValid) {
+        setError('Invalid password.');
+        return;
       }
+  
+      // Store user data in session
+      sessionStorage.setItem('userId', userDoc.id);
+      sessionStorage.setItem('roleId', userData.role_id);
+  
+      // Update auth context
+      await login();
+  
+      // Navigate based on role
+      if (userData.role_id === 'admin') {
+        navigate('/dashboard');
+      } else {
+        navigate('/minimart');
+      }
+  
     } catch (error) {
-      setError('Authentication failed. Please try again.');
-      console.error('Auth error:', error);
+      console.error('Login error:', error);
+      setError('An error occurred during login.');
     }
   };
 
