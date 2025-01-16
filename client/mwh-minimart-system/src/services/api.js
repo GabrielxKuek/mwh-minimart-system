@@ -336,6 +336,25 @@ export const getVoucherProductById = async (voucherProducts) => {
   }
 };
 
+export const getTotalUsers = async () => {
+  const response = await api.get("/dashboard/data");
+  return response.data.totalUsers;
+};
+
+export const getTotalPendingRequests = async () => {
+  const response = await api.get("/dashboard/data");
+  return response.data.totalPendingRequests;
+};
+
+export const getLowStockItems = async () => {
+  const response = await api.get("/dashboard/data");
+  return response.data.lowStockItems;
+};
+
+export const getRecentChanges = async () => {
+  const response = await api.get("/dashboard/data");
+  return response.data.recentChanges;
+};
 // Transaction Management API Calls
 export const getTransactions = async () => {
   const response = await api.get("/transactions"); // No need for manual headers

@@ -23,7 +23,7 @@ import Achievements from "./pages/Achievements";
 import Leaderboard from "./pages/Leaderboard";
 import Vouchers from "./pages/Vouchers";
 import Minimart from "./pages/Minimart";
-import Tasks from "./pages/Tasks";
+import Task from "./pages/Tasks";
 import TransactionManagement from "./pages/TransactionManagement";
 import Profile from "./pages/Profile";
 import Reports from "./pages/Reports";
@@ -171,7 +171,7 @@ const AppRoutes = () => {
           path="/tasks"
           element={
             <ProtectedRoute>
-              <Tasks />
+              <Task />
             </ProtectedRoute>
           }
         />
@@ -211,7 +211,7 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-        
+
         <Route
           path="/profile"
           element={
