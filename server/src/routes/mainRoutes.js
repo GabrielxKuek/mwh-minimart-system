@@ -1,4 +1,3 @@
-// server/src/routes/mainRoutes.js
 const express = require("express");
 const router = express.Router();
 
@@ -15,7 +14,7 @@ const leaderboardRoute = require("./leaderboardRoute");
 const voucherRoute = require("./voucherRoute");
 
 // Use routes
-router.use("/task", taskRoute);
+router.use("/tasks", taskRoute); // Ensure this line is included
 router.use("/dashboard", dashboardRoute);
 router.use("/authentication", authenticationRoute);
 router.use("/minimart", minimartRoute);

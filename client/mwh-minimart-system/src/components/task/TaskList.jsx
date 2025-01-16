@@ -1,18 +1,6 @@
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import {
-  getAllProducts,
-  deleteProduct,
-  getLowStockProducts,
-} from "../../services/api";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { getAllTasks, deleteTask } from "../../services/api";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,67 +20,62 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { toast } from "react-toastify";
 import { Search, ChevronDown, AlertTriangle } from "lucide-react";
-import EditProductForm from "./EditProductForm";
+import EditTaskForm from "./EditTaskForm";
 
-const ProductList = ({ refreshTrigger }) => {
-  const [products, setProducts] = useState([]);
+const TaskList = ({ refreshTrigger }) => {
+  const [tasks, setTasks] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [lowStockAlert, setLowStockAlert] = useState(false);
 
-  const fetchProducts = async () => {
-    const data = await getAllProducts();
-    setProducts(data);
-  };
-
-  const fetchLowStockProducts = async () => {
-    const data = await getLowStockProducts(10); // Set your low stock threshold here
-    setLowStockAlert(data.length > 0);
-  };
-
-  useEffect(() => {
-    fetchProducts();
-    fetchLowStockProducts();
-  }, [refreshTrigger]);
-
-  const handleDelete = async (productId) => {
+  const fetchTasks = async () => {
     try {
-      await deleteProduct(productId);
-      setProducts(products.filter((product) => product.id !== productId));
-      toast.success("Product deleted successfully!");
+      const data = await getAllTasks();
+      // Ensure points are numbers
+      const tasksWithNumericPoints = data.map(task => ({
+        ...task,
+        points: Number(task.points),
+      }));
+      setTasks(tasksWithNumericPoints);
     } catch (error) {
-      console.error("Error deleting product:", error);
-      toast.error("Failed to delete product.");
+      console.error("Error fetching tasks:", error);
+      toast.error("Failed to fetch tasks.");
     }
   };
 
-  const handleProductEdit = () => {
-    fetchProducts();
+  useEffect(() => {
+    fetchTasks();
+  }, [refreshTrigger]);
+
+  const handleDelete = async (taskId) => {
+    try {
+      await deleteTask(taskId);
+      setTasks(tasks.filter((task) => task.id !== taskId));
+      toast.success("Task deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      toast.error("Failed to delete task.");
+    }
   };
 
-  const filteredProducts = products.filter((product) => {
+  const handleTaskEdit = () => {
+    fetchTasks();
+  };
+
+  const filteredTasks = tasks.filter((task) => {
     const query = searchQuery.toLowerCase();
     return (
-      product.name.toLowerCase().includes(query) ||
-      product.description.toLowerCase().includes(query)
+      task.name.toLowerCase().includes(query) ||
+      task.description.toLowerCase().includes(query)
     );
   });
 
   return (
     <div>
-      {lowStockAlert && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mb-4 flex items-center">
-          <AlertTriangle className="mr-2 h-5 w-5" />
-          <span className="font-bold">Low Stock Alert!</span> Some products are
-          running low on stock.
-        </div>
-      )}
-
       <div className="mb-4 flex items-center">
         <div className="relative w-full md:w-1/2 lg:w-1/3">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             type="text"
-            placeholder="Search by name, description, ..."
+            placeholder="Search by name or description"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 rounded-md"
@@ -105,18 +88,16 @@ const ProductList = ({ refreshTrigger }) => {
             <TableRow>
               <TableHead className="font-medium">Name</TableHead>
               <TableHead className="font-medium">Description</TableHead>
-              <TableHead className="font-medium">Quantity</TableHead>
-              <TableHead className="font-medium">Point</TableHead>
+              <TableHead className="font-medium">Points</TableHead>
               <TableHead className="text-right font-medium">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredProducts.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>{product.description}</TableCell>
-                <TableCell>{product.quantity}</TableCell>
-                <TableCell>{product.point}</TableCell>
+            {filteredTasks.map((task) => (
+              <TableRow key={task.id}>
+                <TableCell>{task.name}</TableCell>
+                <TableCell>{task.description}</TableCell>
+                <TableCell>{task.points}</TableCell>
                 <TableCell className="text-right">
                   <Popover>
                     <PopoverTrigger asChild>
@@ -129,10 +110,10 @@ const ProductList = ({ refreshTrigger }) => {
                       <div className="grid gap-4 p-2">
                         <div className="space-y-2">
                           <h4 className="font-medium leading-none">
-                            {product.name}
+                            {task.name}
                           </h4>
                           <p className="text-sm text-muted-foreground">
-                            {product.description}
+                            {task.description}
                           </p>
                         </div>
                         <Separator />
@@ -148,29 +129,25 @@ const ProductList = ({ refreshTrigger }) => {
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-[425px] rounded-lg">
                               <DialogHeader>
-                                <DialogTitle>Product Details</DialogTitle>
+                                <DialogTitle>Task Details</DialogTitle>
                                 <DialogDescription>
-                                  Details for {product.name}
+                                  Details for {task.name}
                                 </DialogDescription>
                               </DialogHeader>
                               <div className="grid gap-1 p-2">
                                 <img
-                                  src={product.imageUrl}
-                                  alt={product.name}
+                                  src={task.imageUrl}
+                                  alt={task.name}
                                   className="h-40 w-40 object-cover rounded-md mx-auto"
                                 />
                                 <p>
-                                  <strong>Name:</strong> {product.name}
+                                  <strong>Name:</strong> {task.name}
                                 </p>
                                 <p>
-                                  <strong>Description:</strong>{" "}
-                                  {product.description}
+                                  <strong>Description:</strong> {task.description}
                                 </p>
                                 <p>
-                                  <strong>Quantity:</strong> {product.quantity}
-                                </p>
-                                <p>
-                                  <strong>Point:</strong> {product.point}
+                                  <strong>Points:</strong> {task.points}
                                 </p>
                               </div>
                               <DialogFooter>
@@ -186,14 +163,14 @@ const ProductList = ({ refreshTrigger }) => {
                               </DialogFooter>
                             </DialogContent>
                           </Dialog>
-                          <EditProductForm
-                            product={product}
-                            onProductEdit={handleProductEdit}
+                          <EditTaskForm
+                            task={task}
+                            onTaskEdit={handleTaskEdit}
                           />
                           <Button
                             variant="destructive"
                             className="w-full rounded-md"
-                            onClick={() => handleDelete(product.id)}
+                            onClick={() => handleDelete(task.id)}
                           >
                             Delete
                           </Button>
@@ -211,8 +188,4 @@ const ProductList = ({ refreshTrigger }) => {
   );
 };
 
-ProductList.propTypes = {
-  refreshTrigger: PropTypes.any.isRequired,
-};
-
-export default ProductList;
+export default TaskList;

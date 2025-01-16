@@ -1,17 +1,16 @@
 import { useState } from "react";
-import RequestList from "../components/request/RequestList";
+import RequestHistoryList from "../components/request/RequestHistoryList";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 
-const RequestManagement = () => {
-  const [refreshTrigger, setRefreshTrigger] = useState(false);
+const RequestHistory = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold text-indigo-700 mb-4">
-        Request Management
+        Request History
       </h1>
       <Separator className="my-4" />
       <div className="mb-4 flex items-center">
@@ -27,10 +26,10 @@ const RequestManagement = () => {
         </div>
       </div>
       <div className="rounded-lg border">
-        <RequestList refreshTrigger={refreshTrigger} searchQuery={searchQuery} />
+        <RequestHistoryList searchQuery={searchQuery} />
       </div>
     </div>
   );
 };
 
-export default RequestManagement;
+export default RequestHistory;
