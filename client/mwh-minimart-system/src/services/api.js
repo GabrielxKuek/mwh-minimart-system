@@ -349,3 +349,8 @@ export const claimTransaction = async (transactionId, code) => {
   }); // No need for manual headers
   return response.data;
 };
+
+
+////////////////////
+// NAVBAR //
+////////////////////
