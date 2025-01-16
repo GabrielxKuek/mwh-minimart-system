@@ -12,6 +12,7 @@ import Achievements from "./pages/Achievements";
 import Leaderboard from "./pages/Leaderboard";
 import Vouchers from "./pages/Vouchers";
 import Minimart from "./pages/Minimart";
+import Task from "./pages/Tasks";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import { useState, useRef } from "react";
@@ -99,6 +100,9 @@ const Navigation = () => {
           </>
         )}
         <li>
+          <Link to="/tasks">Tasks</Link>
+        </li>
+        <li>
           <Link to="/achievements">Achievements</Link>
         </li>
         <li>
@@ -141,16 +145,109 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<ProtectedRoute><UserManagement /></ProtectedRoute>} /> {/* Set a default route */}
-            <Route path="/user-management" element={<RoleProtectedRoute allowedRoles={['admin']}><UserManagement /></RoleProtectedRoute>} />
-            <Route path="/request-management" element={<RoleProtectedRoute allowedRoles={['admin']}><RequestManagement /></RoleProtectedRoute>} />
-            <Route path="/request-history" element={<RoleProtectedRoute allowedRoles={['admin']}><RequestHistory /></RoleProtectedRoute>} />
-            <Route path="/inventory-management" element={<RoleProtectedRoute allowedRoles={['admin']}><InventoryManagement /></RoleProtectedRoute>} />
-            <Route path="/task-management" element={<RoleProtectedRoute allowedRoles={['admin']}><TaskManagement /></RoleProtectedRoute>} />
-            <Route path="/achievements" element={<ProtectedRoute><Achievements /></ProtectedRoute>} />
-            <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
-            <Route path="/minimart" element={<ProtectedRoute><Minimart /></ProtectedRoute>} />
-            <Route path="/vouchers" element={<ProtectedRoute><Vouchers /></ProtectedRoute>} />
+
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <h1>Dashboard</h1>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Update admin routes to use RoleProtectedRoute */}
+            <Route
+              path="/user-management"
+              element={
+                <RoleProtectedRoute allowedRoles={['admin']}>
+                  <UserManagement />
+                </RoleProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/request-management"
+              element={
+                <RoleProtectedRoute allowedRoles={['admin']}>
+                  <RequestManagement />
+                </RoleProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/request-history"
+              element={
+                <ProtectedRoute>
+                  <RequestHistory/>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/task-management"
+              element={
+                <ProtectedRoute>
+                  <TaskManagement/>
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/inventory-management"
+              element={
+                <RoleProtectedRoute allowedRoles={['admin']}>
+                  <InventoryManagement />
+                </RoleProtectedRoute>
+              }
+            />
+            
+            {/* Keep regular protected routes for non-admin pages */}
+            <Route
+              path="/tasks"
+              element={
+                <ProtectedRoute>
+                  <Task />
+                </ProtectedRoute>
+              } 
+            />
+
+            <Route
+              path="/achievements"
+              element={
+                <ProtectedRoute>
+                  <Achievements />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/leaderboard"
+              element={
+                <ProtectedRoute>
+                  <Leaderboard />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/minimart"
+              element={
+                <ProtectedRoute>
+                  <Minimart />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/vouchers"
+              element={
+                <ProtectedRoute>
+                  <Vouchers />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </Layout>
       </Router>
@@ -159,3 +256,6 @@ function App() {
 }
 
 export default App;
+
+//--------------------------------------------------  END  -----------------------------------------------------//
+
