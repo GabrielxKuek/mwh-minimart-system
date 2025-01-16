@@ -54,5 +54,6 @@ router.put("/:userId", userController.updateUser);
 router.put("/:userId/suspend", userController.suspendUser);
 router.put("/:userId/reactivate", userController.reactivateUser);
 router.get("/search", userController.findUsers);
+router.get("/:userId/points", userController.getCurrentPoints);
 
 module.exports = router;

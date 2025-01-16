@@ -79,6 +79,21 @@ const userModel = {
         throw error;
       });
   },
+  
+  getCurrentPointsByUserId: function(userId) {
+    const docRef = doc(usersCollection, userId);
+    return getDoc(docRef)
+      .then((docSnap) => {
+        if (!docSnap.exists()) {
+          throw new Error('User not found');
+        }
+        return docSnap.data().current_points;
+      })
+      .catch((error) => {
+        console.error("Error getting user points:", error);
+        throw error;
+      });
+  }
 };
 
 module.exports = userModel;

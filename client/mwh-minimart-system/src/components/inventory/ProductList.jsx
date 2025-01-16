@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
   getAllProducts,
   deleteProduct,
@@ -65,7 +66,6 @@ const ProductList = ({ refreshTrigger }) => {
   };
 
   const handleProductEdit = () => {
-    // Trigger a refresh of the product list
     fetchProducts();
   };
 
@@ -79,7 +79,6 @@ const ProductList = ({ refreshTrigger }) => {
 
   return (
     <div>
-      {/* Low Stock Alert */}
       {lowStockAlert && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mb-4 flex items-center">
           <AlertTriangle className="mr-2 h-5 w-5" />
@@ -210,6 +209,10 @@ const ProductList = ({ refreshTrigger }) => {
       </div>
     </div>
   );
+};
+
+ProductList.propTypes = {
+  refreshTrigger: PropTypes.any.isRequired,
 };
 
 export default ProductList;
