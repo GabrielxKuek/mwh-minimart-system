@@ -29,8 +29,9 @@ const RoleProtectedRoute = ({ children, allowedRoles }) => {
     return <Navigate to="/login" replace />;
   }
   
-  return allowedRoles.includes(roleId) ? children : <Navigate to="/dashboard" replace />;
+  return allowedRoles.includes(roleId) ? children : <Navigate to="/user-management" replace />;
 };
+
 RoleProtectedRoute.propTypes = {
   children: PropTypes.node.isRequired,
   allowedRoles: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -103,7 +104,6 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Navigate to="/login" replace />} />
-            
             <Route path="/login" element={<Login />} />
 
             <Route
@@ -115,33 +115,35 @@ function App() {
               }
             />
 
+            {/* Update admin routes to use RoleProtectedRoute */}
             <Route
               path="/user-management"
               element={
-                <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={['admin']}>
                   <UserManagement />
-                </ProtectedRoute>
+                </RoleProtectedRoute>
               }
             />
             
             <Route
               path="/request-management"
               element={
-                <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={['admin']}>
                   <RequestManagement />
-                </ProtectedRoute>
+                </RoleProtectedRoute>
               }
             />
             
             <Route
               path="/inventory-management"
               element={
-                <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={['admin']}>
                   <InventoryManagement />
-                </ProtectedRoute>
+                </RoleProtectedRoute>
               }
             />
             
+            {/* Keep regular protected routes for non-admin pages */}
             <Route
               path="/achievements"
               element={

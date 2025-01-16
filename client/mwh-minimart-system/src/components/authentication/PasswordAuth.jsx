@@ -22,7 +22,7 @@ const PasswordAuth = () => {
   
     try {
       const usersRef = collection(db, 'users');
-      const q = query(usersRef, where('email', '==', email.toLowerCase()));
+      const q = query(usersRef, where('email', '==', email));
       const querySnapshot = await getDocs(q);
   
       if (querySnapshot.empty) {
