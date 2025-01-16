@@ -355,6 +355,12 @@ export const getRecentChanges = async () => {
   const response = await api.get("/dashboard/data");
   return response.data.recentChanges;
 };
+
+export const getApprovedRequests = async () => {
+  const response = await api.get("/dashboard/data");
+  return response.data.approvedRequests;
+};
+
 // Transaction Management API Calls
 export const getTransactions = async () => {
   const response = await api.get("/transactions"); // No need for manual headers

@@ -21,6 +21,40 @@ const getLowStockItems = async () => {
   return lowStockSnapshot.size;
 };
 
+const getApprovedRequests = async () => {
+  const requestsRef = collection(db, "requests");
+  const approvedRequestsQuery = query(requestsRef, where("status_id", "==", "approved"));
+  const approvedRequestsSnapshot = await getDocs(approvedRequestsQuery);
+
+  const productQuantities = {};
+
+  for (const requestDoc of approvedRequestsSnapshot.docs) {
+    const requestData = requestDoc.data();
+    const productId = requestData.product_id.split('/').pop(); // Extract product ID
+    const quantity = requestData.quantity;
+
+    if (!productQuantities[productId]) {
+      productQuantities[productId] = 0;
+    }
+    productQuantities[productId] += quantity;
+  }
+
+  const productQuantitiesArray = [];
+
+  for (const productId in productQuantities) {
+    const productDocRef = doc(db, "products", productId);
+    const productDoc = await getDoc(productDocRef);
+    if (productDoc.exists()) {
+      productQuantitiesArray.push({
+        name: productDoc.data().name,
+        quantity: productQuantities[productId],
+      });
+    }
+  }
+
+  return productQuantitiesArray;
+};
+
 const getRecentChanges = async () => {
   const recentChanges = [];
 
@@ -29,11 +63,21 @@ const getRecentChanges = async () => {
   const usersQuery = query(usersRef, orderBy("updated_at", "desc"), limit(5));
   const usersSnapshot = await getDocs(usersQuery);
   usersSnapshot.forEach(doc => {
+    const data = doc.data();
+    let action = "updated";
+    if (data.status_id === "suspended") {
+      action = "suspended";
+    } else if (data.status_id === "active") {
+      action = "reactivated";
+    }
+    if (data.created_at && data.created_at.seconds === data.updated_at.seconds) {
+      action = "added";
+    }
     recentChanges.push({
       type: "User",
-      name: doc.data().name,
-      status: doc.data().status_id,
-      updated_at: doc.data().updated_at,
+      action,
+      name: data.name,
+      updated_at: data.updated_at,
     });
   });
 
@@ -46,10 +90,17 @@ const getRecentChanges = async () => {
     const userId = requestData.user_id.split('/').pop(); // Extract user ID from the user_id field
     const userDocRef = doc(db, "users", userId);
     const userDoc = await getDoc(userDocRef);
+    const userName = userDoc.exists() ? userDoc.data().name : "Unknown User";
+    let action = "updated";
+    if (requestData.status_id === "approved") {
+      action = "approved";
+    } else if (requestData.status_id === "rejected") {
+      action = "rejected";
+    }
     recentChanges.push({
       type: "Request",
-      name: userDoc.exists() ? userDoc.data().name : "Unknown User",
-      status: requestData.status_id,
+      action,
+      name: userName,
       updated_at: requestData.updated_at,
     });
   }
@@ -59,16 +110,21 @@ const getRecentChanges = async () => {
   const productsQuery = query(productsRef, orderBy("updated_at", "desc"), limit(5));
   const productsSnapshot = await getDocs(productsQuery);
   productsSnapshot.forEach(doc => {
+    const data = doc.data();
+    let action = "updated";
+    if (data.created_at && data.created_at.seconds === data.updated_at.seconds) {
+      action = "added";
+    }
     recentChanges.push({
       type: "Product",
-      name: doc.data().name,
-      quantity: doc.data().quantity,
-      updated_at: doc.data().updated_at,
+      action,
+      name: data.name,
+      updated_at: data.updated_at,
     });
   });
 
   // Sort by updated_at timestamp
-  recentChanges.sort((a, b) => b.updated_at - a.updated_at);
+  recentChanges.sort((a, b) => b.updated_at.seconds - a.updated_at.seconds);
 
   return recentChanges;
 };
@@ -77,5 +133,6 @@ module.exports = {
   getTotalUsers,
   getTotalPendingRequests,
   getLowStockItems,
+  getApprovedRequests,
   getRecentChanges,
 };
