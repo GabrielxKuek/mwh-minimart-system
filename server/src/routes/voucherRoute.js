@@ -9,6 +9,6 @@ const controller = require('../controllers/voucherController');
 // router.post('/create', controller.createRequest);
 
 router.get('/all', controller.readVoucherByAll);
-router.get('/product/:id', controller.readProductById);
+router.get('/product/:id', controller.readVoucherProductById);
 
 module.exports = router;

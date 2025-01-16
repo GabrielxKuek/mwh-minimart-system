@@ -23,7 +23,7 @@ module.exports.selectVoucherByAll = async () => {
     }
 };
 
-module.exports.selectProductById = async (productId) => {
+module.exports.selectVoucherProductById = async (productId) => {
     try {
         // Reference to the products collection
         const productRef = doc(db, "products", productId);

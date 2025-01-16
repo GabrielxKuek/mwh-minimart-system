@@ -236,3 +236,22 @@ export const getVoucherByAll = async () => {
     throw error;
   }
 };
+
+// get products from voucher
+export const getVoucherProductByAll = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/voucher/all`);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch vouchers: ${response.status}`);
+    }
+
+    const vouchers = await response.json();
+
+    return vouchers;
+    
+  } catch (error) {
+    console.error("Error fetching vouchers:", error);
+    throw error;
+  }
+};
