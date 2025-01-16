@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { db } from '../../lib/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { Button } from "../ui/button"
-import { Input } from "../ui/input"
-import { Label } from "../ui/label"
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
+import bcrypt from 'bcryptjs'; // Import bcryptjs
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 
 const PasswordAuth = () => {
   const [email, setEmail] = useState('');
@@ -33,9 +34,10 @@ const PasswordAuth = () => {
       const userDoc = querySnapshot.docs[0];
       const userData = userDoc.data();
   
-      // Check if password matches
-      if (userData.password !== password) {
-        setError('Invalid password');
+      // Compare the hashed password with the user input
+      const isPasswordValid = await bcrypt.compare(password, userData.password);
+      if (!isPasswordValid) {
+        setError('Invalid password.');
         return;
       }
   
