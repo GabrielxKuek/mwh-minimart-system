@@ -5,7 +5,7 @@ export const adminMenuItems = {
       { to: "/inventory-management", label: "Inventory" },
     ],
     requests: [
-      { to: "/task-completion-request", label: "Task Completion Requests" },
+      { to: "/task-completion-request", label: "Completion Requests" },
       { to: "/request-management", label: "Current Requests" },
       { to: "/request-history", label: "Request History" },
     ],

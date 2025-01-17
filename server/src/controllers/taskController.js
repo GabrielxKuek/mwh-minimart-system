@@ -162,6 +162,41 @@ const taskController = {
       
       res.status(500).json({ message: error.message });
     }
+  },
+
+  async bookTask(req, res) {
+    try {
+      const { userId } = req.body;
+      const { taskId } = req.body;
+
+      // Validate input
+      if (!taskId) {
+        return res.status(400).json({ message: "Task ID is required" });
+      }
+
+      if (!userId) {
+        return res.status(400).json({ message: "User ID is required" });
+      }
+
+      // Book the task
+      const booking = await taskModel.bookTask(userId, taskId);
+      
+      res.status(201).json(booking);
+    } catch (error) {
+      console.error("Error booking task:", error);
+      
+      // Handle specific errors
+      if (error.message === "User has already booked this task") {
+        return res.status(400).json({ message: error.message });
+      }
+      
+      if (error.message === "Task not found") {
+        return res.status(404).json({ message: error.message });
+      }
+      
+      // Handle any other errors
+      res.status(500).json({ message: "Failed to book task" });
+    }
   }
 };
 

@@ -391,6 +391,50 @@ const taskModel = {
       console.error("Error assigning task points:", error);
       throw new Error("Failed to assign task points");
     }
+  },
+
+  async bookTask(userId, taskId) {
+    try {
+      // Check if user already has this task
+      const existingBookingQuery = query(
+        userTaskCollection,
+        where("user_id", "==", userId),
+        where("task_id", "==", taskId)
+      );
+      
+      const existingBooking = await getDocs(existingBookingQuery);
+      if (!existingBooking.empty) {
+        throw new Error("User has already booked this task");
+      }
+
+      // Check if task exists
+      const taskRef = doc(db, "tasks", taskId);
+      const taskSnap = await getDoc(taskRef);
+      if (!taskSnap.exists()) {
+        throw new Error("Task not found");
+      }
+
+      // Create new UserTask document
+      const userTaskData = {
+        user_id: userId,
+        task_id: taskId,
+        status_id: "incomplete",
+        booked_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        completion_image: ""
+      };
+
+      const userTaskRef = await addDoc(userTaskCollection, userTaskData);
+
+      return {
+        userTaskId: userTaskRef.id,
+        ...userTaskData,
+        task: taskSnap.data()
+      };
+    } catch (error) {
+      console.error("Error booking task:", error);
+      throw error;
+    }
   }
 };
 
