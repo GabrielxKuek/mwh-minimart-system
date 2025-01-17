@@ -1,8 +1,9 @@
-const { collection, doc, getDoc, getDocs, updateDoc, deleteDoc, addDoc } = require("firebase/firestore");
+const { collection, doc, getDoc, getDocs, updateDoc, deleteDoc, addDoc, query, where } = require("firebase/firestore");
 const { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject, getMetadata } = require("firebase/storage");
 const { db } = require("../configs/firebase");
 
 const taskCollection = collection(db, "tasks");
+const userTaskCollection = collection(db, "UserTask");
 const storage = getStorage();
 
 const taskModel = {
@@ -146,6 +147,44 @@ const taskModel = {
     } catch (error) {
       console.error("Error deleting task:", error);
       throw new Error("Failed to delete task");
+    }
+  },
+
+  async getUserTasks(userId) {
+    try {
+      // Create a query to get all UserTask documents for the specified user
+      const userTaskQuery = query(userTaskCollection, where("user_id", "==", userId));
+      const userTaskSnap = await getDocs(userTaskQuery);
+
+      // Array to store the full task details
+      const tasks = [];
+
+      // Iterate through each UserTask document
+      for (const userTaskDoc of userTaskSnap.docs) {
+        const userTaskData = userTaskDoc.data();
+        
+        // Get the associated task details
+        const taskDoc = await getDoc(doc(db, "tasks", userTaskData.task_id));
+        
+        if (taskDoc.exists()) {
+          tasks.push({
+            userTaskId: userTaskDoc.id,
+            taskId: taskDoc.id,
+            userId: userId,
+            status: userTaskData.status_id,
+            bookedAt: userTaskData.booked_at || null,
+            updatedAt: userTaskData.updated_at || null,
+            completionImage: userTaskData.completion_image || null,
+            // Task details
+            ...taskDoc.data()
+          });
+        }
+      }
+
+      return tasks;
+    } catch (error) {
+      console.error("Error getting user tasks:", error);
+      throw new Error("Failed to get user tasks");
     }
   },
 };

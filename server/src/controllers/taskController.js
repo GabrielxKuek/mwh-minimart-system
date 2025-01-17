@@ -70,6 +70,19 @@ const taskController = {
       res.status(500).json({ message: error.message });
     }
   },
+
+  // something
+  async getUserTasks(req, res) {
+    try {
+      const { userId } = req.body;
+
+      const tasks = await taskModel.getUserTasks(userId);
+      res.status(200).json(tasks);
+    } catch (error) {
+      console.error("Error getting user tasks:", error);
+      res.status(500).json({ message: error.message });
+    }
+  },
 };
 
 module.exports = taskController;
