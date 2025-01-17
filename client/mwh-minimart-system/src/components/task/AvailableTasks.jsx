@@ -9,7 +9,7 @@ const AvailableTasks = () => {
 
   const fetchTasks = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/tasks/");
+      const response = await fetch("http://https://mwh-minimart-system-backend.onrender.com/api/tasks/");
       if (!response.ok) {
         throw new Error("Failed to fetch tasks");
       }
