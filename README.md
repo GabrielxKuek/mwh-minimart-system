@@ -152,9 +152,10 @@ Contributions, issues, and feature requests are welcome! See [CONTRIBUTING.md](C
 
 ## 👥 Team
 
-- [Team Member 1] - Role
-- [Team Member 2] - Role
-- [Team Member 3] - Role
+- [[Team Member 1]]https://github.com/GabrielxKuek - Developer (Resident)
+- [[Team Member 2]](https://github.com/xR4F4ELx) - Developer (Resident)
+- [[Team Member 3]](https://github.com/codebreaker64) - Developer (Admin)
+- [[Team Member 4]](https://github.com/calvinseptyanto) - Developer (Admin)
 
 ## 📞 Contact
 
