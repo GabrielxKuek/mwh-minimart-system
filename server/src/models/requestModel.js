@@ -9,6 +9,7 @@ const {
 const { db } = require("../configs/firebase.js");
 
 const requestsCollection = collection(db, "requests");
+const changelogCollection = collection(db, "changelog");
 
 const requestModel = {
   // Retrieve a request by ID
@@ -97,8 +98,20 @@ const requestModel = {
     try {
       const docRef = await addDoc(requestsCollection, {
         ...requestData,
-        updated_at: new Date(), // Set updated_at to the current timestamp
       });
+
+      // Retrieve product name
+      const productName = await this.getProductNameByRef(requestData.product_id);
+
+      // Log the add action
+      await addDoc(changelogCollection, {
+        type: "Request",
+        action: "added",
+        name: productName,
+        status: requestData.status_id,
+        timestamp: new Date(),
+      });
+
       return { id: docRef.id, ...requestData };
     } catch (error) {
       console.error("Error adding request:", error);
@@ -116,7 +129,24 @@ const requestModel = {
         return null; // Request not found
       }
 
-      await updateDoc(docRef, { ...updatedFields, updated_at: new Date() }); // Set updated_at to the current timestamp
+      await updateDoc(docRef, { ...updatedFields });
+
+      // Retrieve product name using docRef
+      const requestData = docSnap.data();
+      let productName = "Unknown Product";
+      if (requestData.product_id) {
+        productName = await this.getProductNameByRef(requestData.product_id);
+      }
+
+      // Log the update action
+      await addDoc(changelogCollection, {
+        type: "Request",
+        action: updatedFields.status_id === "approved" ? "approved" : "rejected",
+        name: productName,
+        status: updatedFields.status_id,
+        timestamp: new Date(),
+      });
+
       return { id: docSnap.id, ...updatedFields };
     } catch (error) {
       console.error("Error updating request:", error);

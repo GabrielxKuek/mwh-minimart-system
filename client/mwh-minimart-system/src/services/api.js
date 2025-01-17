@@ -341,7 +341,6 @@ export const getTotalResidents = async () => {
   return response.data.totalResidents;
 };
 
-
 export const getTotalPendingRequests = async () => {
   const response = await api.get("/dashboard/data");
   return response.data.totalPendingRequests;
@@ -352,14 +351,19 @@ export const getLowStockItems = async () => {
   return response.data.lowStockItems;
 };
 
+export const getApprovedRequests = async () => {
+  const response = await api.get("/dashboard/data");
+  return response.data.approvedRequests;
+};
+
 export const getRecentChanges = async () => {
   const response = await api.get("/dashboard/data");
   return response.data.recentChanges;
 };
 
-export const getApprovedRequests = async () => {
+export const getTotalPendingTasks = async () => {
   const response = await api.get("/dashboard/data");
-  return response.data.approvedRequests;
+  return response.data.totalPendingTasks;
 };
 
 // Transaction Management API Calls

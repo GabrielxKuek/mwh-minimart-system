@@ -87,7 +87,7 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           {/* Logo Section */}
           <div className="flex-shrink-0 flex items-center">
-            <Link to="/tasks" className="text-xl font-bold text-blue-600">
+            <Link to="/dashboard" className="text-xl font-bold text-blue-600">
               Dashboard
             </Link>
           </div>
