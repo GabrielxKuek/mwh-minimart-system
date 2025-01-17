@@ -48,6 +48,8 @@ const Dashboard = () => {
     return "Invalid date";
   };
 
+  const emptyChartData = [{ name: "No Data", quantity: 0 }];
+
   return (
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -91,7 +93,7 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData}>
+              <BarChart data={chartData.length ? chartData : emptyChartData}>
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
