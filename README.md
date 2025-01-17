@@ -70,6 +70,8 @@ MWH Empower is an innovative mobile application designed to support youth rehabi
 | User Management | A Full suite of tools for creating, managing and updating users. |![image](https://github.com/user-attachments/assets/c93a339c-a804-462d-8efd-4c609ec627d8)|
 | Task Management | Full suite of tools for creating, editing, and managing tasks.  | ![image](https://github.com/user-attachments/assets/ac0fa376-d8d8-4c3d-b873-8b4588c3ea13)|
 | Transaction Management | Centralized system for tracking all voucher transactions, point allocations, and prize redemptions. Includes detailed transaction history, filtering options, and audit trails. | ![image](https://github.com/user-attachments/assets/b03170f0-3e36-438e-bb72-46fd94ce996d)|
+| Inventory Management | Allows the admin to track the quantity of items in the inventory and the ability to request for supply when running low  | ![image](https://github.com/user-attachments/assets/2ee25fdb-4709-4a66-b41a-bdd619a739dd)
+ |
 
 ## 🔧 Technical Highlights
 
