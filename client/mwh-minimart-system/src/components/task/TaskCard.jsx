@@ -38,13 +38,13 @@ const TaskCard = ({ task }) => {
                     </div>
                     <div className="flex flex-col gap-3">
                         <div className="flex flex-col gap-1">
-                            <div className="flex items-center gap-2 text-sm text-gray-500">
+                            {/* <div className="flex items-center gap-2 text-sm text-gray-500">
                                 <Clock className={`h-4 w-4 ${isBooked ? 'text-gray-400' : 'text-indigo-500'}`} />
                                 <span>Deadline</span>
-                            </div>
-                            <span className="text-sm font-medium text-gray-700 pl-6">
+                            </div> */}
+                            {/* <span className="text-sm font-medium text-gray-700 pl-6">
                                 {new Date(task.deadline).toLocaleDateString()}
-                            </span>
+                            </span> */}
                         </div>
                         <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-2 text-sm text-gray-500">

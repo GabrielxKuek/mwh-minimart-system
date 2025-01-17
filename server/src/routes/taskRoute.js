@@ -19,4 +19,11 @@ router.put('/:taskId', upload.single('image'), taskController.updateTask);
 // Route to delete a task by ID
 router.delete('/:taskId', taskController.deleteTask);
 
+router.post('/book', taskController.bookTask);
+router.post('/:historyId/complete', upload.single('photo'), taskController.submitCompletion);
+router.get('/user/:userId', taskController.getUserHistory);
+router.patch('/:historyId/status', taskController.updateStatus);
+
+module.exports = router;
+
 module.exports = router;

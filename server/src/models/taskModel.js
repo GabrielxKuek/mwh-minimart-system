@@ -150,4 +150,104 @@ const taskModel = {
   },
 };
 
+class TaskHistory {
+  static async createTaskBooking(userId, taskId) {
+      try {
+          const taskHistoryRef = db.collection('taskHistory');
+          const taskRef = db.collection('tasks').doc(taskId);
+          
+          const task = await taskRef.get();
+          if (!task.exists) {
+              throw new Error('Task not found');
+          }
+
+          const historyData = {
+              userId,
+              taskId,
+              taskData: task.data(),
+              status: 'uncompleted',
+              createdAt: Timestamp.now(),
+              updatedAt: Timestamp.now()
+          };
+
+          return await taskHistoryRef.add(historyData);
+      } catch (error) {
+          throw error;
+      }
+  }
+
+  static async submitCompletion(historyId, photoFile) {
+      try {
+          const taskHistoryRef = db.collection('taskHistory').doc(historyId);
+          const taskHistory = await taskHistoryRef.get();
+
+          if (!taskHistory.exists) {
+              throw new Error('Task history not found');
+          }
+
+          // Upload photo to Firebase Storage
+          const photoPath = `task-completions/${historyId}/${Date.now()}-${photoFile.originalname}`;
+          const photoRef = storage.ref().child(photoPath);
+          await photoRef.put(photoFile.buffer);
+
+          // Get the public URL of the uploaded photo
+          const photoUrl = await photoRef.getDownloadURL();
+
+          // Update task history with photo and change status to pending
+          await taskHistoryRef.update({
+              completionPhoto: photoUrl,
+              status: 'pending',
+              submittedAt: Timestamp.now(),
+              updatedAt: Timestamp.now()
+          });
+
+          return { historyId, photoUrl };
+      } catch (error) {
+          throw error;
+      }
+  }
+
+  static async getUserTaskHistory(userId) {
+      try {
+          const taskHistoryRef = db.collection('taskHistory');
+          const snapshot = await taskHistoryRef
+              .where('userId', '==', userId)
+              .orderBy('createdAt', 'desc')
+              .get();
+
+          return snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data()
+          }));
+      } catch (error) {
+          throw error;
+      }
+  }
+
+  static async updateTaskStatus(historyId, status, adminId = null) {
+      try {
+          const validStatuses = ['uncompleted', 'pending', 'completed'];
+          if (!validStatuses.includes(status)) {
+              throw new Error('Invalid status');
+          }
+
+          const taskHistoryRef = db.collection('taskHistory').doc(historyId);
+          const updateData = {
+              status,
+              updatedAt: Timestamp.now()
+          };
+
+          if (status === 'completed') {
+              updateData.completedAt = Timestamp.now();
+              updateData.approvedBy = adminId;
+          }
+
+          await taskHistoryRef.update(updateData);
+          return { historyId, status };
+      } catch (error) {
+          throw error;
+      }
+  }
+}
+
 module.exports = taskModel;
