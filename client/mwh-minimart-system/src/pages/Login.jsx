@@ -6,7 +6,7 @@ const Login = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <img 
-        src="/src/assets/img/mwh-vertical.png" 
+        src={"/static/images/mwh-vertical.png"}
         alt="Muhammadiyah Welfare Home Logo" 
         className="w-32 h-auto mb-2"
       />

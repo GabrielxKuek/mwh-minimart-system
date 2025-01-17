@@ -89,7 +89,7 @@ const Navbar = () => {
           <div className="flex-shrink-0 flex items-center mt-4">
             <Link to="/dashboard" className="w-full max-w-[150px]">
               <img 
-                src="/src/assets/img/mwh-horizontal.png" 
+                src={"/static/images/mwh-horizontal.png"}
                 alt="Muhammadiyah Welfare Home" 
                 className="w-full h-auto"
               />
