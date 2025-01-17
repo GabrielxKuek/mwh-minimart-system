@@ -231,6 +231,166 @@ const taskModel = {
       console.error("Error uploading task completion:", error);
       throw new Error("Failed to upload task completion");
     }
+  },
+
+  async getTaskRequests(statusFilter = ['pending', 'completed']) {
+    try {
+      const taskRequestsQuery = query(
+        userTaskCollection,
+        where("status_id", "in", Array.isArray(statusFilter) ? statusFilter : [statusFilter])
+      );
+
+      const userTasksSnapshot = await getDocs(taskRequestsQuery);
+      const taskRequests = [];
+
+      for (const userTaskDoc of userTasksSnapshot.docs) {
+        const userTaskData = userTaskDoc.data();
+        
+        // Get task details
+        const taskDoc = await getDoc(doc(db, "tasks", userTaskData.task_id));
+        if (!taskDoc.exists()) continue;
+
+        const taskData = taskDoc.data();
+
+        taskRequests.push({
+          userTaskId: userTaskDoc.id,
+          task_id: userTaskData.task_id,
+          user_id: userTaskData.user_id,
+          status_id: userTaskData.status_id,
+          booked_at: userTaskData.booked_at || "",
+          updated_at: userTaskData.updated_at || "",
+          completion_image: userTaskData.completion_image || "",
+          task: {
+            name: taskData.name,
+            description: taskData.description,
+            points: taskData.points,
+            imageUrl: taskData.imageUrl
+          }
+        });
+      }
+
+      return taskRequests;
+    } catch (error) {
+      console.error("Error getting task requests:", error);
+      throw new Error("Failed to get task requests");
+    }
+  },
+
+  // Update task status
+  async updateTaskStatus(userTaskId, newStatus) {
+    try {
+      const userTaskRef = doc(db, "UserTask", userTaskId);
+      const userTaskSnap = await getDoc(userTaskRef);
+
+      if (!userTaskSnap.exists()) {
+        throw new Error("UserTask not found");
+      }
+
+      const updateData = {
+        status_id: newStatus,
+        updated_at: new Date().toISOString()
+      };
+
+      await updateDoc(userTaskRef, updateData);
+
+      // Get the updated task data
+      const updatedDoc = await getDoc(userTaskRef);
+      const updatedData = updatedDoc.data();
+
+      // Get the associated task details
+      const taskDoc = await getDoc(doc(db, "tasks", updatedData.task_id));
+      const taskData = taskDoc.exists() ? taskDoc.data() : null;
+
+      return {
+        userTaskId: userTaskId,
+        task_id: updatedData.task_id,
+        user_id: updatedData.user_id,
+        status_id: updatedData.status_id,
+        booked_at: updatedData.booked_at || "",
+        updated_at: updatedData.updated_at,
+        completion_image: updatedData.completion_image || "",
+        task: taskData ? {
+          name: taskData.name,
+          description: taskData.description,
+          points: taskData.points,
+          imageUrl: taskData.imageUrl
+        } : null
+      };
+    } catch (error) {
+      console.error("Error updating task status:", error);
+      throw new Error("Failed to update task status");
+    }
+  },
+
+  async updateUserPoints(userId, points) {
+    try {
+      const userRef = doc(db, "users", userId);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        throw new Error("User not found");
+      }
+
+      const userData = userSnap.data();
+      const currentPoints = userData.current_points || 0;
+      const totalPoints = userData.total_points || 0;
+
+      // Update both current and total points
+      await updateDoc(userRef, {
+        current_points: currentPoints + points,
+        total_points: totalPoints + points
+      });
+
+      return {
+        userId,
+        current_points: currentPoints + points,
+        total_points: totalPoints + points
+      };
+    } catch (error) {
+      console.error("Error updating user points:", error);
+      throw new Error("Failed to update user points");
+    }
+  },
+
+  async assignTaskPoints(userTaskId, status) {
+    try {
+      // Only proceed if the status is being set to 'completed'
+      if (status !== 'completed') {
+        return null;
+      }
+
+      // Get the UserTask document
+      const userTaskRef = doc(db, "UserTask", userTaskId);
+      const userTaskSnap = await getDoc(userTaskRef);
+
+      if (!userTaskSnap.exists()) {
+        throw new Error("UserTask not found");
+      }
+
+      const userTaskData = userTaskSnap.data();
+      
+      // Get the task details to know how many points to award
+      const taskRef = doc(db, "tasks", userTaskData.task_id);
+      const taskSnap = await getDoc(taskRef);
+
+      if (!taskSnap.exists()) {
+        throw new Error("Task not found");
+      }
+
+      const taskData = taskSnap.data();
+      const pointsToAward = parseInt(taskData.points) || 0;
+
+      // Update the user's points
+      const result = await this.updateUserPoints(userTaskData.user_id, pointsToAward);
+
+      return {
+        ...result,
+        points_awarded: pointsToAward
+      };
+    } catch (error) {
+      console.error("Error assigning task points:", error);
+      throw new Error("Failed to assign task points");
+    }
   }
 };
 
