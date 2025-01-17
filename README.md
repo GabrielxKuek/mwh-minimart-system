@@ -1,28 +1,3 @@
-Project Description: MWH Empower App
-
-The MWH Empower App is an innovative platform designed to support youths in their journey of rehabilitation and reintegration into society. This application combines practical task management, rewards, and gamification to encourage positive engagement and personal development.
-
-Key Features for Youths:
-	•	Task Booking for Rewards: Youths can browse and book various community or self-improvement tasks, earning voucher points upon completion.
-	•	Rewards Redemption: Accumulated voucher points can be redeemed for exciting prizes and necessities at a dedicated in-app minimart.
-	•	Gamification Elements:
-	•	Leaderboards: Encourages friendly competition by showcasing top-performing participants.
-	•	Achievements: Unlockable badges motivate users by recognizing their milestones and consistent efforts.
-
-Comprehensive Admin Functionality:
-
-To ensure seamless operation, the app includes a robust admin interface with distinct functionalities for managing:
-	•	Tasks: Create, assign, and monitor tasks to ensure alignment with program goals.
-	•	Inventory: Maintain up-to-date records of minimart items, ensuring prize availability.
-	•	Users: Monitor user activity, progress, and performance.
-	•	Transactions: Track point allocations and redemptions with full transparency.
-	•	Minimart: Manage prize listings, stock levels, and voucher point requirements.
-	•	Dashboard: Gain actionable insights through an intuitive and easy-to-use dashboard for overseeing overall program performance.
-
-Impact and Usability:
-
-The MWH Empower App aims to inspire a sense of responsibility, self-worth, and achievement among its users. Its straightforward design ensures accessibility for both participants and administrators, making it a powerful tool for youth rehabilitation initiatives. By integrating gamification and a tangible reward system, the app fosters long-term engagement and meaningful progress for every participant.
-
 # 🌟 MWH Empower <img src="assets/app-logo.png" alt="MWH Empower Logo">
 
 [![Built with React](https://img.shields.io/badge/Built%20with-React-61DAFB.svg?style=flat&logo=react)](https://reactjs.org/)
@@ -40,6 +15,21 @@ The MWH Empower App aims to inspire a sense of responsibility, self-worth, and a
 ---
 
 MWH Empower is an innovative mobile application designed to support youth rehabilitation and reintegration into society. Through a gamified task-reward system, users can earn points by completing various tasks and redeem them for rewards, fostering positive behavior and life skills development.
+
+## 🌟 Key Features for Residents:
+- **📝 Task Booking for Rewards**: Residents can browse and book various community or self-improvement tasks, earning voucher points upon completion.
+- **🎁 Rewards Redemption**: Accumulated voucher points can be redeemed for exciting prizes and necessities at a dedicated in-app minimart.
+- **🏆 Gamification Elements**:
+  - **📊 Leaderboards**: Encourage friendly competition by showcasing top-performing participants.
+  - **🏅 Achievements**: Unlockable badges motivate users by recognizing their milestones and consistent efforts.
+
+## 🔧 Comprehensive Admin Functionality:
+- **🗂 Tasks**: Create, assign, and monitor tasks to ensure alignment with program goals.
+- **📦 Inventory**: Maintain up-to-date records of minimart items, ensuring prize availability.
+- **👥 Users**: Monitor user activity, progress, and performance.
+- **💸 Transactions**: Track point allocations and redemptions with full transparency.
+- **🛍 Minimart**: Manage prize listings, stock levels, and voucher point requirements.
+- **📊 Dashboard**: Gain actionable insights through an intuitive and easy-to-use dashboard for overseeing overall program performance.
 
 ## ⭐ Key Features
 
@@ -120,22 +110,34 @@ This project implements numerous advanced web development concepts:
 ## 🚀 Getting Started
 
 1. Clone this repository
-2. Update Node:
-   ```bash
-   nvm install --lts
-   ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-4. Set up environment variables:
-   ```bash
-   cp .env.example .env
-   ```
-5. Start the development server:
-   ```bash
-   npm run dev
-   ```
+2. **Terminal 1: Setup for the Client:**
+   - Navigate to the client directory:
+     ```bash
+     cd client/mwh-minimart-system
+     ```
+   - Install client dependencies:
+     ```bash
+     npm install
+     ```
+   - Start the client development server:
+     ```bash
+     npm run dev
+     ```
+
+3. **Terminal 2: Setup for the Server:**
+   - Navigate to the server directory:
+     ```bash
+     cd server
+     ```
+   - Install server dependencies:
+     ```bash
+     npm install
+     ```
+   - Start the server development server:
+     ```bash
+     npm run dev
+     ```
+
 
 ## 🛠️ Technology Stack
 
@@ -144,10 +146,6 @@ This project implements numerous advanced web development concepts:
 - **Database**: Firebase Firestore
 - **Storage**: Firebase Storage
 - **Authentication**: Firebase Auth
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for ways to get started.
 
 ## 👥 Team
 
