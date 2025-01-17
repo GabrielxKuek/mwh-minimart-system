@@ -14,7 +14,7 @@
 - [🎮 App Preview](#-app-preview)
 - [🔧 Technical Highlights](#-technical-highlights)
 - [📱 User Features](#-user-features)
-- [👩‍💼 Admin Features](#️-admin-features)
+- [👩‍💼 Admin Features](#-user-features)
 - [🚀 Getting Started](#-getting-started)
 - [🛠️ Technology Stack](#️-technology-stack)
 - [👥 Team](#-team)
