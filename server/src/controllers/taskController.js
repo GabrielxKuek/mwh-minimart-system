@@ -131,10 +131,7 @@ const taskController = {
       const { userTaskId } = req.params;
       const { status_id } = req.body;
 
-      if (!status_id) {
-        return res.status(400).json({ message: "Status is required" });
-      }
-
+      // Validate status
       const validStatuses = ['pending', 'completed', 'incomplete'];
       if (!validStatuses.includes(status_id)) {
         return res.status(400).json({ 
@@ -142,16 +139,30 @@ const taskController = {
         });
       }
 
+      // Update task status
       const updatedTask = await taskModel.updateTaskStatus(userTaskId, status_id);
-      res.status(200).json(updatedTask);
+
+      // If task is marked as completed, assign points
+      let pointsResult = null;
+      if (status_id === 'completed') {
+        pointsResult = await taskModel.assignTaskPoints(userTaskId, status_id);
+      }
+
+      // Return combined response
+      res.status(200).json({
+        task: updatedTask,
+        points: pointsResult
+      });
     } catch (error) {
       console.error("Error updating task status:", error);
+      
       if (error.message === "UserTask not found") {
         return res.status(404).json({ message: error.message });
       }
+      
       res.status(500).json({ message: error.message });
     }
-  },
+  }
 };
 
 module.exports = taskController;

@@ -322,7 +322,76 @@ const taskModel = {
     }
   },
 
-  
+  async updateUserPoints(userId, points) {
+    try {
+      const userRef = doc(db, "users", userId);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        throw new Error("User not found");
+      }
+
+      const userData = userSnap.data();
+      const currentPoints = userData.current_points || 0;
+      const totalPoints = userData.total_points || 0;
+
+      // Update both current and total points
+      await updateDoc(userRef, {
+        current_points: currentPoints + points,
+        total_points: totalPoints + points
+      });
+
+      return {
+        userId,
+        current_points: currentPoints + points,
+        total_points: totalPoints + points
+      };
+    } catch (error) {
+      console.error("Error updating user points:", error);
+      throw new Error("Failed to update user points");
+    }
+  },
+
+  async assignTaskPoints(userTaskId, status) {
+    try {
+      // Only proceed if the status is being set to 'completed'
+      if (status !== 'completed') {
+        return null;
+      }
+
+      // Get the UserTask document
+      const userTaskRef = doc(db, "UserTask", userTaskId);
+      const userTaskSnap = await getDoc(userTaskRef);
+
+      if (!userTaskSnap.exists()) {
+        throw new Error("UserTask not found");
+      }
+
+      const userTaskData = userTaskSnap.data();
+      
+      // Get the task details to know how many points to award
+      const taskRef = doc(db, "tasks", userTaskData.task_id);
+      const taskSnap = await getDoc(taskRef);
+
+      if (!taskSnap.exists()) {
+        throw new Error("Task not found");
+      }
+
+      const taskData = taskSnap.data();
+      const pointsToAward = parseInt(taskData.points) || 0;
+
+      // Update the user's points
+      const result = await this.updateUserPoints(userTaskData.user_id, pointsToAward);
+
+      return {
+        ...result,
+        points_awarded: pointsToAward
+      };
+    } catch (error) {
+      console.error("Error assigning task points:", error);
+      throw new Error("Failed to assign task points");
+    }
+  }
 };
 
 module.exports = taskModel;
