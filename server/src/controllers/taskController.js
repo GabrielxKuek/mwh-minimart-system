@@ -74,7 +74,7 @@ const taskController = {
   // something
   async getUserTasks(req, res) {
     try {
-      const { userId } = req.body;
+      const userId = req.headers.userid;
 
       const tasks = await taskModel.getUserTasks(userId);
       res.status(200).json(tasks);
