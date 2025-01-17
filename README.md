@@ -159,7 +159,7 @@ This project implements numerous advanced web development concepts:
      ```
 
 4. **Terminal 2: Setup for the Server:**
-   - Navigate to the server directory:
+  - Navigate to the server directory:
      ```bash
      cd server
      ```
@@ -167,15 +167,16 @@ This project implements numerous advanced web development concepts:
      ```bash
      nvm install --lts
      ```
-   - Install server dependencies:
+  - Install server dependencies:
      ```bash
      npm install
      ```
-   - Create .env file at server folder:
+  - Create .env file at server folder:
      ```bash
      touch .env
      ```
-   - Key in values inside the .env file:
+  - Key in values inside the .env file:
+    ```
       API_KEY=
       AUTH_DOMAIN=
       PROJECT_ID=
@@ -183,8 +184,8 @@ This project implements numerous advanced web development concepts:
       MESSAGING_SENDER_ID=
       APP_ID=
       MEASUREMENT_ID=
-
-   - Start the server development server:
+    ```
+  - Start the server development server:
      ```bash
      npm run dev
      ```
