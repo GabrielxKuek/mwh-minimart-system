@@ -23,10 +23,11 @@ Impact and Usability:
 
 The MWH Empower App aims to inspire a sense of responsibility, self-worth, and achievement among its users. Its straightforward design ensures accessibility for both participants and administrators, making it a powerful tool for youth rehabilitation initiatives. By integrating gamification and a tangible reward system, the app fosters long-term engagement and meaningful progress for every participant.
 
+![image](https://github.com/user-attachments/assets/bb915e76-3346-4d57-8161-808366d0e275)
 
 | Feature | Description | Demo |
 | ------- | ----------- | ---- |
-| **Computer Vision Detection** | Utilizes advanced AI models to identify vegetables and produce in real-time | ![image](https://github.com/user-attachments/assets/bb915e76-3346-4d57-8161-808366d0e275) |
-| **Inventory Tracking** | Inventory tracking functionality with a user-friendly interface to minimize food waste by preventing overbuying. | <img src="assets/FrontendDemo.jpg" alt="Frontend Demo"> |
-| **Intelligent Receipt Processing** | Combines OCR technology with AI to accurately interpret receipts, even when damaged or faded. | After initial text extraction, the system leverages ChatGPT to fill in gaps and interpret unclear text based on context, ensuring reliable inventory tracking. |
+| Tasks Feature | Allows the residents to book tasks to complete for rewards such as voucher points! | ![image](https://github.com/user-attachments/assets/ac67ad11-79b3-4024-9573-f900d62731f4) |
+| Minimart Feature | Residents can use their voucher points to redeem prizes in the minimart! | ![image](https://github.com/user-attachments/assets/6ce09306-961e-434f-825d-6907a41474cc)|
+| Voucher Dashboard | Used by the residents to track their claimed and unclaimed vouchers | ![image](https://github.com/user-attachments/assets/fdeea93f-bed9-4255-a549-0aec401eeda5)|
 | **Smart Recipe Suggestions** | Generates recipe recommendations based on detected ingredients to minimize food waste by encouraging the use of food users already have. | - |
