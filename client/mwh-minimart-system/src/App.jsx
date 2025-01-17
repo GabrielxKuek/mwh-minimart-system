@@ -28,6 +28,7 @@ import TransactionManagement from "./pages/TransactionManagement";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
 import Reports from "./pages/Reports";
+import ForgetPassword from "./pages/ForgetPassword";
 import TaskCompletionRequest from "./pages/TaskCompletionRequest";
 
 // Constants
@@ -239,6 +240,13 @@ const AppRoutes = () => {
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/forget-password"
+          element={
+            <ForgetPassword />
           }
         />
 
