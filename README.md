@@ -8,7 +8,7 @@
 [![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat&logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![Express.js](https://img.shields.io/badge/Express.js-000000?style=flat&logo=express&logoColor=white)](https://expressjs.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
-
+ • [Presentation Slides](https://www.canva.com/design/DAGcbAGkyac/KO-wlqhGd23-cfApxtekmA/edit?utm_content=DAGcbAGkyac&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 ## 📖 Table of Contents
 - [🌟 Key Features for Residents](#-key-features-for-residents)
 - [🔧 Comprehensive Admin Functionality](#-comprehensive-admin-functionality)
