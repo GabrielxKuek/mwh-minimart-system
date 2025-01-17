@@ -9,13 +9,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Clock, Trophy, Image as ImageIcon } from "lucide-react";
 import PropTypes from 'prop-types';
-import TaskDetailsDialog from './TaskDetailsDialog';
+import TaskCompletionDialog from './TaskCompletionDialog';
 
-const UserTaskCard = ({ task }) => {
-    const [showDetails, setShowDetails] = useState(false);
+const UserTaskCard = ({ task, onTaskUpdate }) => {
+    const [showCompletion, setShowCompletion] = useState(false);
     const isCompleted = task.status === "completed";
 
-    // Function to format the date
     const formatDate = (dateString) => {
         if (!dateString) return 'Not started';
         return new Date(dateString).toLocaleDateString();
@@ -29,6 +28,12 @@ const UserTaskCard = ({ task }) => {
                 return 'bg-yellow-100 text-yellow-700';
             default:
                 return 'bg-gray-100 text-gray-700';
+        }
+    };
+
+    const handleCompletionSuccess = (result) => {
+        if (onTaskUpdate) {
+            onTaskUpdate(result);
         }
     };
 
@@ -104,24 +109,22 @@ const UserTaskCard = ({ task }) => {
                     <p className="text-sm text-gray-600 mb-4 line-clamp-2">
                         {task.description}
                     </p>
-                    <Button
-                        variant="outline"
-                        className={`w-full ${
-                            isCompleted
-                                ? 'border-gray-200 text-gray-500 hover:bg-gray-50'
-                                : 'border-indigo-200 hover:bg-indigo-50'
-                        }`}
-                        onClick={() => setShowDetails(true)}
-                    >
-                        View Details
-                    </Button>
+                    {!isCompleted && (
+                        <Button
+                            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                            onClick={() => setShowCompletion(true)}
+                        >
+                            Complete Task
+                        </Button>
+                    )}
                 </CardContent>
             </Card>
 
-            <TaskDetailsDialog
-                open={showDetails}
-                onOpenChange={setShowDetails}
+            <TaskCompletionDialog
+                open={showCompletion}
+                onOpenChange={setShowCompletion}
                 task={task}
+                onSuccess={handleCompletionSuccess}
             />
         </>
     );
@@ -141,6 +144,7 @@ UserTaskCard.propTypes = {
         name: PropTypes.string.isRequired,
         points: PropTypes.string.isRequired,
     }).isRequired,
+    onTaskUpdate: PropTypes.func,
 };
 
 export default UserTaskCard;

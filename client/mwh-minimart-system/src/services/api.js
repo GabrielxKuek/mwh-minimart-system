@@ -406,3 +406,31 @@ export const getAllUserTasks = async (userId) => {
     throw error;
   }
 };
+
+export const uploadTaskCompletion = async (userTaskId, imageFile) => {
+  try {
+    const url = `${API_BASE_URL}/tasks/completion/${userTaskId}`;
+    
+    // Create FormData and append the image
+    const formData = new FormData();
+    formData.append('completionImage', imageFile);
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+
+  } catch (error) {
+    console.error('Error uploading task completion:', error);
+    throw error;
+  }
+};

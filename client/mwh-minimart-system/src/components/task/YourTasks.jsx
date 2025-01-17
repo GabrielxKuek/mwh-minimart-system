@@ -115,7 +115,11 @@ const YourTasks = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredTasks().map((task) => (
-                <UserTaskCard key={task.userTaskId} task={task} />
+                <UserTaskCard 
+                  key={task.userTaskId} 
+                  task={task}
+                  onTaskUpdate={fetchTasks}
+                />
               ))}
             </div>
           )}
