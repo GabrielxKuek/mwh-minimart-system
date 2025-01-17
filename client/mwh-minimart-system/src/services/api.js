@@ -501,10 +501,10 @@ export const bookTask = async (userId, taskId) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: { 
-        "userId": userId,
-        "taskId": taskId 
-      }
+      body: JSON.stringify({ 
+        userId,
+        taskId 
+      })
     });
 
     if (!response.ok) {

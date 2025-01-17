@@ -166,7 +166,7 @@ const taskController = {
 
   async bookTask(req, res) {
     try {
-      const userId = req.body;
+      const { userId } = req.body;
       const { taskId } = req.body;
 
       // Validate input

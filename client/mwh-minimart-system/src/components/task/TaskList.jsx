@@ -3,6 +3,7 @@ import { getAllTasks, deleteTask } from "../../services/api";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import PropTypes from "prop-types";
 import {
   Dialog,
   DialogContent,
@@ -19,7 +20,7 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "react-toastify";
-import { Search, ChevronDown, AlertTriangle } from "lucide-react";
+import { Search, ChevronDown } from "lucide-react";
 import EditTaskForm from "./EditTaskForm";
 
 const TaskList = ({ refreshTrigger }) => {
@@ -186,6 +187,10 @@ const TaskList = ({ refreshTrigger }) => {
       </div>
     </div>
   );
+};
+
+TaskList.propTypes = {
+  refreshTrigger: PropTypes.any.isRequired, // Adjust the type (e.g., `PropTypes.bool`, `PropTypes.number`) as needed
 };
 
 export default TaskList;
