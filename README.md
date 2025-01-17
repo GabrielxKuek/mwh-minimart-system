@@ -9,6 +9,8 @@
 [![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat&logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![Express.js](https://img.shields.io/badge/Express.js-000000?style=flat&logo=express&logoColor=white)](https://expressjs.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat&logo=vercel&logoColor=white)](https://vercel.com/)
+[![Render](https://img.shields.io/badge/Render-46E3B7?style=flat&logo=render&logoColor=white)](https://render.com/)
 
 ## 📖 Table of Contents
 - [🌟 Key Features for Residents](#-key-features-for-residents)
@@ -21,6 +23,7 @@
 - [📱 User Features](#-user-features)
 - [👩‍💼 Admin Features](#-user-features)
 - [🚀 Getting Started](#-getting-started)
+- [🌐 Deployment](#-deployment)
 - [🛠️ Technology Stack](#️-technology-stack)
 - [👥 Team](#-team)
 
@@ -144,6 +147,7 @@ This project implements numerous advanced web development concepts:
    ```bash
    git clone https://github.com/your-repo-name.git
    cd your-repo-name
+   ```
 
 3. **Terminal 1: Setup for the Client**:
   - Navigate to the client directory:
@@ -205,6 +209,46 @@ This project implements numerous advanced web development concepts:
      npm run dev
      ```
 
+## 🌐 Deployment
+
+The application is deployed across two platforms for optimal performance and reliability:
+
+### Frontend Deployment [![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat&logo=vercel&logoColor=white)](https://vercel.com/)
+- **URL**: [https://mwh-minimart-system.vercel.app](https://mwh-minimart-system.vercel.app)
+- **Platform**: Vercel
+- **Technology Stack**:
+  - React.js
+  - Tailwind CSS
+  - Firebase SDK
+  - Vite
+- **Features**:
+  - Automated deployments
+  - Edge network distribution
+  - SSL encryption
+  - Real-time updates
+  - Responsive design
+
+### Backend Deployment [![Render](https://img.shields.io/badge/Render-46E3B7?style=flat&logo=render&logoColor=white)](https://render.com/)
+- **URL**: [https://mwh-minimart-system-backend.onrender.com](https://mwh-minimart-system-backend.onrender.com)
+- **Platform**: Render
+- **Technology Stack**:
+  - Node.js
+  - Express.js
+  - Firebase Admin SDK
+- **Features**:
+  - Auto-scaling
+  - Continuous deployment
+  - Health checks
+  - Secure environment variables
+  - API monitoring
+
+### Deployment Configuration
+- Both frontend and backend deployments are configured for continuous integration and deployment (CI/CD)
+- Environment variables are securely managed through respective platform dashboards
+- SSL certificates are automatically provisioned and renewed
+- Regular health checks ensure system reliability
+- Automated backups and rollback capabilities
+
 ## 🛠️ Technology Stack
 
 - **Frontend**: React, Tailwind CSS
@@ -212,6 +256,7 @@ This project implements numerous advanced web development concepts:
 - **Database**: Firebase Firestore
 - **Storage**: Firebase Storage
 - **Authentication**: Firebase Auth
+- **Deployment**: Vercel (Frontend), Render (Backend)
 
 ## 👥 Team
 <table>
@@ -251,4 +296,4 @@ This project implements numerous advanced web development concepts:
 </tr>
 </table>
 
-Made by Hack Tuah Script on That Thang
+Made by Hack Tuah Script on That Thang
