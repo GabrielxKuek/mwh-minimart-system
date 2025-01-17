@@ -187,6 +187,51 @@ const taskModel = {
       throw new Error("Failed to get user tasks");
     }
   },
+
+  async uploadTaskCompletion (userTaskId, file) {
+    try {
+      // Get reference to the UserTask document
+      const userTaskRef = doc(db, "UserTask", userTaskId);
+      const userTaskSnap = await getDoc(userTaskRef); 
+  
+      if (!userTaskSnap.exists()) {
+        throw new Error("UserTask not found");
+      }
+  
+      let completionImageUrl = null;
+      const storage = getStorage();
+  
+      if (file) {
+        const timestamp = new Date().getTime();
+        const filename = `task_completion_images/${userTaskId}_${timestamp}_${file.originalname}`;
+        
+        // Upload the completion image
+        const storageRef = ref(storage, filename);
+        const uploadTask = uploadBytesResumable(storageRef, file.buffer);
+        const snapshot = await uploadTask;
+        completionImageUrl = await getDownloadURL(snapshot.ref);
+      }
+  
+      // Update the UserTask document with completion details
+      const updateData = {
+        completion_image: completionImageUrl,
+        updated_at: new Date().toISOString(),
+        status_id: "pending"
+      };
+  
+      await updateDoc(userTaskRef, updateData);
+  
+      return {
+        userTaskId,
+        completionImageUrl,
+        status: "completed",
+        updatedAt: updateData.updated_at
+      };
+    } catch (error) {
+      console.error("Error uploading task completion:", error);
+      throw new Error("Failed to upload task completion");
+    }
+  }
 };
 
 module.exports = taskModel;
