@@ -86,9 +86,13 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo Section */}
-          <div className="flex-shrink-0 flex items-center">
-            <Link to="/dashboard" className="text-xl font-bold text-blue-600">
-              Dashboard
+          <div className="flex-shrink-0 flex items-center mt-4">
+            <Link to="/dashboard" className="w-full max-w-[150px]">
+              <img 
+                src="/src/assets/img/mwh-horizontal.png" 
+                alt="Muhammadiyah Welfare Home" 
+                className="w-full h-auto"
+              />
             </Link>
           </div>
 

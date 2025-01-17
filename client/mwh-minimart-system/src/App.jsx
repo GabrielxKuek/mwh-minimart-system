@@ -27,11 +27,14 @@ import Dashboard from "./pages/Dashboard";
 import Task from "./pages/Tasks";
 import TransactionManagement from "./pages/TransactionManagement";
 import Profile from "./pages/Profile";
+import Dashboard from "./pages/Dashboard";
 import Reports from "./pages/Reports";
+import ForgetPassword from "./pages/ForgetPassword";
 import TaskCompletionRequest from "./pages/TaskCompletionRequest";
 
 // Constants
 const ADMIN_ROLE = "admin";
+// const RESIDENT_ROLE = "resident";
 
 // Protected Route Components
 const ProtectedRoute = ({ children }) => {
@@ -241,11 +244,27 @@ const AppRoutes = () => {
           }
         />
 
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/forget-password"
+          element={
+            <ForgetPassword />
+          }
+        />
+
         {/* Fallback Route */}
         <Route 
           path="*" 
           element={
-            <Navigate to={isAuthenticated ? "/tasks" : "/login"} replace />
+            <Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />
           } 
         />
       </Routes>
