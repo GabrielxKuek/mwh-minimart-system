@@ -1,10 +1,11 @@
 const { db } = require("../configs/firebase");
 const { collection, getDocs, query, where, orderBy, limit, doc, getDoc } = require("firebase/firestore");
 
-const getTotalUsers = async () => {
+const getTotalResidents = async () => {
   const usersRef = collection(db, "users");
-  const usersSnapshot = await getDocs(usersRef);
-  return usersSnapshot.size;
+  const residentsQuery = query(usersRef, where("role_id", "==", "resident"));
+  const residentsSnapshot = await getDocs(residentsQuery);
+  return residentsSnapshot.size;
 };
 
 const getTotalPendingRequests = async () => {
@@ -123,6 +124,20 @@ const getRecentChanges = async () => {
     });
   });
 
+  // Fetch recent delete actions
+  const recentChangesRef = collection(db, "recent_changes");
+  const recentChangesQuery = query(recentChangesRef, orderBy("updated_at", "desc"), limit(5));
+  const recentChangesSnapshot = await getDocs(recentChangesQuery);
+  recentChangesSnapshot.forEach(doc => {
+    const data = doc.data();
+    recentChanges.push({
+      type: data.type,
+      action: data.action,
+      name: data.name,
+      updated_at: data.updated_at,
+    });
+  });
+
   // Sort by updated_at timestamp
   recentChanges.sort((a, b) => b.updated_at.seconds - a.updated_at.seconds);
 
@@ -130,7 +145,7 @@ const getRecentChanges = async () => {
 };
 
 module.exports = {
-  getTotalUsers,
+  getTotalResidents,
   getTotalPendingRequests,
   getLowStockItems,
   getApprovedRequests,

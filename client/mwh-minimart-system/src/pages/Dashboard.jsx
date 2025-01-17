@@ -6,10 +6,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { getTotalUsers, getTotalPendingRequests, getLowStockItems, getApprovedRequests, getRecentChanges } from "../services/api";
+import { getTotalResidents, getTotalPendingRequests, getLowStockItems, getApprovedRequests, getRecentChanges } from "../services/api";
 
 const Dashboard = () => {
-  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalResidents, setTotalResidents] = useState(0);
   const [totalPendingRequests, setTotalPendingRequests] = useState(0);
   const [lowStockItems, setLowStockItems] = useState(0);
   const [approvedRequests, setApprovedRequests] = useState([]);
@@ -18,13 +18,13 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const users = await getTotalUsers();
+      const residents = await getTotalResidents();
       const pendingRequests = await getTotalPendingRequests();
       const lowStock = await getLowStockItems();
       const approvedRequestsData = await getApprovedRequests();
       const changes = await getRecentChanges();
 
-      setTotalUsers(users);
+      setTotalResidents(residents);
       setTotalPendingRequests(pendingRequests);
       setLowStockItems(lowStock);
       setApprovedRequests(approvedRequestsData);
@@ -50,10 +50,10 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <Card>
           <CardHeader>
-            <CardTitle>Total Users</CardTitle>
+            <CardTitle>Total Residents</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{totalUsers}</p>
+            <p className="text-2xl font-bold">{totalResidents}</p>
           </CardContent>
         </Card>
         <Card>
@@ -103,7 +103,7 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             <ul className="space-y-2">
-            {recentChanges.map((change, index) => (
+              {recentChanges.map((change, index) => (
                 <li key={index} className="text-sm">
                   {`${change.type} ${change.action}: ${change.name} (Time: ${formatTimestamp(change.updated_at)})`}
                 </li>
