@@ -1,8 +1,9 @@
-const { collection, doc, getDoc, getDocs, updateDoc, deleteDoc, addDoc } = require("firebase/firestore");
+const { collection, doc, getDoc, getDocs, updateDoc, deleteDoc, addDoc, query, where } = require("firebase/firestore");
 const { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject, getMetadata } = require("firebase/storage");
 const { db } = require("../configs/firebase");
 
 const taskCollection = collection(db, "tasks");
+const userTaskCollection = collection(db, "UserTask");
 const storage = getStorage();
 
 const taskModel = {
@@ -148,6 +149,89 @@ const taskModel = {
       throw new Error("Failed to delete task");
     }
   },
+
+  async getUserTasks(userId) {
+    try {
+      // Create a query to get all UserTask documents for the specified user
+      const userTaskQuery = query(userTaskCollection, where("user_id", "==", userId));
+      const userTaskSnap = await getDocs(userTaskQuery);
+
+      // Array to store the full task details
+      const tasks = [];
+
+      // Iterate through each UserTask document
+      for (const userTaskDoc of userTaskSnap.docs) {
+        const userTaskData = userTaskDoc.data();
+        
+        // Get the associated task details
+        const taskDoc = await getDoc(doc(db, "tasks", userTaskData.task_id));
+        
+        if (taskDoc.exists()) {
+          tasks.push({
+            userTaskId: userTaskDoc.id,
+            taskId: taskDoc.id,
+            userId: userId,
+            status: userTaskData.status_id,
+            bookedAt: userTaskData.booked_at || null,
+            updatedAt: userTaskData.updated_at || null,
+            completionImage: userTaskData.completion_image || null,
+            // Task details
+            ...taskDoc.data()
+          });
+        }
+      }
+
+      return tasks;
+    } catch (error) {
+      console.error("Error getting user tasks:", error);
+      throw new Error("Failed to get user tasks");
+    }
+  },
+
+  async uploadTaskCompletion (userTaskId, file) {
+    try {
+      // Get reference to the UserTask document
+      const userTaskRef = doc(db, "UserTask", userTaskId);
+      const userTaskSnap = await getDoc(userTaskRef); 
+  
+      if (!userTaskSnap.exists()) {
+        throw new Error("UserTask not found");
+      }
+  
+      let completionImageUrl = null;
+      const storage = getStorage();
+  
+      if (file) {
+        const timestamp = new Date().getTime();
+        const filename = `task_completion_images/${userTaskId}_${timestamp}_${file.originalname}`;
+        
+        // Upload the completion image
+        const storageRef = ref(storage, filename);
+        const uploadTask = uploadBytesResumable(storageRef, file.buffer);
+        const snapshot = await uploadTask;
+        completionImageUrl = await getDownloadURL(snapshot.ref);
+      }
+  
+      // Update the UserTask document with completion details
+      const updateData = {
+        completion_image: completionImageUrl,
+        updated_at: new Date().toISOString(),
+        status_id: "pending"
+      };
+  
+      await updateDoc(userTaskRef, updateData);
+  
+      return {
+        userTaskId,
+        completionImageUrl,
+        status: "completed",
+        updatedAt: updateData.updated_at
+      };
+    } catch (error) {
+      console.error("Error uploading task completion:", error);
+      throw new Error("Failed to upload task completion");
+    }
+  }
 };
 
 module.exports = taskModel;

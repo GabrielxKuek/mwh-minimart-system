@@ -10,6 +10,12 @@ router.post('/', upload.single('image'), taskController.addTask);
 // Route to get all tasks
 router.get('/', taskController.getAllTasks);
 
+// Route to get a user tasks by id
+router.get('/user/task/', taskController.getUserTasks);
+
+// Route to upload task completion image
+router.post('/completion/:userTaskId', upload.single('completionImage'), taskController.uploadTaskCompletion);
+
 // Route to get a task by ID
 router.get('/:taskId', taskController.getTask);
 
