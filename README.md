@@ -144,11 +144,6 @@ This project implements numerous advanced web development concepts:
 - **Database**: Firebase Firestore
 - **Storage**: Firebase Storage
 - **Authentication**: Firebase Auth
-- **Hosting**: [Your hosting platform]
-
-## 📝 License
-
-This project is licensed under the [Your License] License - see the LICENSE.md file for details.
 
 ## 🤝 Contributing
 
@@ -160,12 +155,4 @@ Contributions, issues, and feature requests are welcome! See [CONTRIBUTING.md](C
 - [[Macam Rafael]](https://github.com/xR4F4ELx) - Developer (Resident)
 - [[Fong Kai Jie]](https://github.com/codebreaker64) - Developer (Admin)
 - [[Calvin Septyanto]](https://github.com/calvinseptyanto) - Developer (Admin)
-
-## 📞 Contact
-
-For any questions or concerns, please contact [contact information].
-
----
-
-Built with ❤️ for youth empowerment and community development.
 
