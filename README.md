@@ -145,6 +145,10 @@ This project implements numerous advanced web development concepts:
      ```bash
      cd client/mwh-minimart-system
      ```
+   - Install latest node version with Long-Term Support:
+     ```bash
+     nvm install --lts
+     ```
    - Install client dependencies:
      ```bash
      npm install
@@ -159,10 +163,27 @@ This project implements numerous advanced web development concepts:
      ```bash
      cd server
      ```
+  - Install latest node version with Long-Term Support:
+     ```bash
+     nvm install --lts
+     ```
    - Install server dependencies:
      ```bash
      npm install
      ```
+   - Create .env file at server folder:
+     ```bash
+     touch .env
+     ```
+   - Key in values inside the .env file:
+      API_KEY=
+      AUTH_DOMAIN=
+      PROJECT_ID=
+      STORAGE_BUCKET=
+      MESSAGING_SENDER_ID=
+      APP_ID=
+      MEASUREMENT_ID=
+
    - Start the server development server:
      ```bash
      npm run dev
