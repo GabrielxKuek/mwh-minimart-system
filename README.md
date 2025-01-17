@@ -120,15 +120,19 @@ This project implements numerous advanced web development concepts:
 ## 🚀 Getting Started
 
 1. Clone this repository
-2. Install dependencies:
+2. Update Node:
+   ```bash
+   nvm install --lts
+   ```
+3. Install dependencies:
    ```bash
    npm install
    ```
-3. Set up environment variables:
+4. Set up environment variables:
    ```bash
    cp .env.example .env
    ```
-4. Start the development server:
+5. Start the development server:
    ```bash
    npm run dev
    ```
