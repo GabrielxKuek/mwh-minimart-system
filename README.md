@@ -84,3 +84,27 @@ Create a new purchase transaction for products.
     }
 }
 ```
+
+### Dashboard
+```http
+GET /dashboard/data
+```
+Return total residents, total pending tasks, total pending requests, total low-stock items, recent changes to databases, and total number of approved items to display in the Dashboard.
+
+### Request Management/History
+
+```http
+GET /requests
+```
+Return a list of all requests pending for Request Management and requests approved/rejected for Request History.
+
+```http
+PUT /requests/${requestId}/approve
+```
+
+Change status of request from pending to approved.
+
+```http
+PUT /requests/${requestId}/reject
+```
+Change status of request from pending to rejected.

@@ -25,4 +25,8 @@ router.put('/:taskId', upload.single('image'), taskController.updateTask);
 // Route to delete a task by ID
 router.delete('/:taskId', taskController.deleteTask);
 
+router.put('/status/:userTaskId', taskController.updateTaskStatus);
+
+router.get('/completion-requests/status', taskController.getTaskRequests);
+
 module.exports = router;

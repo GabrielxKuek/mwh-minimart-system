@@ -438,3 +438,59 @@ export const uploadTaskCompletion = async (userTaskId, imageFile) => {
     throw error;
   }
 };
+
+// Get all task requests (pending and completed)
+export const getTaskRequests = async (statusFilter = null) => {
+  try {
+    let url = `${API_BASE_URL}/tasks/completion-requests/status`;
+    if (statusFilter) {
+      url += `?status=${statusFilter}`;
+    }
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching task requests:', error);
+    throw error;
+  }
+};
+
+// Update task status
+export const updateTaskStatus = async (userTaskId, status_id) => {
+  try {
+    const url = `${API_BASE_URL}/tasks/status/${userTaskId}`;
+    
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ status_id })
+    });
+
+    if (!response.ok) {
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error updating task status:', error);
+    throw error;
+  }
+};
