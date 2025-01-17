@@ -29,4 +29,7 @@ router.put('/status/:userTaskId', taskController.updateTaskStatus);
 
 router.get('/completion-requests/status', taskController.getTaskRequests);
 
+// Book a task
+router.post('/book/book', taskController.bookTask);
+
 module.exports = router;

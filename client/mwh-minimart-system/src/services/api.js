@@ -490,3 +490,33 @@ export const updateTaskStatus = async (userTaskId, status_id) => {
     throw error;
   }
 };
+
+// Book a task
+export const bookTask = async (userId, taskId) => {
+  try {
+    const url = `${API_BASE_URL}/tasks/book/book`;
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: { 
+        "userId": userId,
+        "taskId": taskId 
+      }
+    });
+
+    if (!response.ok) {
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error booking task:', error);
+    throw error;
+  }
+};

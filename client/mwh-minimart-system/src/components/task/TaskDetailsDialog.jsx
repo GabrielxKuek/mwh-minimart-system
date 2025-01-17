@@ -7,18 +7,34 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Trophy } from "lucide-react";
+import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { bookTask } from '../../services/api';
 
-const TaskDetailsDialog = ({ open, onOpenChange, task }) => {
+const TaskDetailsDialog = ({ open, onOpenChange, task, onTaskBooked }) => {
+    const [isBooking, setIsBooking] = useState(false);
+
     const handleBookTask = async () => {
+        const userId = sessionStorage.getItem('userId');
+        if (!userId) {
+            console.error('No user ID found');
+            return;
+        }
+
         try {
-            // Add your booking logic here
-            console.log('Booking task:', task.id);
+            setIsBooking(true);
+            await bookTask(userId, task.id);
+            onTaskBooked && onTaskBooked();
             onOpenChange(false);
         } catch (error) {
             console.error('Error booking task:', error);
+        } finally {
+            setIsBooking(false);
         }
     };
+
+    // Convert points to number for display
+    const pointsValue = parseInt(task.points) || 0;
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -42,13 +58,15 @@ const TaskDetailsDialog = ({ open, onOpenChange, task }) => {
                 </DialogHeader>
                 <div className="space-y-6">
                     <div className="space-y-4">
-                        <div className="flex items-center gap-2 text-gray-500">
-                            <Clock className="h-4 w-4 text-indigo-500" />
-                            <span>Deadline: {new Date(task.deadline).toLocaleDateString()}</span>
-                        </div>
+                        {task.deadline && (
+                            <div className="flex items-center gap-2 text-gray-500">
+                                <Clock className="h-4 w-4 text-indigo-500" />
+                                <span>Deadline: {new Date(task.deadline).toLocaleDateString()}</span>
+                            </div>
+                        )}
                         <div className="flex items-center gap-2 text-gray-500">
                             <Trophy className="h-4 w-4 text-indigo-500" />
-                            <span>{task.points} points</span>
+                            <span>{pointsValue} points</span>
                         </div>
                     </div>
                     <div className="space-y-2">
@@ -57,10 +75,11 @@ const TaskDetailsDialog = ({ open, onOpenChange, task }) => {
                     </div>
                     {task.status !== "booked" && (
                         <Button
-                            className="w-full"
+                            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
                             onClick={handleBookTask}
+                            disabled={isBooking}
                         >
-                            Book Task
+                            {isBooking ? 'Booking...' : 'Book Task'}
                         </Button>
                     )}
                 </div>
@@ -76,10 +95,14 @@ TaskDetailsDialog.propTypes = {
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
         description: PropTypes.string.isRequired,
-        points: PropTypes.number.isRequired,
-        deadline: PropTypes.string.isRequired,
+        points: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number
+        ]).isRequired,
+        deadline: PropTypes.string, // Made optional
         status: PropTypes.string.isRequired,
     }).isRequired,
+    onTaskBooked: PropTypes.func
 };
 
 export default TaskDetailsDialog;
