@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { getTotalResidents, getTotalPendingRequests, getLowStockItems, getApprovedRequests, getRecentChanges } from "../services/api";
+import { getTotalResidents, getTotalPendingRequests, getLowStockItems, getApprovedRequests, getRecentChanges, getTotalPendingTasks } from "../services/api";
 
 const Dashboard = () => {
   const [totalResidents, setTotalResidents] = useState(0);
@@ -14,6 +14,7 @@ const Dashboard = () => {
   const [lowStockItems, setLowStockItems] = useState(0);
   const [approvedRequests, setApprovedRequests] = useState([]);
   const [recentChanges, setRecentChanges] = useState([]);
+  const [totalPendingTasks, setTotalPendingTasks] = useState(0);
   const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
@@ -23,12 +24,14 @@ const Dashboard = () => {
       const lowStock = await getLowStockItems();
       const approvedRequestsData = await getApprovedRequests();
       const changes = await getRecentChanges();
+      const pendingTasks = await getTotalPendingTasks();
 
       setTotalResidents(residents);
       setTotalPendingRequests(pendingRequests);
       setLowStockItems(lowStock);
       setApprovedRequests(approvedRequestsData);
       setRecentChanges(changes);
+      setTotalPendingTasks(pendingTasks);
 
       // Set chart data
       setChartData(approvedRequestsData);
@@ -45,6 +48,8 @@ const Dashboard = () => {
     return "Invalid date";
   };
 
+  const emptyChartData = [{ name: "No Data", quantity: 0 }];
+
   return (
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -58,10 +63,10 @@ const Dashboard = () => {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Blank</CardTitle>
+            <CardTitle>Total Pending Tasks</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">-</p>
+            <p className="text-2xl font-bold">{totalPendingTasks}</p>
           </CardContent>
         </Card>
         <Card>
@@ -88,7 +93,7 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData}>
+              <BarChart data={chartData.length ? chartData : emptyChartData}>
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
@@ -105,7 +110,7 @@ const Dashboard = () => {
             <ul className="space-y-2">
               {recentChanges.map((change, index) => (
                 <li key={index} className="text-sm">
-                  {`${change.type} ${change.action}: ${change.name} (Time: ${formatTimestamp(change.updated_at)})`}
+                  {`${change.type} ${change.action}: ${change.name} (Time: ${formatTimestamp(change.timestamp)})`}
                 </li>
               ))}
             </ul>

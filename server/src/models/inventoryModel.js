@@ -3,6 +3,7 @@ const { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject, get
 const { db } = require("../configs/firebase");
 
 const productCollection = collection(db, "products");
+const changelogCollection = collection(db, "changelog");
 const storage = getStorage();
 
 const inventoryModel = {
@@ -13,14 +14,20 @@ const inventoryModel = {
       const snapshot = await uploadTask;
       const imageUrl = await getDownloadURL(snapshot.ref);
 
-      const now = new Date();
       const productRef = await addDoc(productCollection, {
         ...productData,
         imageUrl,
         quantity: parseInt(productData.quantity),
         point: parseInt(productData.point),
-        created_at: now, // Set created_at to the current timestamp
-        updated_at: now, // Set updated_at to the current timestamp
+      });
+
+      // Log the add action
+      await addDoc(changelogCollection, {
+        type: "Product",
+        action: "added",
+        name: productData.name,
+        quantity: parseInt(productData.quantity),
+        timestamp: new Date(),
       });
 
       return { id: productRef.id, ...productData, imageUrl };
@@ -94,7 +101,7 @@ const inventoryModel = {
       console.log("Updating product in Firestore with ID:", productId); // Add logging here
       console.log("Updated product data:", { ...productData, imageUrl }); // Add logging here
 
-      const updateData = { ...productData, updated_at: new Date() }; // Set updated_at to the current timestamp
+      const updateData = { ...productData };
       if (imageUrl) {
         updateData.imageUrl = imageUrl;
       } else {
@@ -102,6 +109,16 @@ const inventoryModel = {
       }
 
       await updateDoc(productRef, updateData);
+
+      // Log the update action
+      await addDoc(changelogCollection, {
+        type: "Product",
+        action: "edited",
+        name: productData.name,
+        quantity: parseInt(productData.quantity),
+        timestamp: new Date(),
+      });
+
       return { id: productId, ...productData, imageUrl };
     } catch (error) {
       console.error("Error updating product:", error);
@@ -147,12 +164,12 @@ const inventoryModel = {
       console.log("Product deleted from Firestore with ID:", productId); // Add logging here
 
       // Log the delete action
-      const recentChangesRef = collection(db, "recent_changes");
-      await addDoc(recentChangesRef, {
+      await addDoc(changelogCollection, {
         type: "Product",
         action: "deleted",
         name: productData.name,
-        updated_at: new Date(),
+        quantity: parseInt(productData.quantity),
+        timestamp: new Date(),
       });
 
       return { id: productId };

@@ -11,24 +11,26 @@ const {
 const { db } = require("../configs/firebase.js");
 
 const usersCollection = collection(db, "users");
+const changelogCollection = collection(db, "changelog");
 
 const userModel = {
-  addUser: function (userData) {
-    const now = new Date();
-    return addDoc(usersCollection, {
+  addUser: async function (userData) {
+    const userRef = await addDoc(usersCollection, {
       ...userData,
       current_points: 0,
       total_points: 0,
-      created_at: now, // Set created_at to the current timestamp
-      updated_at: now, // Set updated_at to the current timestamp
-    })
-      .then((docRef) => {
-        return docRef.id;
-      })
-      .catch((error) => {
-        console.error("Error adding user:", error);
-        throw error;
-      });
+    });
+
+    // Log the add action
+    await addDoc(changelogCollection, {
+      type: "User",
+      action: "added",
+      name: userData.name,
+      status: userData.status_id,
+      timestamp: new Date(),
+    });
+
+    return userRef.id;
   },
 
   getUserById: function (userId) {
@@ -57,13 +59,59 @@ const userModel = {
       });
   },
 
-  updateUser: function (userId, updatedData) {
+  updateUser: async function (userId, updatedData) {
     const docRef = doc(usersCollection, userId);
-    return updateDoc(docRef, { ...updatedData, updated_at: new Date() }) // Set updated_at to the current timestamp
-      .catch((error) => {
-        console.error("Error updating user:", error);
-        throw error;
+    await updateDoc(docRef, { ...updatedData });
+
+    // Retrieve the updated user data to ensure the name field is present
+    const userSnap = await getDoc(docRef);
+    if (userSnap.exists()) {
+      const userData = userSnap.data();
+      // Log the update action
+      await addDoc(changelogCollection, {
+        type: "User",
+        action: "updated",
+        name: userData.name,
+        status: updatedData.status_id,
+        timestamp: new Date(),
       });
+    }
+  },
+
+  suspendUser: async function (userId) {
+    const docRef = doc(usersCollection, userId);
+    await updateDoc(docRef, { status_id: "suspended" });
+
+    // Log the suspend action
+    const userSnap = await getDoc(docRef);
+    if (userSnap.exists()) {
+      const userData = userSnap.data();
+      await addDoc(changelogCollection, {
+        type: "User",
+        action: "suspended",
+        name: userData.name,
+        status: "suspended",
+        timestamp: new Date(),
+      });
+    }
+  },
+
+  reactivateUser: async function (userId) {
+    const docRef = doc(usersCollection, userId);
+    await updateDoc(docRef, { status_id: "active" });
+
+    // Log the reactivate action
+    const userSnap = await getDoc(docRef);
+    if (userSnap.exists()) {
+      const userData = userSnap.data();
+      await addDoc(changelogCollection, {
+        type: "User",
+        action: "reactivated",
+        name: userData.name,
+        status: "active",
+        timestamp: new Date(),
+      });
+    }
   },
 
   findUsers: function (criteria) {

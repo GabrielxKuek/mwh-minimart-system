@@ -23,6 +23,7 @@ import Achievements from "./pages/Achievements";
 import Leaderboard from "./pages/Leaderboard";
 import Vouchers from "./pages/Vouchers";
 import Minimart from "./pages/Minimart";
+import Dashboard from "./pages/Dashboard";
 import Task from "./pages/Tasks";
 import TransactionManagement from "./pages/TransactionManagement";
 import Profile from "./pages/Profile";
@@ -95,18 +96,27 @@ const AppRoutes = () => {
         <Route 
           path="/login" 
           element={
-            isAuthenticated ? <Navigate to="/tasks" replace /> : <Login />
+            isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />
           } 
         />
         
         <Route 
           path="/" 
           element={
-            <Navigate to={isAuthenticated ? "/tasks" : "/login"} replace />
+            <Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />
           } 
         />
 
         {/* Admin Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <RoleProtectedRoute allowedRoles={[ADMIN_ROLE]}>
+              <Dashboard />
+            </RoleProtectedRoute>
+          }
+        />
+
         <Route
           path="/user-management"
           element={

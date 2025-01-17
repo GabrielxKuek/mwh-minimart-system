@@ -1,86 +1,32 @@
-# MWH Minimart System API Reference
+Project Description: MWH Empower App
 
-## Base URL
-```
-localhost:8080/api
-```
+The MWH Empower App is an innovative platform designed to support youths in their journey of rehabilitation and reintegration into society. This application combines practical task management, rewards, and gamification to encourage positive engagement and personal development.
 
-## Endpoints
+Key Features for Youths:
+	•	Task Booking for Rewards: Youths can browse and book various community or self-improvement tasks, earning voucher points upon completion.
+	•	Rewards Redemption: Accumulated voucher points can be redeemed for exciting prizes and necessities at a dedicated in-app minimart.
+	•	Gamification Elements:
+	•	Leaderboards: Encourages friendly competition by showcasing top-performing participants.
+	•	Achievements: Unlockable badges motivate users by recognizing their milestones and consistent efforts.
 
-### Get All Products
+Comprehensive Admin Functionality:
 
-```http
-GET /minimart/all
-```
+To ensure seamless operation, the app includes a robust admin interface with distinct functionalities for managing:
+	•	Tasks: Create, assign, and monitor tasks to ensure alignment with program goals.
+	•	Inventory: Maintain up-to-date records of minimart items, ensuring prize availability.
+	•	Users: Monitor user activity, progress, and performance.
+	•	Transactions: Track point allocations and redemptions with full transparency.
+	•	Minimart: Manage prize listings, stock levels, and voucher point requirements.
+	•	Dashboard: Gain actionable insights through an intuitive and easy-to-use dashboard for overseeing overall program performance.
 
-Returns a list of all products in the minimart system.
+Impact and Usability:
 
-#### Response
+The MWH Empower App aims to inspire a sense of responsibility, self-worth, and achievement among its users. Its straightforward design ensures accessibility for both participants and administrators, making it a powerful tool for youth rehabilitation initiatives. By integrating gamification and a tangible reward system, the app fosters long-term engagement and meaningful progress for every participant.
 
-```json
-[
-    {
-        "product_id": "pfSpnciOkTxpOow0VFeE",
-        "name": "Indomie",
-        "description": "Indomie",
-        "quantity": 0,
-        "image_url": "https://firebasestorage.googleapis.com/v0/b/muhammadiyah-db.firebasestorage.app/o/product_images%2Findomie.jpg?alt=media&token=60ec882d-9d35-4f30-babb-ee693c6e964d",
-        "point": 10
-    },
-    {
-        "product_id": "zZplkwEvX17jr7Vp8R5c",
-        "name": "Sour Patch Kids",
-        "description": "Sour candy made of kids",
-        "quantity": 71,
-        "image_url": "https://firebasestorage.googleapis.com/v0/b/muhammadiyah-db.firebasestorage.app/o/product_images%2Fsour-patch-kid.jpg?alt=media&token=1c9a1be6-ad88-4eb6-ad62-837b2ab57e16",
-        "point": 10
-    }
-]
-```
 
-### Purchase Products
-
-```http
-POST /minimart/purchase
-```
-
-Create a new purchase transaction for products.
-
-#### Request Body
-
-```json
-{
-    "code": "4321",
-    "points_cost": 4,
-    "productId": [
-        {"zZp1kwEvX17jr7Vp8R5c": 1},
-        {"pfSpnc1OkTxpOow0VFcE": 2}
-    ],
-    "status": "unclaimed",
-    "userId": "ysqZyF75qJLzfcLFsyWo"
-}
-```
-
-#### Response
-
-```json
-{
-    "success": true,
-    "data": {
-        "id": "qNXLVOeztJIFAC2Lccuu",
-        "code": "4321",
-        "points_cost": 4,
-        "productId": [
-            {
-                "zZp1kwEvX17jr7Vp8R5c": 1
-            },
-            {
-                "pfSpnc1OkTxpOow0VFcE": 2
-            }
-        ],
-        "status": "unclaimed",
-        "userId": "ysqZyF75qJLzfcLFsyWo",
-        "createdAt": "2025-01-16T19:35:38.639Z"
-    }
-}
-```
+| Feature | Description | Demo |
+| ------- | ----------- | ---- |
+| **Computer Vision Detection** | Utilizes advanced AI models to identify vegetables and produce in real-time | ![image](https://github.com/user-attachments/assets/bb915e76-3346-4d57-8161-808366d0e275) |
+| **Inventory Tracking** | Inventory tracking functionality with a user-friendly interface to minimize food waste by preventing overbuying. | <img src="assets/FrontendDemo.jpg" alt="Frontend Demo"> |
+| **Intelligent Receipt Processing** | Combines OCR technology with AI to accurately interpret receipts, even when damaged or faded. | After initial text extraction, the system leverages ChatGPT to fill in gaps and interpret unclear text based on context, ensuring reliable inventory tracking. |
+| **Smart Recipe Suggestions** | Generates recipe recommendations based on detected ingredients to minimize food waste by encouraging the use of food users already have. | - |

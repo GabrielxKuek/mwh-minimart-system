@@ -50,7 +50,7 @@ const userController = {
 
   suspendUser: function (req, res) {
     userModel
-      .updateUser(req.params.userId, { status_id: "suspended" })
+      .suspendUser(req.params.userId, { status_id: "suspended" })
       .then(() => {
         res.status(200).json({ message: "User suspended" });
       })
@@ -61,7 +61,7 @@ const userController = {
 
   reactivateUser: function (req, res) {
     userModel
-      .updateUser(req.params.userId, { status_id: "active" })
+      .reactivateUser(req.params.userId, { status_id: "active" })
       .then(() => {
         res.status(200).json({ message: "User reactivated" });
       })

@@ -1,4 +1,4 @@
-const { getTotalResidents, getTotalPendingRequests, getLowStockItems, getApprovedRequests, getRecentChanges } = require("../models/dashboardModel");
+const { getTotalResidents, getTotalPendingRequests, getLowStockItems, getApprovedRequests, getRecentChanges, getTotalPendingTasks } = require("../models/dashboardModel");
 
 module.exports.getDashboardData = async (req, res) => {
   try {
@@ -7,6 +7,7 @@ module.exports.getDashboardData = async (req, res) => {
     const lowStockItems = await getLowStockItems();
     const approvedRequests = await getApprovedRequests();
     const recentChanges = await getRecentChanges();
+    const totalPendingTasks = await getTotalPendingTasks();
 
     res.status(200).json({
       totalResidents,
@@ -14,6 +15,7 @@ module.exports.getDashboardData = async (req, res) => {
       lowStockItems,
       approvedRequests,
       recentChanges,
+      totalPendingTasks,
     });
   } catch (error) {
     console.error("Error fetching dashboard data:", error);
