@@ -23,8 +23,6 @@ Impact and Usability:
 
 The MWH Empower App aims to inspire a sense of responsibility, self-worth, and achievement among its users. Its straightforward design ensures accessibility for both participants and administrators, making it a powerful tool for youth rehabilitation initiatives. By integrating gamification and a tangible reward system, the app fosters long-term engagement and meaningful progress for every participant.
 
-![image](https://github.com/user-attachments/assets/bb915e76-3346-4d57-8161-808366d0e275)
-
 # 🌟 MWH Empower <img src="assets/app-logo.png" alt="MWH Empower Logo">
 
 [![Built with React](https://img.shields.io/badge/Built%20with-React-61DAFB.svg?style=flat&logo=react)](https://reactjs.org/)
@@ -69,8 +67,13 @@ MWH Empower is an innovative mobile application designed to support youth rehabi
 | Tasks Feature | Allows the residents to book tasks to complete for rewards such as voucher points! | ![image](https://github.com/user-attachments/assets/ac67ad11-79b3-4024-9573-f900d62731f4) |
 | Minimart Feature | Residents can use their voucher points to redeem prizes in the minimart! | ![image](https://github.com/user-attachments/assets/6ce09306-961e-434f-825d-6907a41474cc)|
 | Voucher Dashboard | Used by the residents to track their claimed and unclaimed vouchers | ![image](https://github.com/user-attachments/assets/fdeea93f-bed9-4255-a549-0aec401eeda5)|
-| Admin Dashboard | A dashboard for admins using graphs for elegant data visualization | ![image](https://github.com/user-attachments/assets/bbfbf5f5-97bc-4214-83b8-bffaa56f6552)|
-| Admin Dashboard | A dashboard for admins using graphs for elegant data visualization | ![image](https://github.com/user-attachments/assets/bbfbf5f5-97bc-4214-83b8-bffaa56f6552)|
+| Achievements | A gamification feature to give a sense of accomplishment to residents |![image](https://github.com/user-attachments/assets/147b7ab7-5da5-4b87-b231-bb1ffe7b8bf6)
+| Leaderboard | Another gamification feature to motivate residents | ![image](https://github.com/user-attachments/assets/4b4fb428-0ec5-40a5-b9e4-2bbaf5e8d2c1)|
+| Admin Dashboard | An elegant dashboard for easy data visualization for the admin| ![image](https://github.com/user-attachments/assets/54658864-06ca-4c97-a817-555207ce47ad)|
+| User Management | A Full suite of tools for creating, managing and updating users. |![image](https://github.com/user-attachments/assets/c93a339c-a804-462d-8efd-4c609ec627d8)|
+| Task Management | Full suite of tools for creating, editing, and managing tasks.  | ![image](https://github.com/user-attachments/assets/ac0fa376-d8d8-4c3d-b873-8b4588c3ea13)|
+| Transaction Management | Centralized system for tracking all voucher transactions, point allocations, and prize redemptions. Includes detailed transaction history, filtering options, and audit trails. | ![image](https://github.com/user-attachments/assets/b03170f0-3e36-438e-bb72-46fd94ce996d)|
+
 
 ## 🔧 Technical Highlights
 
