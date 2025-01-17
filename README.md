@@ -148,9 +148,44 @@ This project implements numerous advanced web development concepts:
 - **Authentication**: Firebase Auth
 
 ## 👥 Team
+<table>
+<tr>
 
-- [[Kuek Guan Jie Gabriel]](https://github.com/GabrielxKuek) - Developer (Resident)
-- [[Macam Rafael]](https://github.com/xR4F4ELx) - Developer (Resident)
-- [[Fong Kai Jie]](https://github.com/codebreaker64) - Developer (Admin)
-- [[Calvin Septyanto]](https://github.com/calvinseptyanto) - Developer (Admin)
+<td align="center">
+<a href="https://github.com/GabrielxKuek">
+<img src="https://avatars.githubusercontent.com/u/139882011?v=4" width="100px;" alt="Gabriel, All-seeing"/><br>
+<sub>
+<b>Gabriel Kuek</b>
+</sub>
+</a>
+</td>
 
+<td align="center">
+<a href="https://github.com/xR4F4ELx">
+<img src="https://avatars.githubusercontent.com/u/148933871?v=4" width="100px;" alt="Rafael Profile Picture"/><br>
+<sub>
+<b>Rafael Macam</b>
+</sub>
+</a>
+</td>
+
+<td align="center">
+<a href="[https://github.com/RojeCodes](https://github.com/codebreaker64)">
+<img src="https://avatars.githubusercontent.com/u/148307081?v=4" width="100px;" alt="Kai Jie Picture"/><br>
+<sub>
+<b>Fong Kai Jie</b>
+</sub>
+</a>
+</td>
+
+<td align="center">
+<a href="https://github.com/kaungyemyintmo">
+<img src="https://avatars.githubusercontent.com/u/148752406?v=4" width="100px;" alt="Calvin Profile Picture"/><br>
+<sub>
+<b>Calvin Septyanto</b>
+</sub>
+</a>
+</td>
+
+</tr>
+</table>
