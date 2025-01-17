@@ -8,14 +8,21 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Trophy } from "lucide-react";
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 const TaskDetailsDialog = ({ open, onOpenChange, task }) => {
     const handleBookTask = async () => {
         try {
-            // Add your booking logic here
+            
+            const response = await axios.post('http://localhost:8080/api/tasks/book', {userId: sessionStorage.getItem('userId'), taskId: task.id});
+            console.log(sessionStorage.getItem('userId'));
+            console.log('Task created:', response.data);
+            
             console.log('Booking task:', task.id);
             onOpenChange(false);
         } catch (error) {
+            console.log(sessionStorage.getItem('userId'));
+            console.log(task.id);
             console.error('Error booking task:', error);
         }
     };

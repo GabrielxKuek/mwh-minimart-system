@@ -1,8 +1,10 @@
 const { collection, doc, getDoc, getDocs, updateDoc, deleteDoc, addDoc } = require("firebase/firestore");
 const { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject, getMetadata } = require("firebase/storage");
 const { db } = require("../configs/firebase");
+const { Timestamp } = require('firebase-admin/firestore');
 
 const taskCollection = collection(db, "tasks");
+const userTaskCollection = collection(db,'UserTask');
 const storage = getStorage();
 
 const taskModel = {
@@ -152,29 +154,37 @@ const taskModel = {
 
 class TaskHistory {
   static async createTaskBooking(userId, taskId) {
-      try {
-          const taskHistoryRef = db.collection('taskHistory');
-          const taskRef = db.collection('tasks').doc(taskId);
-          
-          const task = await taskRef.get();
-          if (!task.exists) {
-              throw new Error('Task not found');
-          }
+    try {
+        // Initialize Firestore references
+        const taskCollection = db.collection('tasks');
+        const userTaskCollection = db.collection('UserTask');
+        
+        
+        // Get the task document
+        const taskRef = taskCollection.doc(taskId);
+        const task = await taskRef.get();
+        
+        if (!task.exists) {
+            throw new Error('Task not found');
+        }
 
-          const historyData = {
-              userId,
-              taskId,
-              taskData: task.data(),
-              status: 'uncompleted',
-              createdAt: Timestamp.now(),
-              updatedAt: Timestamp.now()
-          };
+        // Prepare history data
+        const historyData = {
+            user_id: userId,
+            task_id: taskId,
+            status_id: 'uncompleted',
+            completion_image: null,
+            booked_at: Timestamp.now(),
+            updated_at: Timestamp.now()
+        };
 
-          return await taskHistoryRef.add(historyData);
-      } catch (error) {
-          throw error;
-      }
-  }
+        // Add to userTaskCollection
+        const result = await userTaskCollection.add(historyData);
+        return result;
+    } catch (error) {
+        throw new Error(`Error in createTaskBooking: ${error.message}`);
+    }
+}
 
   static async submitCompletion(historyId, photoFile) {
       try {
@@ -250,4 +260,7 @@ class TaskHistory {
   }
 }
 
-module.exports = taskModel;
+module.exports = {
+  taskModel,
+  TaskHistory
+};
