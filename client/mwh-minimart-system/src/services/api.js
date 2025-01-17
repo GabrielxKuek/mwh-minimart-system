@@ -195,8 +195,10 @@ export const getMinimartProducts = async () => {
 };
 
 // insert transaction history (buying a product)
-export const enterTransaction = async (input_code, input_points_cost, input_products) => {
+export const addTransaction = async (input_code, input_points_cost, input_products, userId) => {
   try {
+    const quantity = input_products.reduce((total, product) => total + Object.values(product)[0], 0)
+
     const response = await fetch(`${API_BASE_URL}/minimart/purchase`, {
       method: 'POST',
       headers: {
@@ -204,11 +206,11 @@ export const enterTransaction = async (input_code, input_points_cost, input_prod
       },
       body: JSON.stringify({
         code: input_code,
-        points_cost: parseInt(input_points_cost), // Ensure it's a number
+        points_cost: parseInt(input_points_cost),
         productId: input_products,
         status: "unclaimed",
-        userId: "3rrxuSJYEFH3uT5TkApi",
-        purchaseQuantity: 1
+        userId: userId,
+        purchaseQuantity: quantity
       })
     });
 
@@ -226,23 +228,80 @@ export const enterTransaction = async (input_code, input_points_cost, input_prod
   }
 };
 
+export const getCurrentPoints = async (userId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}/points`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch current points: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.current_points;
+   
+  } catch (error) {
+    console.error("Error fetching current points:", error);
+    throw error;
+  }
+};
+
+export const createRequest = async (product_id, quantity, userId) => {
+  try {
+    // Ensure proper prefixes are present
+    const formattedProductId = product_id.startsWith('products/') ? product_id : `products/${product_id}`;
+    const formattedUserId = userId.startsWith('users/') ? userId : `users/${userId}`;
+   
+    const response = await fetch(`${API_BASE_URL}/minimart/request`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        product_id: formattedProductId,
+        quantity: parseInt(quantity),
+        user_id: formattedUserId,
+        status_id: "pending"  // Using string status instead of number
+      })
+    });
+
+    const responseText = await response.text();
+   
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (e) {
+      console.error('Response was not JSON:', responseText);
+      throw new Error('Invalid server response');
+    }
+    
+    if (!response.ok) {
+      throw new Error(data.message || `Request failed with status: ${response.status}`);
+    }
+    return data;
+   
+  } catch (error) {
+    console.error("Error creating request:", error);
+    throw error;
+  }
+};
+
 ////////////////////
 // VOUCHER SYSTEM //
 ////////////////////
 
 // get vouchers
-export const getVoucherByAll = async () => {
+export const getVoucherByUserId = async (userId) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/voucher/all`);
-
+    const response = await fetch(`${API_BASE_URL}/voucher/userId`, {
+      headers: {
+        'userid': userId
+      }
+    });
     if (!response.ok) {
       throw new Error(`Failed to fetch vouchers: ${response.status}`);
     }
-
     const vouchers = await response.json();
-
     return vouchers;
-    
+   
   } catch (error) {
     console.error("Error fetching vouchers:", error);
     throw error;
@@ -276,3 +335,48 @@ export const getVoucherProductById = async (voucherProducts) => {
     throw error;
   }
 };
+
+export const getTotalResidents = async () => {
+  const response = await api.get("/dashboard/data");
+  return response.data.totalResidents;
+};
+
+
+export const getTotalPendingRequests = async () => {
+  const response = await api.get("/dashboard/data");
+  return response.data.totalPendingRequests;
+};
+
+export const getLowStockItems = async () => {
+  const response = await api.get("/dashboard/data");
+  return response.data.lowStockItems;
+};
+
+export const getRecentChanges = async () => {
+  const response = await api.get("/dashboard/data");
+  return response.data.recentChanges;
+};
+
+export const getApprovedRequests = async () => {
+  const response = await api.get("/dashboard/data");
+  return response.data.approvedRequests;
+};
+
+// Transaction Management API Calls
+export const getTransactions = async () => {
+  const response = await api.get("/transactions"); // No need for manual headers
+  return response.data;
+};
+
+export const claimTransaction = async (transactionId, code) => {
+  const response = await api.put("/transactions/claim", {
+    transactionId,
+    code,
+  }); // No need for manual headers
+  return response.data;
+};
+
+
+////////////////////
+// NAVBAR //
+////////////////////

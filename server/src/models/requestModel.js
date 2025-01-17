@@ -4,12 +4,11 @@ const {
   getDoc,
   getDocs,
   updateDoc,
+  addDoc,
 } = require("firebase/firestore");
 const { db } = require("../configs/firebase.js");
 
 const requestsCollection = collection(db, "requests");
-const productsCollection = collection(db, "products");
-const usersCollection = collection(db, "users");
 
 const requestModel = {
   // Retrieve a request by ID
@@ -93,6 +92,20 @@ const requestModel = {
     }
   },
 
+  // Add a new request
+  addRequest: async function (requestData) {
+    try {
+      const docRef = await addDoc(requestsCollection, {
+        ...requestData,
+        updated_at: new Date(), // Set updated_at to the current timestamp
+      });
+      return { id: docRef.id, ...requestData };
+    } catch (error) {
+      console.error("Error adding request:", error);
+      throw error;
+    }
+  },
+
   // Update a request document
   updateRequest: async function (requestId, updatedFields) {
     const docRef = doc(requestsCollection, requestId);
@@ -103,7 +116,7 @@ const requestModel = {
         return null; // Request not found
       }
 
-      await updateDoc(docRef, updatedFields);
+      await updateDoc(docRef, { ...updatedFields, updated_at: new Date() }); // Set updated_at to the current timestamp
       return { id: docSnap.id, ...updatedFields };
     } catch (error) {
       console.error("Error updating request:", error);
