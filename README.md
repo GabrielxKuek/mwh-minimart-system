@@ -115,8 +115,6 @@ This project implements numerous advanced web development concepts:
 
 ## 🚀 Getting Started
 
-## 🚀 Getting Started
-
 1. **Install the Latest Node.js Version**:
    - Visit the [Node.js Downloads page](https://nodejs.org/) and download the latest **LTS** version for your operating system.  
    - Alternatively, install it using a package manager:  
