@@ -5,25 +5,32 @@
 [![Express.js](https://img.shields.io/badge/Express.js-000000?style=flat&logo=express&logoColor=white)](https://expressjs.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
 
-<h4 align="center">
-  <a href="#key-features">Features</a> ·
-  <a href="#app-preview">Preview</a> ·
-  <a href="#technical-highlights">Technical Details</a> ·
-  <a href="#getting-started">Getting Started</a>
-</h4>
+## 📖 Table of Contents
+- [🌟 Key Features for Residents](#-key-features-for-residents)
+- [🔧 Comprehensive Admin Functionality](#-comprehensive-admin-functionality)
+- [⭐ Key Features](#-key-features)
+  - [For Users](#for-users)
+  - [For Admins](#for-admins)
+- [🎮 App Preview](#-app-preview)
+- [🔧 Technical Highlights](#-technical-highlights)
+- [📱 User Features](#-user-features)
+- [👩‍💼 Admin Features](#️-admin-features)
+- [🚀 Getting Started](#-getting-started)
+- [🛠️ Technology Stack](#️-technology-stack)
+- [👥 Team](#-team)
 
 ---
 
 MWH Empower is an innovative mobile application designed to support youth rehabilitation and reintegration into society. Through a gamified task-reward system, users can earn points by completing various tasks and redeem them for rewards, fostering positive behavior and life skills development.
 
-## 🌟 Key Features for Residents:
+## 🌟 Key Features for Residents
 - **📝 Task Booking for Rewards**: Residents can browse and book various community or self-improvement tasks, earning voucher points upon completion.
 - **🎁 Rewards Redemption**: Accumulated voucher points can be redeemed for exciting prizes and necessities at a dedicated in-app minimart.
 - **🏆 Gamification Elements**:
   - **📊 Leaderboards**: Encourage friendly competition by showcasing top-performing participants.
   - **🏅 Achievements**: Unlockable badges motivate users by recognizing their milestones and consistent efforts.
 
-## 🔧 Comprehensive Admin Functionality:
+## 🔧 Comprehensive Admin Functionality
 - **🗂 Tasks**: Create, assign, and monitor tasks to ensure alignment with program goals.
 - **📦 Inventory**: Maintain up-to-date records of minimart items, ensuring prize availability.
 - **👥 Users**: Monitor user activity, progress, and performance.
@@ -63,7 +70,6 @@ MWH Empower is an innovative mobile application designed to support youth rehabi
 | User Management | A Full suite of tools for creating, managing and updating users. |![image](https://github.com/user-attachments/assets/c93a339c-a804-462d-8efd-4c609ec627d8)|
 | Task Management | Full suite of tools for creating, editing, and managing tasks.  | ![image](https://github.com/user-attachments/assets/ac0fa376-d8d8-4c3d-b873-8b4588c3ea13)|
 | Transaction Management | Centralized system for tracking all voucher transactions, point allocations, and prize redemptions. Includes detailed transaction history, filtering options, and audit trails. | ![image](https://github.com/user-attachments/assets/b03170f0-3e36-438e-bb72-46fd94ce996d)|
-
 
 ## 🔧 Technical Highlights
 
@@ -138,7 +144,6 @@ This project implements numerous advanced web development concepts:
      npm run dev
      ```
 
-
 ## 🛠️ Technology Stack
 
 - **Frontend**: React, Tailwind CSS
@@ -150,7 +155,6 @@ This project implements numerous advanced web development concepts:
 ## 👥 Team
 <table>
 <tr>
-
 <td align="center">
 <a href="https://github.com/GabrielxKuek">
 <img src="https://avatars.githubusercontent.com/u/139882011?v=4" width="100px;" alt="Gabriel, All-seeing"/><br>
@@ -159,7 +163,6 @@ This project implements numerous advanced web development concepts:
 </sub>
 </a>
 </td>
-
 <td align="center">
 <a href="https://github.com/xR4F4ELx">
 <img src="https://avatars.githubusercontent.com/u/101986187?v=4" width="100px;" alt="Rafael Profile Picture"/><br>
@@ -168,7 +171,6 @@ This project implements numerous advanced web development concepts:
 </sub>
 </a>
 </td>
-
 <td align="center">
 <a href="https://github.com/codebreaker64">
 <img src="https://avatars.githubusercontent.com/u/64005011?v=4" width="100px;" alt="Kai Jie Picture"/><br>
@@ -177,7 +179,6 @@ This project implements numerous advanced web development concepts:
 </sub>
 </a>
 </td>
-
 <td align="center">
 <a href="https://github.com/calvinseptyanto">
 <img src="https://avatars.githubusercontent.com/u/98633109?v=4" width="100px;" alt="Calvin Profile Picture"/><br>
@@ -186,6 +187,5 @@ This project implements numerous advanced web development concepts:
 </sub>
 </a>
 </td>
-
 </tr>
 </table>
