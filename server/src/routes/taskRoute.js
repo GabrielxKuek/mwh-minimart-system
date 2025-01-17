@@ -13,7 +13,7 @@ router.get('/user/:userId', taskController.getUserHistory);
 router.post('/', upload.single('image'), taskController.addTask);
 
 // Route to get all tasks
-router.get('/', taskController.getAllTasks);
+router.get('/', taskController.getAllTask);
 
 // Route to delete a task by ID
 router.delete('/:taskId', taskController.deleteTask);

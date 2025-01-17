@@ -42,7 +42,7 @@ const taskModel = {
     }
   },
 
-  async getAllTasks() {
+  async getAll() {
     try {
       const tasksSnap = await getDocs(taskCollection);
       const tasks = tasksSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));

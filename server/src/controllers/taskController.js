@@ -39,9 +39,10 @@ const taskController = {
         }
     },
 
-    async getAllTasks(req, res) {
+    async getAllTask(req, res) {
         try {
-            const tasks = await taskModel.getAllTasks();
+            const tasksSnap = await getDocs(taskCollection);
+            const tasks = tasksSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
             res.status(200).json(tasks);
         } catch (error) {
             console.error("Error getting all tasks:", error);
