@@ -170,7 +170,7 @@ This project implements numerous advanced web development concepts:
 </td>
 
 <td align="center">
-<a href="[https://github.com/RojeCodes](https://github.com/codebreaker64)">
+<a href="https://github.com/codebreaker64">
 <img src="https://avatars.githubusercontent.com/u/148307081?v=4" width="100px;" alt="Kai Jie Picture"/><br>
 <sub>
 <b>Fong Kai Jie</b>
