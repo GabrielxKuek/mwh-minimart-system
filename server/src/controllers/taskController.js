@@ -107,6 +107,51 @@ const taskController = {
       res.status(500).json({ message: error.message });
     }
   },
+
+  async getTaskRequests(req, res) {
+    try {
+      const { status } = req.query;
+      let statusFilter = null;
+      
+      if (status) {
+        statusFilter = status.split(',');
+      }
+
+      const requests = await taskModel.getTaskRequests(statusFilter);
+      res.status(200).json(requests);
+    } catch (error) {
+      console.error("Error getting task requests:", error);
+      res.status(500).json({ message: error.message });
+    }
+  },
+
+  // Update task status (pending/completed/incomplete)
+  async updateTaskStatus(req, res) {
+    try {
+      const { userTaskId } = req.params;
+      const { status_id } = req.body;
+
+      if (!status_id) {
+        return res.status(400).json({ message: "Status is required" });
+      }
+
+      const validStatuses = ['pending', 'completed', 'incomplete'];
+      if (!validStatuses.includes(status_id)) {
+        return res.status(400).json({ 
+          message: "Invalid status. Must be one of: pending, completed, incomplete" 
+        });
+      }
+
+      const updatedTask = await taskModel.updateTaskStatus(userTaskId, status_id);
+      res.status(200).json(updatedTask);
+    } catch (error) {
+      console.error("Error updating task status:", error);
+      if (error.message === "UserTask not found") {
+        return res.status(404).json({ message: error.message });
+      }
+      res.status(500).json({ message: error.message });
+    }
+  },
 };
 
 module.exports = taskController;

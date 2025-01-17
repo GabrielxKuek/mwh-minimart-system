@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Search } from "lucide-react";
+import { Search, Download } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -20,81 +26,94 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getTaskRequests, updateTaskStatus } from "../services/api";
 
-// Dummy data based on your Firestore structure
-const dummyTasks = [
-  {
-    id: "76WX56Ju5QYkEqaEdyPq",
-    user_id: "ysqZyF75qJLzfcLFsyWo",
-    task_id: "Fwmc15khu5Yy2hkLGaJN",
-    status_id: "pending",
-    updated_at: "2025-01-17T10:42:15.351Z",
-    completion_image: "https://firebasestorage.googleapis.com/v0/b/muhammadiyah-db.firebasestorage.app/o/task_completion_images%2F76WX56Ju5QYkEqaEdyPq",
-    task: {
-      name: "Watering the plants",
-      description: "Water the plants in the welfare home",
-      points: "50"
-    },
-    user: {
-      name: "fdsfds",
-      email: "e0866232@u.nus.edu"
-    }
-  },
-  {
-    id: "89YZ67Kv6RZlFrbFezRr",
-    user_id: "htRzHG86rKMgdLGtWo",
-    task_id: "GhNj26khv6Zz3ikMHbKM",
-    status_id: "completed",
-    updated_at: "2025-01-16T15:30:00.000Z",
-    completion_image: "https://example.com/image2.jpg",
-    task: {
-      name: "Clean the common area",
-      points: "75"
-    },
-    user: {
-      name: "John Smith",
-      email: "john.smith@u.nus.edu"
-    }
-  },
-  {
-    id: "90AB78Lw7SAm",
-    user_id: "iuSzIH97sLNheMHuXp",
-    task_id: "HiOk37liv7Aa4jlNIcLN",
-    status_id: "pending",
-    updated_at: "2025-01-15T14:20:00.000Z",
-    completion_image: "https://example.com/image3.jpg",
-    task: {
-      name: "Organize library books",
-      points: "100"
-    },
-    user: {
-      name: "Jane Doe",
-      email: "jane.doe@u.nus.edu"
-    }
-  }
-];
+const ImagePreviewDialog = ({ isOpen, onClose, imageUrl, taskName }) => (
+  <Dialog open={isOpen} onOpenChange={onClose}>
+    <DialogContent className="max-w-3xl">
+      <DialogHeader>
+        <DialogTitle>{taskName} - Completion Image</DialogTitle>
+      </DialogHeader>
+      <div className="relative mt-4">
+        <img 
+          src={imageUrl} 
+          alt="Task Completion" 
+          className="w-full h-auto rounded-lg"
+          style={{ maxHeight: '70vh' }}
+        />
+      </div>
+      <div className="mt-4 flex justify-end">
+        <Button
+          variant="outline"
+          onClick={() => window.open(imageUrl, '_blank')}
+          className="mr-2 gap-2"
+        >
+          <Download className="h-4 w-4" />
+          Download
+        </Button>
+        <Button onClick={onClose}>Close</Button>
+      </div>
+    </DialogContent>
+  </Dialog>
+);
+
+ImagePreviewDialog.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  imageUrl: PropTypes.string,
+  taskName: PropTypes.string
+};
 
 const TaskCompletionList = ({ searchQuery, statusFilter }) => {
-  const [tasks, setTasks] = useState(dummyTasks);
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        setLoading(true);
+        const statusQuery = statusFilter === 'all' ? 'pending,completed' : statusFilter;
+        const fetchedTasks = await getTaskRequests(statusQuery);
+        setTasks(fetchedTasks);
+        setError(null);
+      } catch (err) {
+        setError('Failed to fetch tasks. Please try again later.');
+        console.error('Error fetching tasks:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, [statusFilter]);
+
+  const handleStatusChange = async (userTaskId, newStatus) => {
+    try {
+      await updateTaskStatus(userTaskId, newStatus);
+      
+      setTasks(tasks.map(task => 
+        task.userTaskId === userTaskId ? { ...task, status_id: newStatus } : task
+      ));
+    } catch (error) {
+      console.error('Error updating task status:', error);
+    }
+  };
+
+  const handleImageClick = (task) => {
+    setSelectedImage({
+      url: task.completion_image,
+      taskName: task.task?.name || 'Task'
+    });
+  };
 
   const filteredTasks = tasks.filter(task => {
     const matchesSearch = 
-      task.task.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      task.user.name.toLowerCase().includes(searchQuery.toLowerCase());
+      (task.task?.name || '').toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesStatus = 
-      statusFilter === 'all' ? 
-      (task.status_id === 'pending' || task.status_id === 'completed') :
-      task.status_id === statusFilter;
-
-    return matchesSearch && matchesStatus;
+    return matchesSearch;
   });
-
-  const handleStatusChange = (taskId, newStatus) => {
-    setTasks(tasks.map(task => 
-      task.id === taskId ? { ...task, status_id: newStatus } : task
-    ));
-  };
 
   const getStatusBadgeClass = (status) => {
     switch (status) {
@@ -109,101 +128,97 @@ const TaskCompletionList = ({ searchQuery, statusFilter }) => {
     }
   };
 
+  if (loading) {
+    return <div className="p-4 text-center">Loading tasks...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-center text-red-500">{error}</div>;
+  }
+
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Task Name</TableHead>
-          <TableHead>Points</TableHead>
-          <TableHead>User</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Submitted At</TableHead>
-          <TableHead>Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {filteredTasks.map((task) => (
-          <TableRow key={task.id}>
-            <TableCell className="font-medium">
-              <div className="flex flex-col">
-                <span>{task.task.name}</span>
-                {task.completion_image && (
-                  <a 
-                    href="#"
-                    className="text-sm text-blue-600 hover:underline"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.open(task.completion_image, '_blank');
-                    }}
-                  >
-                    View Image
-                  </a>
-                )}
-              </div>
-            </TableCell>
-            <TableCell>{task.task.points}</TableCell>
-            <TableCell>
-              <div className="flex flex-col">
-                <span>{task.user.name}</span>
-                <span className="text-sm text-gray-500">{task.user.email}</span>
-              </div>
-            </TableCell>
-            <TableCell>
-              <Badge className={getStatusBadgeClass(task.status_id)}>
-                {task.status_id.charAt(0).toUpperCase() + task.status_id.slice(1)}
-              </Badge>
-            </TableCell>
-            <TableCell>
-              {new Date(task.updated_at).toLocaleString()}
-            </TableCell>
-            <TableCell>
-              <div className="flex gap-2">
-                {task.status_id === 'pending' && (
-                  <>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-green-500 text-green-500 hover:bg-green-50"
-                      onClick={() => handleStatusChange(task.id, 'completed')}
-                    >
-                      Approve
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-red-500 text-red-500 hover:bg-red-50"
-                      onClick={() => handleStatusChange(task.id, 'incomplete')}
-                    >
-                      Reject
-                    </Button>
-                  </>
-                )}
-                {task.status_id === 'completed' && (
-                  <>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-yellow-500 text-yellow-500 hover:bg-yellow-50"
-                      onClick={() => handleStatusChange(task.id, 'pending')}
-                    >
-                      Pending
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-red-500 text-red-500 hover:bg-red-50"
-                      onClick={() => handleStatusChange(task.id, 'incomplete')}
-                    >
-                      Reject
-                    </Button>
-                  </>
-                )}
-              </div>
-            </TableCell>
+    <>
+      <ImagePreviewDialog 
+        isOpen={!!selectedImage}
+        onClose={() => setSelectedImage(null)}
+        imageUrl={selectedImage?.url}
+        taskName={selectedImage?.taskName}
+      />
+
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Task Name</TableHead>
+            <TableHead>Points</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Submitted At</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {filteredTasks.map((task) => (
+            <TableRow key={task.userTaskId}>
+              <TableCell className="font-medium">
+                <div className="flex flex-col">
+                  <span>{task.task?.name}</span>
+                  {task.completion_image && (
+                    <button 
+                      onClick={() => handleImageClick(task)}
+                      className="text-sm text-blue-600 hover:underline text-left mt-1"
+                    >
+                      View Image
+                    </button>
+                  )}
+                </div>
+              </TableCell>
+              <TableCell>{task.task?.points}</TableCell>
+              <TableCell>
+                <Badge className={getStatusBadgeClass(task.status_id)}>
+                  {task.status_id.charAt(0).toUpperCase() + task.status_id.slice(1)}
+                </Badge>
+              </TableCell>
+              <TableCell>
+                {task.updated_at ? new Date(task.updated_at).toLocaleString() : 'N/A'}
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  {task.status_id === 'pending' && (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-green-500 text-green-500 hover:bg-green-50"
+                        onClick={() => handleStatusChange(task.userTaskId, 'completed')}
+                      >
+                        Approve
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-red-500 text-red-500 hover:bg-red-50"
+                        onClick={() => handleStatusChange(task.userTaskId, 'incomplete')}
+                      >
+                        Reject
+                      </Button>
+                    </>
+                  )}
+                  {task.status_id === 'completed' && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-red-500 text-red-500 hover:bg-red-50"
+                      onClick={() => handleStatusChange(task.userTaskId, 'incomplete')}
+                    >
+                      Reject
+                    </Button>
+                  )}
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </>
   );
 };
 
@@ -228,7 +243,7 @@ const TaskCompletionRequest = () => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             type="text"
-            placeholder="Search by Task or User"
+            placeholder="Search by Task Name"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 rounded-md"
