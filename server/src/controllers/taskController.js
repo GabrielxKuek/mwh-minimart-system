@@ -70,6 +70,43 @@ const taskController = {
       res.status(500).json({ message: error.message });
     }
   },
+
+  // UserTasks
+  async getUserTasks(req, res) {
+    try {
+      const userId = req.headers.userid;
+
+      const tasks = await taskModel.getUserTasks(userId);
+      res.status(200).json(tasks);
+    } catch (error) {
+      console.error("Error getting user tasks:", error);
+      res.status(500).json({ message: error.message });
+    }
+  },
+
+  async uploadTaskCompletion(req, res) {
+    try {
+      const { userTaskId } = req.params;
+      const file = req.file;
+
+      // Validate if file exists
+      if (!file) {
+        return res.status(400).json({ 
+          message: "Completion image is required" 
+        });
+      }
+
+      console.log("Uploading completion for userTaskId:", userTaskId);
+      console.log("File received:", file.originalname);
+
+      const result = await taskModel.uploadTaskCompletion(userTaskId, file);
+      
+      res.status(200).json(result);
+    } catch (error) {
+      console.error("Error uploading task completion:", error);
+      res.status(500).json({ message: error.message });
+    }
+  },
 };
 
 module.exports = taskController;
