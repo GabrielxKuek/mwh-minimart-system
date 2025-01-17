@@ -27,6 +27,7 @@ import Task from "./pages/Tasks";
 import TransactionManagement from "./pages/TransactionManagement";
 import Profile from "./pages/Profile";
 import Reports from "./pages/Reports";
+import TaskCompletionRequest from "./pages/TaskCompletionRequest";
 
 // Constants
 const ADMIN_ROLE = "admin";
@@ -217,6 +218,15 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/task-completion-request"
+          element={
+            <ProtectedRoute>
+              <TaskCompletionRequest />
             </ProtectedRoute>
           }
         />
