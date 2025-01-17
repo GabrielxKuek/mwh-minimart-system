@@ -1,4 +1,8 @@
-# 🌟 MWH Empower <img src="assets/app-logo.png" alt="MWH Empower Logo">
+# 🌟 MWH Empower 
+
+<img src="https://github.com/GabrielxKuek/mwh-minimart-system/blob/main/images/cover.png" alt="MWH Empower Logo">
+
+---
 
 [![Built with React](https://img.shields.io/badge/Built%20with-React-61DAFB.svg?style=flat&logo=react)](https://reactjs.org/)
 [![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat&logo=firebase&logoColor=black)](https://firebase.google.com/)
@@ -70,8 +74,6 @@ MWH Empower is an innovative mobile application designed to support youth rehabi
 | User Management | A Full suite of tools for creating, managing and updating users. |![image](https://github.com/user-attachments/assets/c93a339c-a804-462d-8efd-4c609ec627d8)|
 | Task Management | Full suite of tools for creating, editing, and managing tasks.  | ![image](https://github.com/user-attachments/assets/ac0fa376-d8d8-4c3d-b873-8b4588c3ea13)|
 | Transaction Management | Centralized system for tracking all voucher transactions, point allocations, and prize redemptions. Includes detailed transaction history, filtering options, and audit trails. | ![image](https://github.com/user-attachments/assets/b03170f0-3e36-438e-bb72-46fd94ce996d)|
-| Inventory Management | Allows the admin to track the quantity of items in the inventory and the ability to request for supply when running low  | ![image](https://github.com/user-attachments/assets/2ee25fdb-4709-4a66-b41a-bdd619a739dd)
- |
 
 ## 🔧 Technical Highlights
 
@@ -137,12 +139,12 @@ This project implements numerous advanced web development concepts:
        npm -v
        ```
 
-2. Clone this repository:
+2. **Clone this repository**:
    ```bash
    git clone https://github.com/your-repo-name.git
    cd your-repo-name
 
-3. **Terminal 1: Setup for the Client:**
+3. **Terminal 1: Setup for the Client**:
   - Navigate to the client directory:
      ```bash
      cd client/mwh-minimart-system
@@ -155,19 +157,29 @@ This project implements numerous advanced web development concepts:
      ```bash
      npm install
      ```
+  - Create .env file at server folder:
+     ```bash
+     touch .env
+     ```
+  - Key in values inside the .env file:
+    ```
+      API_KEY=
+      AUTH_DOMAIN=
+      PROJECT_ID=
+      STORAGE_BUCKET=
+      MESSAGING_SENDER_ID=
+      APP_ID=
+      MEASUREMENT_ID=
+    ```
   - Start the client development server:
      ```bash
      npm run dev
      ```
 
-4. **Terminal 2: Setup for the Server:**
+4. **Terminal 2: Setup for the Server**:
   - Navigate to the server directory:
      ```bash
      cd server
-     ```
-  - Install latest node version with Long-Term Support:
-     ```bash
-     nvm install --lts
      ```
   - Install server dependencies:
      ```bash
