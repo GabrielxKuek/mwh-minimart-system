@@ -171,7 +171,7 @@ This project implements numerous advanced web development concepts:
 
 <td align="center">
 <a href="https://github.com/codebreaker64">
-<img src="https://avatars.githubusercontent.com/u/148307081?v=4" width="100px;" alt="Kai Jie Picture"/><br>
+<img src="https://avatars.githubusercontent.com/u/64005011?v=4" width="100px;" alt="Kai Jie Picture"/><br>
 <sub>
 <b>Fong Kai Jie</b>
 </sub>
@@ -179,8 +179,8 @@ This project implements numerous advanced web development concepts:
 </td>
 
 <td align="center">
-<a href="https://github.com/kaungyemyintmo">
-<img src="https://avatars.githubusercontent.com/u/148752406?v=4" width="100px;" alt="Calvin Profile Picture"/><br>
+<a href="https://github.com/calvinseptyanto">
+<img src="https://avatars.githubusercontent.com/u/98633109?v=4" width="100px;" alt="Calvin Profile Picture"/><br>
 <sub>
 <b>Calvin Septyanto</b>
 </sub>
