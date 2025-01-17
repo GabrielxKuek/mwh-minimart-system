@@ -27,7 +27,6 @@ import Dashboard from "./pages/Dashboard";
 import Task from "./pages/Tasks";
 import TransactionManagement from "./pages/TransactionManagement";
 import Profile from "./pages/Profile";
-import Dashboard from "./pages/Dashboard";
 import Reports from "./pages/Reports";
 import ForgetPassword from "./pages/ForgetPassword";
 import TaskCompletionRequest from "./pages/TaskCompletionRequest";
