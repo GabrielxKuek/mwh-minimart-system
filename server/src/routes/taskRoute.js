@@ -5,9 +5,9 @@ const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.post('/book', taskController.bookTask);
-router.post('/:historyId/complete', upload.single('photo'), taskController.submitCompletion);
+// router.post('/:historyId/complete', upload.single('photo'), taskController.submitCompletion);
 router.get('/user/:userId', taskController.getUserHistory);
-router.patch('/:historyId/status', taskController.updateStatus);
+// router.patch('/:historyId/status', taskController.updateStatus);
 
 // Route to create a new task
 router.post('/', upload.single('image'), taskController.addTask);
