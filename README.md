@@ -115,8 +115,34 @@ This project implements numerous advanced web development concepts:
 
 ## 🚀 Getting Started
 
-1. Clone this repository
-2. **Terminal 1: Setup for the Client:**
+## 🚀 Getting Started
+
+1. **Install the Latest Node.js Version**:
+   - Visit the [Node.js Downloads page](https://nodejs.org/) and download the latest **LTS** version for your operating system.  
+   - Alternatively, install it using a package manager:  
+     - **Windows**: Use [nvm-windows](https://github.com/coreybutler/nvm-windows):
+       ```bash
+       nvm install lts
+       nvm use lts
+       ```
+     - **macOS/Linux**: Use [nvm (Node Version Manager)](https://github.com/nvm-sh/nvm):
+       ```bash
+       curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+       nvm install --lts
+       nvm use --lts
+       ```
+     - Verify installation:
+       ```bash
+       node -v
+       npm -v
+       ```
+
+2. Clone this repository:
+   ```bash
+   git clone https://github.com/your-repo-name.git
+   cd your-repo-name
+
+3. **Terminal 1: Setup for the Client:**
    - Navigate to the client directory:
      ```bash
      cd client/mwh-minimart-system
@@ -130,7 +156,7 @@ This project implements numerous advanced web development concepts:
      npm run dev
      ```
 
-3. **Terminal 2: Setup for the Server:**
+4. **Terminal 2: Setup for the Server:**
    - Navigate to the server directory:
      ```bash
      cd server
