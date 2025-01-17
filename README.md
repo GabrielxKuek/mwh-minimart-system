@@ -162,7 +162,7 @@ This project implements numerous advanced web development concepts:
 
 <td align="center">
 <a href="https://github.com/xR4F4ELx">
-<img src="https://avatars.githubusercontent.com/u/148933871?v=4" width="100px;" alt="Rafael Profile Picture"/><br>
+<img src="https://avatars.githubusercontent.com/u/101986187?v=4" width="100px;" alt="Rafael Profile Picture"/><br>
 <sub>
 <b>Rafael Macam</b>
 </sub>
