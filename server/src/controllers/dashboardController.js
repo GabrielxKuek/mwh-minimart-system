@@ -1,15 +1,15 @@
-const { getTotalUsers, getTotalPendingRequests, getLowStockItems, getApprovedRequests, getRecentChanges } = require("../models/dashboardModel");
+const { getTotalResidents, getTotalPendingRequests, getLowStockItems, getApprovedRequests, getRecentChanges } = require("../models/dashboardModel");
 
 module.exports.getDashboardData = async (req, res) => {
   try {
-    const totalUsers = await getTotalUsers();
+    const totalResidents = await getTotalResidents();
     const totalPendingRequests = await getTotalPendingRequests();
     const lowStockItems = await getLowStockItems();
     const approvedRequests = await getApprovedRequests();
     const recentChanges = await getRecentChanges();
 
     res.status(200).json({
-      totalUsers,
+      totalResidents,
       totalPendingRequests,
       lowStockItems,
       approvedRequests,

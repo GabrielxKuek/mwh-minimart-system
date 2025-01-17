@@ -336,10 +336,11 @@ export const getVoucherProductById = async (voucherProducts) => {
   }
 };
 
-export const getTotalUsers = async () => {
+export const getTotalResidents = async () => {
   const response = await api.get("/dashboard/data");
-  return response.data.totalUsers;
+  return response.data.totalResidents;
 };
+
 
 export const getTotalPendingRequests = async () => {
   const response = await api.get("/dashboard/data");
