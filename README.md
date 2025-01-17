@@ -1,7 +1,3 @@
-
-
-
-
 Project Description: MWH Empower App
 
 The MWH Empower App is an innovative platform designed to support youths in their journey of rehabilitation and reintegration into society. This application combines practical task management, rewards, and gamification to encourage positive engagement and personal development.
@@ -26,3 +22,6 @@ To ensure seamless operation, the app includes a robust admin interface with dis
 Impact and Usability:
 
 The MWH Empower App aims to inspire a sense of responsibility, self-worth, and achievement among its users. Its straightforward design ensures accessibility for both participants and administrators, making it a powerful tool for youth rehabilitation initiatives. By integrating gamification and a tangible reward system, the app fosters long-term engagement and meaningful progress for every participant.
+
+
+![image](https://github.com/user-attachments/assets/bb915e76-3346-4d57-8161-808366d0e275)
