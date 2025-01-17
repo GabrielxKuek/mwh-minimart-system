@@ -11,6 +11,7 @@ const requestRoute = require("./requestRoute");
 const inventoryRoute = require("./inventoryRoute");
 const achievementsRoute = require("./achievementsRoute");
 const leaderboardRoute = require("./leaderboardRoute");
+const transactionRoutes = require("./transactionRoute");
 const voucherRoute = require("./voucherRoute");
 
 // Use routes
@@ -23,6 +24,7 @@ router.use("/requests", requestRoute);
 router.use("/inventory", inventoryRoute);
 router.use("/achievements", achievementsRoute);
 router.use("/leaderboard", leaderboardRoute);
+router.use("/transactions", transactionRoutes);
 router.use("/voucher", voucherRoute);
 
 module.exports = router;

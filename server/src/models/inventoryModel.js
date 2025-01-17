@@ -13,11 +13,14 @@ const inventoryModel = {
       const snapshot = await uploadTask;
       const imageUrl = await getDownloadURL(snapshot.ref);
 
+      const now = new Date();
       const productRef = await addDoc(productCollection, {
         ...productData,
         imageUrl,
         quantity: parseInt(productData.quantity),
         point: parseInt(productData.point),
+        created_at: now, // Set created_at to the current timestamp
+        updated_at: now, // Set updated_at to the current timestamp
       });
 
       return { id: productRef.id, ...productData, imageUrl };
@@ -91,7 +94,7 @@ const inventoryModel = {
       console.log("Updating product in Firestore with ID:", productId); // Add logging here
       console.log("Updated product data:", { ...productData, imageUrl }); // Add logging here
 
-      const updateData = { ...productData };
+      const updateData = { ...productData, updated_at: new Date() }; // Set updated_at to the current timestamp
       if (imageUrl) {
         updateData.imageUrl = imageUrl;
       } else {
@@ -142,6 +145,16 @@ const inventoryModel = {
 
       await deleteDoc(productRef);
       console.log("Product deleted from Firestore with ID:", productId); // Add logging here
+
+      // Log the delete action
+      const recentChangesRef = collection(db, "recent_changes");
+      await addDoc(recentChangesRef, {
+        type: "Product",
+        action: "deleted",
+        name: productData.name,
+        updated_at: new Date(),
+      });
+
       return { id: productId };
     } catch (error) {
       console.error("Error deleting product:", error);

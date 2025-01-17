@@ -1,8 +1,9 @@
-const { selectVoucherByAll, selectVoucherProductById } = require('../models/voucherModel');
+const { selectVoucherByUserId, selectVoucherProductById } = require('../models/voucherModel');
 
-module.exports.readVoucherByAll = async (req, res, next) => {
+module.exports.readVoucherByUserId = async (req, res, next) => {
     try {
-        const data = await selectVoucherByAll();
+        const userId = req.headers.userid;
+        const data = await selectVoucherByUserId(userId);
         res.status(200).json(data);
     } catch (error) {
         console.error("Error fetching data:", error);
