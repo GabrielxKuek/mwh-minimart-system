@@ -127,6 +127,12 @@ const Navbar = () => {
               </>
             )}
 
+            <Link 
+              to="/resident-dashboard" 
+              className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Dashboard
+            </Link>
             <NavDropdown 
               label="Activities" 
               items={userMenuItems.activities}
@@ -190,6 +196,9 @@ const Navbar = () => {
               </>
             )}
             
+            <MobileNavLink to="/resident-dashboard">
+              Dashboard
+            </MobileNavLink>
             {Object.values(userMenuItems).flat().map((item) => (
               <MobileNavLink key={item.to} to={item.to}>
                 {item.label}

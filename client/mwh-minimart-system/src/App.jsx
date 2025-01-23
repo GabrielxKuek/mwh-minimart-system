@@ -30,6 +30,7 @@ import Profile from "./pages/Profile";
 import Reports from "./pages/Reports";
 import ForgetPassword from "./pages/ForgetPassword";
 import TaskCompletionRequest from "./pages/TaskCompletionRequest";
+import ResidentDashboard from "./pages/ResidentDashboard";
 
 // Constants
 const ADMIN_ROLE = "admin";
@@ -54,7 +55,7 @@ const RoleProtectedRoute = ({ children, allowedRoles }) => {
   }
 
   if (!allowedRoles.includes(roleId)) {
-    return <Navigate to="/tasks" replace />;
+    return <Navigate to="/resident-dashboard" replace />;
   }
 
   return children;
@@ -180,6 +181,15 @@ const AppRoutes = () => {
         />
 
         {/* Protected Routes for All Users */}
+        <Route
+          path="/resident-dashboard"
+          element={
+            <ProtectedRoute>
+              <ResidentDashboard />
+            </ProtectedRoute>
+          }
+        />  
+
         <Route
           path="/tasks"
           element={
