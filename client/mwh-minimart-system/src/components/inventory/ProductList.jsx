@@ -37,21 +37,14 @@ import EditProductForm from "./EditProductForm";
 const ProductList = ({ refreshTrigger }) => {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [lowStockAlert, setLowStockAlert] = useState(false);
 
   const fetchProducts = async () => {
     const data = await getAllProducts();
     setProducts(data);
   };
 
-  const fetchLowStockProducts = async () => {
-    const data = await getLowStockProducts(10); // Set your low stock threshold here
-    setLowStockAlert(data.length > 0);
-  };
-
   useEffect(() => {
     fetchProducts();
-    fetchLowStockProducts();
   }, [refreshTrigger]);
 
   const handleDelete = async (productId) => {
@@ -79,14 +72,6 @@ const ProductList = ({ refreshTrigger }) => {
 
   return (
     <div>
-      {lowStockAlert && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md mb-4 flex items-center">
-          <AlertTriangle className="mr-2 h-5 w-5" />
-          <span className="font-bold">Low Stock Alert!</span> Some products are
-          running low on stock.
-        </div>
-      )}
-
       <div className="mb-4 flex items-center">
         <div className="relative w-full md:w-1/2 lg:w-1/3">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
