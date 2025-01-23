@@ -98,7 +98,7 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-4">
-            {isAdmin && (
+            {isAdmin ? (
               <>
                 <NavDropdown 
                   label="Management" 
@@ -125,14 +125,14 @@ const Navbar = () => {
                   onItemClick={handleDropdownItemClick}
                 />
               </>
+            ) : (
+              <Link 
+                to="/resident-dashboard" 
+                className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Dashboard
+              </Link>
             )}
-
-            <Link 
-              to="/resident-dashboard" 
-              className="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
-            >
-              Dashboard
-            </Link>
             <NavDropdown 
               label="Activities" 
               items={userMenuItems.activities}
@@ -186,7 +186,7 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {isAdmin && (
+            {isAdmin ? (
               <>
                 {Object.values(adminMenuItems).flat().map((item) => (
                   <MobileNavLink key={item.to} to={item.to}>
@@ -194,11 +194,11 @@ const Navbar = () => {
                   </MobileNavLink>
                 ))}
               </>
+            ) : (
+              <MobileNavLink to="/resident-dashboard">
+                Dashboard
+              </MobileNavLink>
             )}
-            
-            <MobileNavLink to="/resident-dashboard">
-              Dashboard
-            </MobileNavLink>
             {Object.values(userMenuItems).flat().map((item) => (
               <MobileNavLink key={item.to} to={item.to}>
                 {item.label}
