@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getUserById, updateUser } from '../services/api';
 import { User, Mail, Coins, History, Crown, Cake } from 'lucide-react';
+import SkillsAndInterests from '../components/profile/SkillsAndInterests';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -167,6 +168,8 @@ const Profile = () => {
               </div>
             </div>
 
+            <SkillsAndInterests />
+
             <div className="flex justify-end space-x-4 pt-6">
               {editMode ? (
                 <>
@@ -200,6 +203,7 @@ const Profile = () => {
               )}
             </div>
           </form>
+
 
           {success && (
             <Alert className="mt-6 bg-green-50 text-green-700 border border-green-200">
