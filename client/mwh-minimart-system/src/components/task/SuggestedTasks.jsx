@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Separator } from "@/components/ui/separator";
 import TaskCard from "./TaskCard";
 
-const AvailableTasks = () => {
+const SuggestedTasks = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -31,9 +31,6 @@ const AvailableTasks = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold text-indigo-700 mb-6">
-        Available Tasks
-      </h1>
       
       <Separator className="my-4" />
 
@@ -52,4 +49,4 @@ const AvailableTasks = () => {
   );
 };
 
-export default AvailableTasks;
+export default SuggestedTasks;
