@@ -79,10 +79,15 @@ const getRecentChanges = async () => {
 };
 
 const getTotalPendingTasks = async () => {
-  const userTasksRef = collection(db, "UserTask");
-  const pendingTasksQuery = query(userTasksRef, where("status_id", "==", "pending"));
-  const pendingTasksSnapshot = await getDocs(pendingTasksQuery);
-  return pendingTasksSnapshot.size;
+  try {
+    const userTasksRef = collection(db, "UserTask");
+    const pendingTasksQuery = query(userTasksRef, where("status_id", "==", "incomplete"));
+    const pendingTasksSnapshot = await getDocs(pendingTasksQuery); 
+    return pendingTasksSnapshot.size;
+  } catch (error) {
+    console.error("Error fetching total pending tasks:", error);
+    throw new Error("Failed to fetch total pending tasks");
+  }
 };
 
 module.exports = {

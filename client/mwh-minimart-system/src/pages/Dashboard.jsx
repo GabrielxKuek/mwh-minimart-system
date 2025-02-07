@@ -7,6 +7,8 @@ import {
 } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { getTotalResidents, getTotalPendingRequests, getLowStockItems, getApprovedRequests, getRecentChanges, getTotalPendingTasks } from "../services/api";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Dashboard = () => {
   const [totalResidents, setTotalResidents] = useState(0);
@@ -16,6 +18,7 @@ const Dashboard = () => {
   const [recentChanges, setRecentChanges] = useState([]);
   const [totalPendingTasks, setTotalPendingTasks] = useState(0);
   const [chartData, setChartData] = useState([]);
+  const [notificationsShown, setNotificationsShown] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +43,14 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (!notificationsShown) {
+      toast.warning("There are new low stock products");
+      toast.info("There are new pending requests");
+      setNotificationsShown(true);
+    }
+  }, [notificationsShown]);
+
   const formatTimestamp = (timestamp) => {
     if (timestamp && timestamp.seconds) {
       const date = new Date(timestamp.seconds * 1000);
@@ -52,6 +63,7 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto p-4">
+      <ToastContainer />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <Card>
           <CardHeader>
