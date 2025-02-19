@@ -2,6 +2,7 @@ import { useState } from "react";
 import UserList from "../components/user/UserList";
 import AddUserForm from "../components/user/AddUserForm";
 import { Separator } from "@/components/ui/separator";
+import UploadCSV from "@/components/user/UploadCSV";
 
 const UserManagement = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(false);
@@ -16,7 +17,8 @@ const UserManagement = () => {
         User Management
       </h1>
       <Separator className="my-4" />
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-end mb-4 space-x-2">
+        <UploadCSV onUpload={handleUserAdded} />
         <AddUserForm onUserAdd={handleUserAdded} />
       </div>
       <div className="rounded-lg border">

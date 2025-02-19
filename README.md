@@ -1,9 +1,16 @@
-# 🌟 MWH Empower <img src="assets/app-logo.png" alt="MWH Empower Logo">
+# 🌟 MWH Empower 
 
+<img src="https://github.com/GabrielxKuek/mwh-minimart-system/blob/main/images/cover.png" alt="MWH Empower Logo">
+
+---
+
+[Presentation Slides](https://www.canva.com/design/DAGcbAGkyac/KO-wlqhGd23-cfApxtekmA/edit?utm_content=DAGcbAGkyac&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) • 
 [![Built with React](https://img.shields.io/badge/Built%20with-React-61DAFB.svg?style=flat&logo=react)](https://reactjs.org/)
 [![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat&logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![Express.js](https://img.shields.io/badge/Express.js-000000?style=flat&logo=express&logoColor=white)](https://expressjs.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat&logo=vercel&logoColor=white)](https://vercel.com/)
+[![Render](https://img.shields.io/badge/Render-46E3B7?style=flat&logo=render&logoColor=white)](https://render.com/)
 
 ## 📖 Table of Contents
 - [🌟 Key Features for Residents](#-key-features-for-residents)
@@ -16,6 +23,7 @@
 - [📱 User Features](#-user-features)
 - [👩‍💼 Admin Features](#-user-features)
 - [🚀 Getting Started](#-getting-started)
+- [🌐 Deployment](#-deployment)
 - [🛠️ Technology Stack](#️-technology-stack)
 - [👥 Team](#-team)
 
@@ -115,34 +123,131 @@ This project implements numerous advanced web development concepts:
 
 ## 🚀 Getting Started
 
-1. Clone this repository
-2. **Terminal 1: Setup for the Client:**
-   - Navigate to the client directory:
+1. **Install the Latest Node.js Version**:
+   - Visit the [Node.js Downloads page](https://nodejs.org/) and download the latest **LTS** version for your operating system.  
+   - Alternatively, install it using a package manager:  
+   - **Windows**: Use [nvm-windows](https://github.com/coreybutler/nvm-windows):
+       ```bash
+       nvm install lts
+       nvm use lts
+       ```
+   - **macOS/Linux**: Use [nvm (Node Version Manager)](https://github.com/nvm-sh/nvm):
+       ```bash
+       curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+       nvm install --lts
+       nvm use --lts
+       ```
+   - Verify installation:
+       ```bash
+       node -v
+       npm -v
+       ```
+
+2. **Clone this repository**:
+   ```bash
+   git clone https://github.com/your-repo-name.git
+   cd your-repo-name
+   ```
+
+3. **Terminal 1: Setup for the Client**:
+  - Navigate to the client directory:
      ```bash
      cd client/mwh-minimart-system
      ```
-   - Install client dependencies:
+  - Install latest node version with Long-Term Support:
+     ```bash
+     nvm install --lts
+     ```
+  - Install client dependencies:
      ```bash
      npm install
      ```
-   - Start the client development server:
+  - Create .env file at server folder:
+     ```bash
+     touch .env
+     ```
+  - Key in values inside the .env file:
+    ```
+      API_KEY=
+      AUTH_DOMAIN=
+      PROJECT_ID=
+      STORAGE_BUCKET=
+      MESSAGING_SENDER_ID=
+      APP_ID=
+      MEASUREMENT_ID=
+    ```
+  - Start the client development server:
      ```bash
      npm run dev
      ```
 
-3. **Terminal 2: Setup for the Server:**
-   - Navigate to the server directory:
+4. **Terminal 2: Setup for the Server**:
+  - Navigate to the server directory:
      ```bash
      cd server
      ```
-   - Install server dependencies:
+  - Install server dependencies:
      ```bash
      npm install
      ```
-   - Start the server development server:
+  - Create .env file at server folder:
+     ```bash
+     touch .env
+     ```
+  - Key in values inside the .env file:
+    ```
+      API_KEY=
+      AUTH_DOMAIN=
+      PROJECT_ID=
+      STORAGE_BUCKET=
+      MESSAGING_SENDER_ID=
+      APP_ID=
+      MEASUREMENT_ID=
+    ```
+  - Start the server development server:
      ```bash
      npm run dev
      ```
+
+## 🌐 Deployment
+
+The application is deployed across two platforms for optimal performance and reliability:
+
+### Frontend Deployment [![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat&logo=vercel&logoColor=white)](https://vercel.com/)
+- **URL**: [https://mwh-minimart-system.vercel.app](https://mwh-minimart-system.vercel.app)
+- **Platform**: Vercel
+- **Technology Stack**:
+  - React.js
+  - Tailwind CSS
+  - Firebase SDK
+  - Vite
+- **Features**:
+  - Automated deployments
+  - Edge network distribution
+  - SSL encryption
+  - Real-time updates
+  - Responsive design
+
+### Backend Deployment [![Render](https://img.shields.io/badge/Render-46E3B7?style=flat&logo=render&logoColor=white)](https://render.com/)
+- **URL**: [https://mwh-minimart-system-backend.onrender.com](https://mwh-minimart-system-backend.onrender.com)
+- **Platform**: Render
+- **Technology Stack**:
+  - Node.js
+  - Express.js
+  - Firebase Admin SDK
+- **Features**:
+  - Auto-scaling
+  - Continuous deployment
+  - Health checks
+  - Secure environment variables
+  - API monitoring
+
+### Deployment Configuration
+- Both frontend and backend deployments are configured for continuous integration and deployment (CI/CD)
+- Environment variables are securely managed through respective platform dashboards
+- SSL certificates are automatically provisioned and renewed
+- Regular health checks ensure system reliability
+- Automated backups and rollback capabilities
 
 ## 🛠️ Technology Stack
 
@@ -151,6 +256,7 @@ This project implements numerous advanced web development concepts:
 - **Database**: Firebase Firestore
 - **Storage**: Firebase Storage
 - **Authentication**: Firebase Auth
+- **Deployment**: Vercel (Frontend), Render (Backend)
 
 ## 👥 Team
 <table>
@@ -189,3 +295,5 @@ This project implements numerous advanced web development concepts:
 </td>
 </tr>
 </table>
+
+Made by Hack Tuah Script on That Thang
